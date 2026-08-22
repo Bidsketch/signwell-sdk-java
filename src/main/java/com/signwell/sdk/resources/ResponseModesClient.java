@@ -120,7 +120,11 @@ public final class ResponseModesClient {
                                 throw new UnsupportedContentTypeException(
                                         contentType, "JSON content");
                             try {
-                                return mapper.readValue(response.body(), type);
+                                T result = mapper.readValue(response.body(), type);
+                                if (result == null)
+                                    throw new com.signwell.sdk.errors.SignWellException(
+                                            "SignWell returned an empty JSON response.");
+                                return result;
                             } catch (IOException failureToParse) {
                                 throw new com.signwell.sdk.errors.SignWellException(
                                         "SignWell returned invalid JSON.", failureToParse);

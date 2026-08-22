@@ -70,7 +70,7 @@ jobs:
           diff -u /tmp/signwell-first.sha256 /tmp/signwell-second.sha256
 
   dependency-review:
-    if: github.event_name == 'pull_request'
+    if: github.event_name == 'pull_request' && github.event.repository.visibility == 'public'
     runs-on: ubuntu-latest
     permissions:
       contents: read

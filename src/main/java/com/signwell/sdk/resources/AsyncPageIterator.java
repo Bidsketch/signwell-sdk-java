@@ -33,18 +33,23 @@ public final class AsyncPageIterator<P, T> {
                     new IllegalStateException(
                             "Wait for the current page request before requesting another page."));
         inFlight = true;
-        return fetch.apply(page)
-                .whenComplete(
-                        (result, failure) -> {
-                            synchronized (this) {
-                                inFlight = false;
-                                if (failure == null) {
-                                    Integer next = nextPage.apply(result);
-                                    done = next == null;
-                                    if (next != null) page = next;
+        try {
+            return fetch.apply(page)
+                    .whenComplete(
+                            (result, failure) -> {
+                                synchronized (this) {
+                                    inFlight = false;
+                                    if (failure == null) {
+                                        Integer next = nextPage.apply(result);
+                                        done = next == null;
+                                        if (next != null) page = next;
+                                    }
                                 }
-                            }
-                        });
+                            });
+        } catch (RuntimeException failure) {
+            inFlight = false;
+            return CompletableFuture.failedFuture(failure);
+        }
     }
 
     public CompletableFuture<List<T>> nextItems() {

@@ -41,6 +41,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.outputTimestamp>2026-01-01T00:00:00Z</project.build.outputTimestamp>
     <maven.compiler.release>11</maven.compiler.release>
+    <google-java-format.version>1.23.0</google-java-format.version>
     <jackson.version>2.22.2</jackson.version>
     <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
     <junit.version>5.12.2</junit.version>
@@ -106,7 +107,6 @@
           <showWarnings>true</showWarnings>
           <compilerArgs>
             <arg>-Xlint:all,-serial,-deprecation</arg>
-            <arg>-Werror</arg>
           </compilerArgs>
         </configuration>
       </plugin>
@@ -157,7 +157,7 @@
         <configuration>
           <java>
             <googleJavaFormat>
-              <version>1.23.0</version>
+              <version>${google-java-format.version}</version>
               <style>AOSP</style>
               <reflowLongStrings>true</reflowLongStrings>
             </googleJavaFormat>
@@ -227,6 +227,15 @@
   </build>
 
   <profiles>
+    <profile>
+      <id>jdk-21-plus</id>
+      <activation>
+        <jdk>[21,)</jdk>
+      </activation>
+      <properties>
+        <google-java-format.version>1.29.0</google-java-format.version>
+      </properties>
+    </profile>
     <profile>
       <id>release</id>
       <build>

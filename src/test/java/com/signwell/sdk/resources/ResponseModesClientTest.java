@@ -6,6 +6,7 @@ import com.signwell.sdk.SignWellOptions;
 import com.signwell.sdk.errors.ApiConnectionException;
 import com.signwell.sdk.errors.ApiTimeoutException;
 import com.signwell.sdk.errors.RateLimitException;
+import com.signwell.sdk.errors.SignWellException;
 import com.signwell.sdk.errors.UnsupportedContentTypeException;
 import com.signwell.sdk.models.CompletedPdfUrlResponse;
 import com.signwell.sdk.raw.ApiClient;
@@ -110,6 +111,17 @@ class ResponseModesClientTest {
         assertThrows(
                 IllegalArgumentException.class,
                 () -> modes.bulkSendCsvStream(java.util.Arrays.asList(id, null)));
+    }
+
+    @Test
+    void rejectsEmptyJsonResponses() {
+        QueueHttpClient http = new QueueHttpClient();
+        http.enqueue(200, Map.of("Content-Type", List.of("application/json")), "null");
+
+        Throwable failure = failure(modes(http).completedPdfUrl(UUID.randomUUID(), false, null));
+
+        assertInstanceOf(SignWellException.class, failure);
+        assertEquals("SignWell returned an empty JSON response.", failure.getMessage());
     }
 
     @Test

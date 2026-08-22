@@ -9,6 +9,7 @@ import com.signwell.sdk.models.*;
 import com.signwell.sdk.raw.ApiClient;
 import com.signwell.sdk.raw.DocumentApi;
 import com.signwell.sdk.raw.TemplateApi;
+import com.signwell.sdk.resources.AsyncPageIterator;
 import com.signwell.sdk.resources.DocumentsResource;
 import com.signwell.sdk.resources.TemplatesResource;
 import java.math.BigDecimal;
@@ -258,6 +259,23 @@ class SdkParityTest {
         TemplatesResource templates = new TemplatesResource(templateRaw);
         assertNotNull(templates.pages().nextPage().join());
         assertEquals(50, templateRaw.limit);
+    }
+
+    @Test
+    void paginatorRecoversWhenFetchThrowsSynchronously() {
+        int[] attempts = {0};
+        AsyncPageIterator<Integer, Integer> iterator =
+                new AsyncPageIterator<>(
+                        1,
+                        page -> {
+                            if (attempts[0]++ == 0) throw new IllegalStateException("boom");
+                            return CompletableFuture.completedFuture(page);
+                        },
+                        page -> null,
+                        List::of);
+
+        assertThrows(CompletionException.class, () -> iterator.nextPage().join());
+        assertEquals(1, iterator.nextPage().join());
     }
 
     @Test
