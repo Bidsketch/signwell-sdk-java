@@ -41,6 +41,7 @@
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <project.build.outputTimestamp>2026-01-01T00:00:00Z</project.build.outputTimestamp>
     <maven.compiler.release>11</maven.compiler.release>
+    <java.compiler.lint>all,-serial,-deprecation</java.compiler.lint>
     <google-java-format.version>1.23.0</google-java-format.version>
     <jackson.version>2.22.2</jackson.version>
     <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
@@ -106,7 +107,8 @@
           <parameters>true</parameters>
           <showWarnings>true</showWarnings>
           <compilerArgs>
-            <arg>-Xlint:all,-serial,-deprecation</arg>
+            <arg>-Xlint:${java.compiler.lint}</arg>
+            <arg>-Werror</arg>
           </compilerArgs>
         </configuration>
       </plugin>
@@ -233,6 +235,7 @@
         <jdk>[21,)</jdk>
       </activation>
       <properties>
+        <java.compiler.lint>all,-serial,-deprecation,-this-escape</java.compiler.lint>
         <google-java-format.version>1.29.0</google-java-format.version>
       </properties>
     </profile>
