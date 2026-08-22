@@ -1,0 +1,29 @@
+name: CodeQL
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  schedule:
+    - cron: "23 3 * * 1"
+
+permissions:
+  contents: read
+  security-events: write
+
+jobs:
+  analyze:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: github/codeql-action/init@37f2634a92ba38a0926ef79a0748ac8ae7d95ab2 # v4.37.8
+        with:
+          languages: java-kotlin
+          build-mode: manual
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - run: mvn -B -ntp -DskipTests package
+      - uses: github/codeql-action/analyze@37f2634a92ba38a0926ef79a0748ac8ae7d95ab2 # v4.37.8

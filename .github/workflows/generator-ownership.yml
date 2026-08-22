@@ -1,0 +1,28 @@
+name: Generator ownership
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
+
+jobs:
+  protect-generated-files:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+        with:
+          fetch-depth: 0
+      - name: Require generator source for generated changes
+        env:
+          BASE_SHA: ${{ github.event.pull_request.base.sha }}
+          PR_BODY: ${{ github.event.pull_request.body }}
+        run: |
+          changed="$(git diff --name-only "$BASE_SHA"...HEAD)"
+          if grep -Eq '^(src/|pom\.xml|README\.md|SECURITY\.md|CONTRIBUTING\.md|LICENSE|examples/quickstart/|api/openapi\.yaml|\.github/(CODEOWNERS|dependabot\.yml|workflows/))' <<< "$changed"; then
+            if ! grep -Eqi 'signwell-sdk-generator|generator source' <<< "$PR_BODY"; then
+              echo '::error::Generated SDK changes must link their signwell-sdk-generator source change.'
+              exit 1
+            fi
+          fi

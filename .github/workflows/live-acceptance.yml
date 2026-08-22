@@ -1,0 +1,45 @@
+name: Live acceptance
+
+on:
+  workflow_dispatch:
+    inputs:
+      completed_document_id:
+        description: Completed test-mode document fixture ID (optional; the harness searches when absent)
+        required: false
+      nom151_document_id:
+        description: Completed Mexican document fixture ID with NOM-151
+        required: false
+      fixture_file_url:
+        description: HTTPS URL for a controlled PDF fixture
+        required: false
+      recipient_email:
+        description: Controlled recipient email (defaults to the API-key owner)
+        required: false
+
+permissions:
+  contents: read
+
+jobs:
+  acceptance:
+    runs-on: ubuntu-latest
+    environment: live-acceptance
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: "11"
+          cache: maven
+      - run: mvn -B -ntp install
+      - name: Run test-mode acceptance and cleanup
+        env:
+          SIGNWELL_API_KEY: ${{ secrets.SIGNWELL_API_KEY }}
+          SIGNWELL_COMPLETED_DOCUMENT_ID: ${{ inputs.completed_document_id }}
+          SIGNWELL_NOM151_DOCUMENT_ID: ${{ inputs.nom151_document_id }}
+          SIGNWELL_FIXTURE_FILE_URL: ${{ inputs.fixture_file_url }}
+          SIGNWELL_RECIPIENT_EMAIL: ${{ inputs.recipient_email }}
+        run: >-
+          mvn -B -ntp -f examples/live-acceptance/pom.xml compile
+          org.codehaus.mojo:exec-maven-plugin:3.6.2:java
+          -Dexec.mainClass=com.signwell.examples.LiveAcceptance
+          -Dexec.cleanupDaemonThreads=false
