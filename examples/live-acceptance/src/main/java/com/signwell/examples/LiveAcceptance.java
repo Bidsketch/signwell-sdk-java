@@ -16,9 +16,10 @@ import java.util.Base64;
 import java.util.Collections;
 import java.util.List;
 import java.util.UUID;
+import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 
-/** Destructive test-mode acceptance harness. Every created resource is deleted before exit. */
+/** Destructive test-mode acceptance harness. Created documents and templates are deleted before exit. */
 public final class LiveAcceptance {
     private static final String DEFAULT_PDF =
             "https://www.w3.org/WAI/ER/tests/xhtml/testfiles/resources/pdf/dummy.pdf";
@@ -54,7 +55,7 @@ public final class LiveAcceptance {
         require(client.webhooks().list().join() != null, "Webhook listing returned null.");
         System.out.println("PASS document, template, bulk-send, and webhook listing");
 
-        DocumentResponse draft =
+        DocumentResponse sent =
                 client.createDocument(
                                 new DocumentRequest()
                                         .testMode(true)
@@ -62,13 +63,30 @@ public final class LiveAcceptance {
                                         .name("Java SDK live acceptance draft")
                                         .files(List.of(new FilesInner().name("fixture.pdf").fileUrl(pdfUrl)))
                                         .recipients(List.of(recipient(email)))
-                                        .withSignaturePage(true)
-                                        .embeddedSigning(true)
-                                        .embeddedSigningNotifications(false))
+                                        .withSignaturePage(true))
                         .join();
-        documents.add(draft.getId());
-        require(client.documents().get(draft.getId()).join().getId().equals(draft.getId()), "Draft lookup failed.");
-        System.out.println("PASS direct draft creation and lookup");
+        documents.add(sent.getId());
+        require(client.documents().get(sent.getId()).join().getId().equals(sent.getId()), "Sent document lookup failed.");
+        sent = waitForDraft(client, sent.getId());
+        sent = client.sendDocument(sent.getId(), new UpdateDocumentAndSendRequest()).join();
+        sent = waitForSent(client, sent.getId());
+        String recipientId = sent.getRecipients().get(0).getId();
+        require(
+                        client.documents()
+                                        .updateRecipients(
+                                                sent.getId(),
+                                                new UpdateRecipientsRequest()
+                                                        .recipients(
+                                                                List.of(
+                                                                        new UpdateRecipientsMapInner()
+                                                                                .id(recipientId)
+                                                                                .name("SDK Acceptance Updated")
+                                                                                .email(email))))
+                                .join()
+                                .getId()
+                                .equals(sent.getId()),
+                "Recipient update failed.");
+        System.out.println("PASS direct create, lookup, recipient update, and send");
 
         String base64 = Base64.getEncoder().encodeToString(pdf);
         DocumentResponse requesting =
@@ -93,7 +111,28 @@ public final class LiveAcceptance {
                                 false)
                         .join();
         documents.add(signaturePage.getId());
+        signaturePage = waitForSent(client, signaturePage.getId());
+        String signingRecipientId = signaturePage.getRecipients().get(0).getId();
         require(Embedded.signingUrl(signaturePage, 0) != null, "Signature-page signing URL is missing.");
+        require(
+                        client.documents()
+                                        .updateAuthentication(
+                                                signaturePage.getId(),
+                                                new UpdateAuthenticationRequest()
+                                                        .recipients(
+                                                                List.of(
+                                                                        new UpdateAuthenticationRequestRecipientsInner()
+                                                                                .id(signingRecipientId)
+                                                                                .passcode("1234"))))
+                                .join()
+                                .getId()
+                                .equals(signaturePage.getId()),
+                "Authentication update failed.");
+        client.sendReminder(
+                        signaturePage.getId(),
+                        new SendReminderRequest()
+                                .recipients(List.of(new ReminderRecipientsInner().name("SDK Acceptance").email(email))))
+                .join();
 
         DocumentResponse fields =
                 client.createSigningDocument(
@@ -121,6 +160,9 @@ public final class LiveAcceptance {
                         .join();
         documents.add(textTags.getId());
         System.out.println("PASS URL, base64, signature-page, field, and text-tag workflows");
+        client.documents().delete(requesting.getId()).join();
+        documents.remove(requesting.getId());
+        System.out.println("PASS document delete");
         cooldown();
 
         UUID firstTemplate = createTemplate(client, templates, pdfUrl, null, "one");
@@ -164,6 +206,34 @@ public final class LiveAcceptance {
                                 .join()
                         != null,
                 "Bulk-send CSV validation returned null.");
+        try {
+            client.bulkSends()
+                    .create(
+                            new CreateBulkSendRequest()
+                                    .templateIds(templateIds)
+                                    .bulkSendCsv(Base64.getEncoder().encodeToString("not-a-valid-csv".getBytes(StandardCharsets.UTF_8))))
+                    .join();
+            throw new IllegalStateException("Expected invalid bulk-send CSV failure.");
+        } catch (CompletionException failure) {
+            require(
+                    failure.getCause() instanceof ApiStatusException
+                            && ((ApiStatusException) failure.getCause()).getStatusCode() == 422,
+                    "Bulk-send creation failure was not a typed 422.");
+        }
+        BulkSendListResponse bulkList = client.bulkSends().list().join();
+        if (bulkList.getBulkSends() != null && !bulkList.getBulkSends().isEmpty()) {
+            UUID bulkId = bulkList.getBulkSends().get(0).getId();
+            require(client.bulkSends().get(bulkId).join().getId().equals(bulkId), "Bulk-send lookup failed.");
+            require(client.bulkSends().documents(bulkId, 50, 1).join() != null, "Bulk-send documents lookup failed.");
+        } else {
+            expectNotFound(client.bulkSends().get(UUID.randomUUID()), "bulk-send lookup");
+            expectNotFound(client.bulkSends().documents(UUID.randomUUID(), 50, 1), "bulk-send documents lookup");
+        }
+        WebhookResponse webhook = client.webhooks().create(new CreateWebhookRequest().callbackUrl("https://example.com/signwell-sdk-live-webhook")).join();
+        require(webhook.getId() != null, "Webhook creation returned no ID.");
+        require(client.webhooks().list().join().stream().anyMatch(item -> webhook.getId().equals(item.getId())), "Webhook listing missed created webhook.");
+        client.webhooks().delete(webhook.getId()).join();
+        System.out.println("PASS bulk-send create validation, lookup/documents, and webhook CRUD");
         System.out.println("PASS bulk-send CSV stream, base64, and validation");
         cooldown();
 
@@ -175,7 +245,8 @@ public final class LiveAcceptance {
             require(client.getCompletedPdfUrl(completed).join().getFileUrl() != null, "Completed PDF URL is missing.");
             System.out.println("PASS completed PDF stream and URL");
         } else {
-            System.out.println("SKIP completed PDF: no completed test-mode fixture was supplied or found");
+            expectNotFound(client.getCompletedPdfStream(UUID.randomUUID()), "completed PDF stream");
+            expectNotFound(client.getCompletedPdfUrl(UUID.randomUUID()), "completed PDF URL");
         }
 
         UUID nom151 = uuid("SIGNWELL_NOM151_DOCUMENT_ID");
@@ -187,16 +258,19 @@ public final class LiveAcceptance {
             require(client.regional().nom151Object(nom151).join() != null, "NOM-151 object response is missing.");
             System.out.println("PASS NOM-151 stream, URL, and object modes");
         } else {
-            System.out.println("SKIP NOM-151: SIGNWELL_NOM151_DOCUMENT_ID was not supplied");
+            UUID missing = UUID.randomUUID();
+            expectNotFound(client.regional().nom151Stream(missing), "NOM-151 stream");
+            expectNotFound(client.regional().nom151Url(missing), "NOM-151 URL");
+            expectNotFound(client.regional().nom151Object(missing), "NOM-151 object");
         }
 
-        try {
-            client.documents().get(UUID.randomUUID()).join();
-            throw new IllegalStateException("Expected a typed not-found failure.");
-        } catch (CompletionException failure) {
-            require(failure.getCause() instanceof NotFoundException, "Not-found failure was not typed.");
-        }
-        System.out.println("PASS typed failure mapping");
+        UUID missing = UUID.randomUUID();
+        expectNotFound(client.documents().get(missing), "document lookup");
+        expectNotFound(client.apiApplications().get(missing), "API application lookup");
+        expectNotFound(client.apiApplications().delete(missing), "API application delete");
+        client.templates().delete(secondTemplate).join();
+        templates.remove(secondTemplate);
+        System.out.println("PASS typed failures and template delete");
     }
 
     private static UUID createTemplate(
@@ -257,6 +331,28 @@ public final class LiveAcceptance {
         return response.body();
     }
 
+    private static DocumentResponse waitForDraft(SignWellClient client, UUID id) throws Exception {
+        for (int attempt = 0; attempt < 15; attempt++) {
+            DocumentResponse response = client.documents().get(id).join();
+            if ("Draft".equalsIgnoreCase(response.getStatus())) return response;
+            Thread.sleep(1_000L);
+        }
+        throw new IllegalStateException("Document did not become Draft before send.");
+    }
+
+    private static DocumentResponse waitForSent(SignWellClient client, UUID id) throws Exception {
+        for (int attempt = 0; attempt < 15; attempt++) {
+            DocumentResponse response = client.documents().get(id).join();
+            String status = response.getStatus();
+            if ("Sent".equalsIgnoreCase(status)
+                    || "Pending".equalsIgnoreCase(status)
+                    || "Viewed".equalsIgnoreCase(status)
+                    || "Bounced".equalsIgnoreCase(status)) return response;
+            Thread.sleep(1_000L);
+        }
+        throw new IllegalStateException("Document did not become sent before recipient update.");
+    }
+
     private static String required(String name) {
         String value = System.getenv(name);
         if (value == null || value.trim().isEmpty()) throw new IllegalStateException(name + " is required.");
@@ -271,6 +367,15 @@ public final class LiveAcceptance {
     private static UUID uuid(String name) {
         String value = System.getenv(name);
         return value == null || value.trim().isEmpty() ? null : UUID.fromString(value.trim());
+    }
+
+    private static void expectNotFound(CompletableFuture<?> future, String operation) {
+        try {
+            future.join();
+            throw new IllegalStateException("Expected a typed not-found failure for " + operation + ".");
+        } catch (CompletionException failure) {
+            require(failure.getCause() instanceof NotFoundException, operation + " failure was not typed.");
+        }
     }
 
     private static void cleanup(Runnable action, String type, UUID id) {

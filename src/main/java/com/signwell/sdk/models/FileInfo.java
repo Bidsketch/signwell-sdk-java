@@ -26,14 +26,14 @@ import java.util.StringJoiner;
         comments = "Generator version: 7.12.0")
 public class FileInfo {
     public static final String JSON_PROPERTY_NAME = "name";
-    @jakarta.annotation.Nonnull private String name;
+    @jakarta.annotation.Nullable private String name;
 
     public static final String JSON_PROPERTY_PAGES_NUMBER = "pages_number";
     @jakarta.annotation.Nonnull private Integer pagesNumber;
 
     public FileInfo() {}
 
-    public FileInfo name(@jakarta.annotation.Nonnull String name) {
+    public FileInfo name(@jakarta.annotation.Nullable String name) {
         this.name = name;
         return this;
     }
@@ -43,16 +43,15 @@ public class FileInfo {
      *
      * @return name
      */
-    @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(value = JsonInclude.Include.ALWAYS)
+    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
     @JsonProperty(JSON_PROPERTY_NAME)
-    @JsonInclude(value = JsonInclude.Include.ALWAYS)
-    public void setName(@jakarta.annotation.Nonnull String name) {
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
     }
 
