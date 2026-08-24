@@ -1,0 +1,28 @@
+name: Bug report
+description: Report reproducible SDK behavior without sensitive data.
+body:
+  - type: input
+    id: version
+    attributes:
+      label: SDK version
+    validations:
+      required: true
+  - type: input
+    id: java
+    attributes:
+      label: Java version
+    validations:
+      required: true
+  - type: textarea
+    id: behavior
+    attributes:
+      label: Expected and actual behavior
+      description: Never include API keys, webhook secrets, customer documents, request headers, or response bodies.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Minimal reproduction
+    validations:
+      required: true

@@ -1,0 +1,81 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    strategy:
+      fail-fast: false
+      matrix:
+        java: ["11", "17", "21", "25"]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: ${{ matrix.java }}
+          cache: maven
+      - run: mvn -B -ntp spotless:check install
+      - name: Compile packaged quick start
+        if: matrix.java == '25'
+        run: mvn -B -ntp -f examples/quickstart/pom.xml verify
+      - name: Validate package contents
+        if: matrix.java == '25'
+        run: |
+          test -f target/signwell-sdk-0.1.0-beta.1.jar
+          test -f target/signwell-sdk-0.1.0-beta.1-sources.jar
+          test -f target/signwell-sdk-0.1.0-beta.1-javadoc.jar
+          test -f target/bom.json
+          jar tf target/signwell-sdk-0.1.0-beta.1.jar | grep -q 'com/signwell/sdk/SignWellClient.class'
+          jar tf target/signwell-sdk-0.1.0-beta.1.jar | grep -q 'META-INF/LICENSE'
+          jar tf target/signwell-sdk-0.1.0-beta.1.jar | grep -q 'META-INF/README.md'
+          unzip -p target/signwell-sdk-0.1.0-beta.1.jar META-INF/MANIFEST.MF | grep -q 'Implementation-Version: 0.1.0-beta.1'
+          if jar tf target/signwell-sdk-0.1.0-beta.1.jar | grep -Eq '(^|/)(\.github|openapi\.yaml|src/test|generator)'; then
+            echo 'Package contains development or generator-only files.' >&2
+            exit 1
+          fi
+          sha256sum target/*.jar target/bom.json > target/checksums.sha256
+      - uses: actions/upload-artifact@043fb46d1a93c77aae656e7c1c64a875d1fc6a0a # v7.0.1
+        if: matrix.java == '25'
+        with:
+          name: maven-central-artifacts
+          path: |
+            target/signwell-sdk-*.jar
+            target/bom.json
+            target/checksums.sha256
+
+  reproducible-package:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/setup-java@b6effb05e454b25005698d916606bdc6ffcbf961 # v5.7.0
+        with:
+          distribution: temurin
+          java-version: "25"
+          cache: maven
+      - name: Compare two clean package builds
+        run: |
+          mvn -B -ntp -DskipTests clean package
+          find target -maxdepth 1 -name 'signwell-sdk-*.jar' -type f -print0 | sort -z | xargs -0 sha256sum | sed 's#target/##' > /tmp/signwell-first.sha256
+          mvn -B -ntp -DskipTests clean package
+          find target -maxdepth 1 -name 'signwell-sdk-*.jar' -type f -print0 | sort -z | xargs -0 sha256sum | sed 's#target/##' > /tmp/signwell-second.sha256
+          diff -u /tmp/signwell-first.sha256 /tmp/signwell-second.sha256
+
+  dependency-review:
+    if: github.event_name == 'pull_request' && github.event.repository.visibility == 'public'
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - uses: actions/dependency-review-action@a1d282b36b6f3519aa1f3fc636f609c47dddb294 # v5.0.0
+        with:
+          fail-on-severity: moderate

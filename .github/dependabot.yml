@@ -1,0 +1,18 @@
+version: 2
+updates:
+  - package-ecosystem: maven
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      maven-runtime:
+        patterns: ["com.fasterxml.jackson.*"]
+      maven-build:
+        patterns: ["org.apache.maven.plugins:*", "com.diffplug.spotless:*", "org.junit.jupiter:*"]
+  - package-ecosystem: github-actions
+    directory: /
+    schedule:
+      interval: weekly
+    groups:
+      github-actions:
+        patterns: ["*"]
