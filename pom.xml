@@ -43,7 +43,7 @@
     <maven.compiler.release>11</maven.compiler.release>
     <java.compiler.lint>all,-serial,-deprecation</java.compiler.lint>
     <google-java-format.version>1.23.0</google-java-format.version>
-    <jackson.version>2.22.2</jackson.version>
+    <jackson.version>2.22.3</jackson.version>
     <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
     <junit.version>5.12.2</junit.version>
   </properties>
