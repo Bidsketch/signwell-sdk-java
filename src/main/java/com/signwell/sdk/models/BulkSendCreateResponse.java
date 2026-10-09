@@ -35,7 +35,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class BulkSendCreateResponse {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private UUID id;
@@ -71,13 +71,13 @@ public class BulkSendCreateResponse {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull UUID id) {
         this.id = id;
@@ -102,13 +102,13 @@ public class BulkSendCreateResponse {
      * @return templateIds
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public List<UUID> getTemplateIds() {
         return templateIds;
     }
 
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTemplateIds(@jakarta.annotation.Nonnull List<UUID> templateIds) {
         this.templateIds = templateIds;
@@ -125,13 +125,13 @@ public class BulkSendCreateResponse {
      *
      * @return apiApplicationId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getApiApplicationId() {
         return apiApplicationId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiApplicationId(@jakarta.annotation.Nullable UUID apiApplicationId) {
         this.apiApplicationId = apiApplicationId;
@@ -149,13 +149,13 @@ public class BulkSendCreateResponse {
      * @return documentsCount
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_DOCUMENTS_COUNT)
+    @JsonProperty(value = JSON_PROPERTY_DOCUMENTS_COUNT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getDocumentsCount() {
         return documentsCount;
     }
 
-    @JsonProperty(JSON_PROPERTY_DOCUMENTS_COUNT)
+    @JsonProperty(value = JSON_PROPERTY_DOCUMENTS_COUNT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setDocumentsCount(@jakarta.annotation.Nonnull Integer documentsCount) {
         this.documentsCount = documentsCount;
@@ -172,13 +172,13 @@ public class BulkSendCreateResponse {
      * @return createdAt
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setCreatedAt(@jakarta.annotation.Nonnull OffsetDateTime createdAt) {
         this.createdAt = createdAt;
@@ -194,13 +194,13 @@ public class BulkSendCreateResponse {
      *
      * @return userId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_USER_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_USER_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getUserId() {
         return userId;
     }
 
-    @JsonProperty(JSON_PROPERTY_USER_ID)
+    @JsonProperty(value = JSON_PROPERTY_USER_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setUserId(@jakarta.annotation.Nullable UUID userId) {
         this.userId = userId;
@@ -217,13 +217,13 @@ public class BulkSendCreateResponse {
      * @return status
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_STATUS)
+    @JsonProperty(value = JSON_PROPERTY_STATUS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getStatus() {
         return status;
     }
 
-    @JsonProperty(JSON_PROPERTY_STATUS)
+    @JsonProperty(value = JSON_PROPERTY_STATUS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setStatus(@jakarta.annotation.Nonnull String status) {
         this.status = status;
@@ -274,10 +274,7 @@ public class BulkSendCreateResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -316,8 +313,11 @@ public class BulkSendCreateResponse {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `template_ids` to the URL query string
@@ -326,13 +326,18 @@ public class BulkSendCreateResponse {
                 if (getTemplateIds().get(i) != null) {
                     joiner.add(
                             String.format(
+                                    java.util.Locale.ROOT,
                                     "%stemplate_ids%s%s=%s",
                                     prefix,
                                     suffix,
                                     "".equals(suffix)
                                             ? ""
                                             : String.format(
-                                                    "%s%d%s", containerPrefix, i, containerSuffix),
+                                                    java.util.Locale.ROOT,
+                                                    "%s%d%s",
+                                                    containerPrefix,
+                                                    i,
+                                                    containerSuffix),
                                     ApiClient.urlEncode(
                                             ApiClient.valueToString(getTemplateIds().get(i)))));
                 }
@@ -343,6 +348,7 @@ public class BulkSendCreateResponse {
         if (getApiApplicationId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_application_id%s=%s",
                             prefix,
                             suffix,
@@ -353,6 +359,7 @@ public class BulkSendCreateResponse {
         if (getDocumentsCount() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdocuments_count%s=%s",
                             prefix,
                             suffix,
@@ -363,6 +370,7 @@ public class BulkSendCreateResponse {
         if (getCreatedAt() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%screated_at%s=%s",
                             prefix,
                             suffix,
@@ -373,6 +381,7 @@ public class BulkSendCreateResponse {
         if (getUserId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%suser_id%s=%s",
                             prefix,
                             suffix,
@@ -383,6 +392,7 @@ public class BulkSendCreateResponse {
         if (getStatus() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sstatus%s=%s",
                             prefix,
                             suffix,

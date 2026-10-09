@@ -7,7 +7,7 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
-|**id** | **UUID** |  |  |
+|**id** | **String** |  |  |
 |**name** | **String** |  |  |
 |**email** | **String** |  |  |
 |**hasGoogleRegistration** | **Boolean** |  |  [optional] |

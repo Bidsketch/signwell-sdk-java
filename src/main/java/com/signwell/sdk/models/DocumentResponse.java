@@ -12,9 +12,11 @@
 
 package com.signwell.sdk.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.signwell.sdk.raw.ApiClient;
 import java.time.OffsetDateTime;
 import java.util.ArrayList;
@@ -27,6 +29,8 @@ import java.util.UUID;
 
 /** DocumentResponse */
 @JsonPropertyOrder({
+    DocumentResponse.JSON_PROPERTY_CFR_PART11,
+    DocumentResponse.JSON_PROPERTY_CFR_PART11_SIGNING_MODE,
     DocumentResponse.JSON_PROPERTY_TEST_MODE,
     DocumentResponse.JSON_PROPERTY_ID,
     DocumentResponse.JSON_PROPERTY_API_APPLICATION_ID,
@@ -43,6 +47,7 @@ import java.util.UUID;
     DocumentResponse.JSON_PROPERTY_STATUS,
     DocumentResponse.JSON_PROPERTY_REMINDERS,
     DocumentResponse.JSON_PROPERTY_ARCHIVED,
+    DocumentResponse.JSON_PROPERTY_EMBEDDED,
     DocumentResponse.JSON_PROPERTY_EMBEDDED_SIGNING,
     DocumentResponse.JSON_PROPERTY_EMBEDDED_EDIT_URL,
     DocumentResponse.JSON_PROPERTY_EMBEDDED_PREVIEW_URL,
@@ -63,12 +68,59 @@ import java.util.UUID;
     DocumentResponse.JSON_PROPERTY_ALLOW_DECLINE,
     DocumentResponse.JSON_PROPERTY_ALLOW_REASSIGN,
     DocumentResponse.JSON_PROPERTY_LABELS,
-    DocumentResponse.JSON_PROPERTY_CHECKBOX_GROUPS
+    DocumentResponse.JSON_PROPERTY_CHECKBOX_GROUPS,
+    DocumentResponse.JSON_PROPERTY_CONDITIONAL_RULES,
+    DocumentResponse.JSON_PROPERTY_CONDITIONAL_LOGIC_DECISIONS
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class DocumentResponse {
+    public static final String JSON_PROPERTY_CFR_PART11 = "cfr_part11";
+    @jakarta.annotation.Nullable private Boolean cfrPart11;
+
+    /**
+     * The signing mode of a 21 CFR Part 11 document: streamlined (one final authentication) or
+     * per_signature (authentication at every signature and initials field). Null when Part 11 does
+     * not apply.
+     */
+    public enum CfrPart11SigningModeEnum {
+        STREAMLINED(String.valueOf("streamlined")),
+
+        PER_SIGNATURE(String.valueOf("per_signature")),
+
+        UNKNOWN_DEFAULT_OPEN_API(String.valueOf("unknown_default_open_api"));
+
+        private String value;
+
+        CfrPart11SigningModeEnum(String value) {
+            this.value = value;
+        }
+
+        @JsonValue
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        @JsonCreator
+        public static CfrPart11SigningModeEnum fromValue(String value) {
+            for (CfrPart11SigningModeEnum b : CfrPart11SigningModeEnum.values()) {
+                if (b.value.equals(value)) {
+                    return b;
+                }
+            }
+            return null;
+        }
+    }
+
+    public static final String JSON_PROPERTY_CFR_PART11_SIGNING_MODE = "cfr_part11_signing_mode";
+    @jakarta.annotation.Nullable private CfrPart11SigningModeEnum cfrPart11SigningMode;
+
     public static final String JSON_PROPERTY_TEST_MODE = "test_mode";
     @jakarta.annotation.Nonnull private Boolean testMode;
 
@@ -117,6 +169,9 @@ public class DocumentResponse {
 
     public static final String JSON_PROPERTY_ARCHIVED = "archived";
     @jakarta.annotation.Nullable private Boolean archived;
+
+    public static final String JSON_PROPERTY_EMBEDDED = "embedded";
+    @jakarta.annotation.Nullable private EmbeddedBranding embedded;
 
     public static final String JSON_PROPERTY_EMBEDDED_SIGNING = "embedded_signing";
     @jakarta.annotation.Nullable private Boolean embeddedSigning;
@@ -184,7 +239,65 @@ public class DocumentResponse {
     public static final String JSON_PROPERTY_CHECKBOX_GROUPS = "checkbox_groups";
     @jakarta.annotation.Nullable private List<CheckboxGroupInfo> checkboxGroups = new ArrayList<>();
 
+    public static final String JSON_PROPERTY_CONDITIONAL_RULES = "conditional_rules";
+
+    @jakarta.annotation.Nullable private List<ConditionalRuleInfo> conditionalRules = new ArrayList<>();
+
+    public static final String JSON_PROPERTY_CONDITIONAL_LOGIC_DECISIONS =
+            "conditional_logic_decisions";
+
+    @jakarta.annotation.Nullable private List<ConditionalLogicDecisionInfo> conditionalLogicDecisions = new ArrayList<>();
+
     public DocumentResponse() {}
+
+    public DocumentResponse cfrPart11(@jakarta.annotation.Nullable Boolean cfrPart11) {
+        this.cfrPart11 = cfrPart11;
+        return this;
+    }
+
+    /**
+     * Whether 21 CFR Part 11 controls apply to this document. Read-only: the value is taken from
+     * the workspace setting when the document is created and never changes afterwards.
+     *
+     * @return cfrPart11
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CFR_PART11, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public Boolean getCfrPart11() {
+        return cfrPart11;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_CFR_PART11, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setCfrPart11(@jakarta.annotation.Nullable Boolean cfrPart11) {
+        this.cfrPart11 = cfrPart11;
+    }
+
+    public DocumentResponse cfrPart11SigningMode(
+            @jakarta.annotation.Nullable CfrPart11SigningModeEnum cfrPart11SigningMode) {
+        this.cfrPart11SigningMode = cfrPart11SigningMode;
+        return this;
+    }
+
+    /**
+     * The signing mode of a 21 CFR Part 11 document: streamlined (one final authentication) or
+     * per_signature (authentication at every signature and initials field). Null when Part 11 does
+     * not apply.
+     *
+     * @return cfrPart11SigningMode
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CFR_PART11_SIGNING_MODE, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public CfrPart11SigningModeEnum getCfrPart11SigningMode() {
+        return cfrPart11SigningMode;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_CFR_PART11_SIGNING_MODE, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setCfrPart11SigningMode(
+            @jakarta.annotation.Nullable CfrPart11SigningModeEnum cfrPart11SigningMode) {
+        this.cfrPart11SigningMode = cfrPart11SigningMode;
+    }
 
     public DocumentResponse testMode(@jakarta.annotation.Nonnull Boolean testMode) {
         this.testMode = testMode;
@@ -197,13 +310,13 @@ public class DocumentResponse {
      * @return testMode
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TEST_MODE)
+    @JsonProperty(value = JSON_PROPERTY_TEST_MODE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Boolean getTestMode() {
         return testMode;
     }
 
-    @JsonProperty(JSON_PROPERTY_TEST_MODE)
+    @JsonProperty(value = JSON_PROPERTY_TEST_MODE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTestMode(@jakarta.annotation.Nonnull Boolean testMode) {
         this.testMode = testMode;
@@ -220,13 +333,13 @@ public class DocumentResponse {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull UUID id) {
         this.id = id;
@@ -242,13 +355,13 @@ public class DocumentResponse {
      *
      * @return apiApplicationId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getApiApplicationId() {
         return apiApplicationId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiApplicationId(@jakarta.annotation.Nullable UUID apiApplicationId) {
         this.apiApplicationId = apiApplicationId;
@@ -265,13 +378,13 @@ public class DocumentResponse {
      *
      * @return requesterEmailAddress
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_REQUESTER_EMAIL_ADDRESS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_REQUESTER_EMAIL_ADDRESS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getRequesterEmailAddress() {
         return requesterEmailAddress;
     }
 
-    @JsonProperty(JSON_PROPERTY_REQUESTER_EMAIL_ADDRESS)
+    @JsonProperty(value = JSON_PROPERTY_REQUESTER_EMAIL_ADDRESS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setRequesterEmailAddress(
             @jakarta.annotation.Nullable String requesterEmailAddress) {
@@ -289,13 +402,13 @@ public class DocumentResponse {
      *
      * @return customRequesterName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getCustomRequesterName() {
         return customRequesterName;
     }
 
-    @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_NAME)
+    @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCustomRequesterName(@jakarta.annotation.Nullable String customRequesterName) {
         this.customRequesterName = customRequesterName;
@@ -312,13 +425,13 @@ public class DocumentResponse {
      *
      * @return customRequesterEmail
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getCustomRequesterEmail() {
         return customRequesterEmail;
     }
 
-    @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCustomRequesterEmail(@jakarta.annotation.Nullable String customRequesterEmail) {
         this.customRequesterEmail = customRequesterEmail;
@@ -334,13 +447,13 @@ public class DocumentResponse {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -356,13 +469,13 @@ public class DocumentResponse {
      *
      * @return subject
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getSubject() {
         return subject;
     }
 
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSubject(@jakarta.annotation.Nullable String subject) {
         this.subject = subject;
@@ -378,13 +491,13 @@ public class DocumentResponse {
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -408,13 +521,13 @@ public class DocumentResponse {
      *
      * @return metadata
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_METADATA)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_METADATA, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Map<String, String> getMetadata() {
         return metadata;
     }
 
-    @JsonProperty(JSON_PROPERTY_METADATA)
+    @JsonProperty(value = JSON_PROPERTY_METADATA, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMetadata(@jakarta.annotation.Nullable Map<String, String> metadata) {
         this.metadata = metadata;
@@ -430,13 +543,13 @@ public class DocumentResponse {
      *
      * @return createdAt
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCreatedAt(@jakarta.annotation.Nullable OffsetDateTime createdAt) {
         this.createdAt = createdAt;
@@ -452,13 +565,13 @@ public class DocumentResponse {
      *
      * @return updatedAt
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
+    @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setUpdatedAt(@jakarta.annotation.Nullable OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
@@ -483,13 +596,13 @@ public class DocumentResponse {
      *
      * @return recipients
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_RECIPIENTS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_RECIPIENTS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<DocumentResponseRecipientsInner> getRecipients() {
         return recipients;
     }
 
-    @JsonProperty(JSON_PROPERTY_RECIPIENTS)
+    @JsonProperty(value = JSON_PROPERTY_RECIPIENTS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setRecipients(
             @jakarta.annotation.Nullable List<DocumentResponseRecipientsInner> recipients) {
@@ -507,13 +620,13 @@ public class DocumentResponse {
      *
      * @return status
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_STATUS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_STATUS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getStatus() {
         return status;
     }
 
-    @JsonProperty(JSON_PROPERTY_STATUS)
+    @JsonProperty(value = JSON_PROPERTY_STATUS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setStatus(@jakarta.annotation.Nullable String status) {
         this.status = status;
@@ -529,13 +642,13 @@ public class DocumentResponse {
      *
      * @return reminders
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_REMINDERS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_REMINDERS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getReminders() {
         return reminders;
     }
 
-    @JsonProperty(JSON_PROPERTY_REMINDERS)
+    @JsonProperty(value = JSON_PROPERTY_REMINDERS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setReminders(@jakarta.annotation.Nullable Boolean reminders) {
         this.reminders = reminders;
@@ -551,16 +664,38 @@ public class DocumentResponse {
      *
      * @return archived
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ARCHIVED)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ARCHIVED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getArchived() {
         return archived;
     }
 
-    @JsonProperty(JSON_PROPERTY_ARCHIVED)
+    @JsonProperty(value = JSON_PROPERTY_ARCHIVED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setArchived(@jakarta.annotation.Nullable Boolean archived) {
         this.archived = archived;
+    }
+
+    public DocumentResponse embedded(@jakarta.annotation.Nullable EmbeddedBranding embedded) {
+        this.embedded = embedded;
+        return this;
+    }
+
+    /**
+     * Get embedded
+     *
+     * @return embedded
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMBEDDED, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public EmbeddedBranding getEmbedded() {
+        return embedded;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_EMBEDDED, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setEmbedded(@jakarta.annotation.Nullable EmbeddedBranding embedded) {
+        this.embedded = embedded;
     }
 
     public DocumentResponse embeddedSigning(@jakarta.annotation.Nullable Boolean embeddedSigning) {
@@ -573,13 +708,13 @@ public class DocumentResponse {
      *
      * @return embeddedSigning
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EMBEDDED_SIGNING)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMBEDDED_SIGNING, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getEmbeddedSigning() {
         return embeddedSigning;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMBEDDED_SIGNING)
+    @JsonProperty(value = JSON_PROPERTY_EMBEDDED_SIGNING, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEmbeddedSigning(@jakarta.annotation.Nullable Boolean embeddedSigning) {
         this.embeddedSigning = embeddedSigning;
@@ -595,13 +730,13 @@ public class DocumentResponse {
      *
      * @return embeddedEditUrl
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EMBEDDED_EDIT_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMBEDDED_EDIT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getEmbeddedEditUrl() {
         return embeddedEditUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMBEDDED_EDIT_URL)
+    @JsonProperty(value = JSON_PROPERTY_EMBEDDED_EDIT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEmbeddedEditUrl(@jakarta.annotation.Nullable String embeddedEditUrl) {
         this.embeddedEditUrl = embeddedEditUrl;
@@ -618,13 +753,13 @@ public class DocumentResponse {
      *
      * @return embeddedPreviewUrl
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EMBEDDED_PREVIEW_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMBEDDED_PREVIEW_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getEmbeddedPreviewUrl() {
         return embeddedPreviewUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMBEDDED_PREVIEW_URL)
+    @JsonProperty(value = JSON_PROPERTY_EMBEDDED_PREVIEW_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEmbeddedPreviewUrl(@jakarta.annotation.Nullable String embeddedPreviewUrl) {
         this.embeddedPreviewUrl = embeddedPreviewUrl;
@@ -641,13 +776,13 @@ public class DocumentResponse {
      *
      * @return applySigningOrder
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_APPLY_SIGNING_ORDER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_APPLY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getApplySigningOrder() {
         return applySigningOrder;
     }
 
-    @JsonProperty(JSON_PROPERTY_APPLY_SIGNING_ORDER)
+    @JsonProperty(value = JSON_PROPERTY_APPLY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApplySigningOrder(@jakarta.annotation.Nullable Boolean applySigningOrder) {
         this.applySigningOrder = applySigningOrder;
@@ -663,13 +798,13 @@ public class DocumentResponse {
      *
      * @return redirectUrl
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_REDIRECT_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getRedirectUrl() {
         return redirectUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_REDIRECT_URL)
+    @JsonProperty(value = JSON_PROPERTY_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setRedirectUrl(@jakarta.annotation.Nullable String redirectUrl) {
         this.redirectUrl = redirectUrl;
@@ -686,13 +821,13 @@ public class DocumentResponse {
      *
      * @return declineRedirectUrl
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DECLINE_REDIRECT_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DECLINE_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getDeclineRedirectUrl() {
         return declineRedirectUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_DECLINE_REDIRECT_URL)
+    @JsonProperty(value = JSON_PROPERTY_DECLINE_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDeclineRedirectUrl(@jakarta.annotation.Nullable String declineRedirectUrl) {
         this.declineRedirectUrl = declineRedirectUrl;
@@ -708,13 +843,13 @@ public class DocumentResponse {
      *
      * @return language
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_LANGUAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_LANGUAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getLanguage() {
         return language;
     }
 
-    @JsonProperty(JSON_PROPERTY_LANGUAGE)
+    @JsonProperty(value = JSON_PROPERTY_LANGUAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setLanguage(@jakarta.annotation.Nullable String language) {
         this.language = language;
@@ -730,13 +865,13 @@ public class DocumentResponse {
      *
      * @return expiresIn
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EXPIRES_IN)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EXPIRES_IN, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getExpiresIn() {
         return expiresIn;
     }
 
-    @JsonProperty(JSON_PROPERTY_EXPIRES_IN)
+    @JsonProperty(value = JSON_PROPERTY_EXPIRES_IN, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setExpiresIn(@jakarta.annotation.Nullable Integer expiresIn) {
         this.expiresIn = expiresIn;
@@ -752,13 +887,13 @@ public class DocumentResponse {
      *
      * @return declineMessage
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DECLINE_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DECLINE_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getDeclineMessage() {
         return declineMessage;
     }
 
-    @JsonProperty(JSON_PROPERTY_DECLINE_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_DECLINE_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDeclineMessage(@jakarta.annotation.Nullable String declineMessage) {
         this.declineMessage = declineMessage;
@@ -774,13 +909,13 @@ public class DocumentResponse {
      *
      * @return errorMessage
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ERROR_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ERROR_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getErrorMessage() {
         return errorMessage;
     }
 
-    @JsonProperty(JSON_PROPERTY_ERROR_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_ERROR_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setErrorMessage(@jakarta.annotation.Nullable String errorMessage) {
         this.errorMessage = errorMessage;
@@ -796,13 +931,13 @@ public class DocumentResponse {
      *
      * @return templateId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_TEMPLATE_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_TEMPLATE_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getTemplateId() {
         return templateId;
     }
 
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_ID)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setTemplateId(@jakarta.annotation.Nullable UUID templateId) {
         this.templateId = templateId;
@@ -826,13 +961,13 @@ public class DocumentResponse {
      *
      * @return templateIds
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<UUID> getTemplateIds() {
         return templateIds;
     }
 
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setTemplateIds(@jakarta.annotation.Nullable List<UUID> templateIds) {
         this.templateIds = templateIds;
@@ -849,13 +984,13 @@ public class DocumentResponse {
      *
      * @return embeddedSigningNotifications
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getEmbeddedSigningNotifications() {
         return embeddedSigningNotifications;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS)
+    @JsonProperty(value = JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEmbeddedSigningNotifications(
             @jakarta.annotation.Nullable Boolean embeddedSigningNotifications) {
@@ -882,13 +1017,13 @@ public class DocumentResponse {
      *
      * @return attachmentRequests
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ATTACHMENT_REQUESTS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ATTACHMENT_REQUESTS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<DocumentResponseAttachmentRequestsInner> getAttachmentRequests() {
         return attachmentRequests;
     }
 
-    @JsonProperty(JSON_PROPERTY_ATTACHMENT_REQUESTS)
+    @JsonProperty(value = JSON_PROPERTY_ATTACHMENT_REQUESTS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setAttachmentRequests(
             @jakarta.annotation.Nullable List<DocumentResponseAttachmentRequestsInner> attachmentRequests) {
@@ -913,13 +1048,13 @@ public class DocumentResponse {
      *
      * @return files
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_FILES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_FILES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<FileInfo> getFiles() {
         return files;
     }
 
-    @JsonProperty(JSON_PROPERTY_FILES)
+    @JsonProperty(value = JSON_PROPERTY_FILES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setFiles(@jakarta.annotation.Nullable List<FileInfo> files) {
         this.files = files;
@@ -944,13 +1079,13 @@ public class DocumentResponse {
      *
      * @return copiedContacts
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_COPIED_CONTACTS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_COPIED_CONTACTS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<CopiedContactInfo> getCopiedContacts() {
         return copiedContacts;
     }
 
-    @JsonProperty(JSON_PROPERTY_COPIED_CONTACTS)
+    @JsonProperty(value = JSON_PROPERTY_COPIED_CONTACTS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCopiedContacts(
             @jakarta.annotation.Nullable List<CopiedContactInfo> copiedContacts) {
@@ -976,13 +1111,13 @@ public class DocumentResponse {
      *
      * @return fields
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_FIELDS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_FIELDS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<List<DocumentResponseFieldsInnerInner>> getFields() {
         return fields;
     }
 
-    @JsonProperty(JSON_PROPERTY_FIELDS)
+    @JsonProperty(value = JSON_PROPERTY_FIELDS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setFields(
             @jakarta.annotation.Nullable List<List<DocumentResponseFieldsInnerInner>> fields) {
@@ -999,13 +1134,13 @@ public class DocumentResponse {
      *
      * @return allowDecline
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ALLOW_DECLINE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ALLOW_DECLINE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getAllowDecline() {
         return allowDecline;
     }
 
-    @JsonProperty(JSON_PROPERTY_ALLOW_DECLINE)
+    @JsonProperty(value = JSON_PROPERTY_ALLOW_DECLINE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setAllowDecline(@jakarta.annotation.Nullable Boolean allowDecline) {
         this.allowDecline = allowDecline;
@@ -1021,13 +1156,13 @@ public class DocumentResponse {
      *
      * @return allowReassign
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ALLOW_REASSIGN)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ALLOW_REASSIGN, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getAllowReassign() {
         return allowReassign;
     }
 
-    @JsonProperty(JSON_PROPERTY_ALLOW_REASSIGN)
+    @JsonProperty(value = JSON_PROPERTY_ALLOW_REASSIGN, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setAllowReassign(@jakarta.annotation.Nullable Boolean allowReassign) {
         this.allowReassign = allowReassign;
@@ -1051,13 +1186,13 @@ public class DocumentResponse {
      *
      * @return labels
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_LABELS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_LABELS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<LabelInfo> getLabels() {
         return labels;
     }
 
-    @JsonProperty(JSON_PROPERTY_LABELS)
+    @JsonProperty(value = JSON_PROPERTY_LABELS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setLabels(@jakarta.annotation.Nullable List<LabelInfo> labels) {
         this.labels = labels;
@@ -1082,17 +1217,82 @@ public class DocumentResponse {
      *
      * @return checkboxGroups
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CHECKBOX_GROUPS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CHECKBOX_GROUPS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<CheckboxGroupInfo> getCheckboxGroups() {
         return checkboxGroups;
     }
 
-    @JsonProperty(JSON_PROPERTY_CHECKBOX_GROUPS)
+    @JsonProperty(value = JSON_PROPERTY_CHECKBOX_GROUPS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCheckboxGroups(
             @jakarta.annotation.Nullable List<CheckboxGroupInfo> checkboxGroups) {
         this.checkboxGroups = checkboxGroups;
+    }
+
+    public DocumentResponse conditionalRules(
+            @jakarta.annotation.Nullable List<ConditionalRuleInfo> conditionalRules) {
+        this.conditionalRules = conditionalRules;
+        return this;
+    }
+
+    public DocumentResponse addConditionalRulesItem(ConditionalRuleInfo conditionalRulesItem) {
+        if (this.conditionalRules == null) {
+            this.conditionalRules = new ArrayList<>();
+        }
+        this.conditionalRules.add(conditionalRulesItem);
+        return this;
+    }
+
+    /**
+     * Get conditionalRules
+     *
+     * @return conditionalRules
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CONDITIONAL_RULES, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public List<ConditionalRuleInfo> getConditionalRules() {
+        return conditionalRules;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_CONDITIONAL_RULES, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setConditionalRules(
+            @jakarta.annotation.Nullable List<ConditionalRuleInfo> conditionalRules) {
+        this.conditionalRules = conditionalRules;
+    }
+
+    public DocumentResponse conditionalLogicDecisions(
+            @jakarta.annotation.Nullable List<ConditionalLogicDecisionInfo> conditionalLogicDecisions) {
+        this.conditionalLogicDecisions = conditionalLogicDecisions;
+        return this;
+    }
+
+    public DocumentResponse addConditionalLogicDecisionsItem(
+            ConditionalLogicDecisionInfo conditionalLogicDecisionsItem) {
+        if (this.conditionalLogicDecisions == null) {
+            this.conditionalLogicDecisions = new ArrayList<>();
+        }
+        this.conditionalLogicDecisions.add(conditionalLogicDecisionsItem);
+        return this;
+    }
+
+    /**
+     * Get conditionalLogicDecisions
+     *
+     * @return conditionalLogicDecisions
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CONDITIONAL_LOGIC_DECISIONS, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public List<ConditionalLogicDecisionInfo> getConditionalLogicDecisions() {
+        return conditionalLogicDecisions;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_CONDITIONAL_LOGIC_DECISIONS, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setConditionalLogicDecisions(
+            @jakarta.annotation.Nullable List<ConditionalLogicDecisionInfo> conditionalLogicDecisions) {
+        this.conditionalLogicDecisions = conditionalLogicDecisions;
     }
 
     /** Return true if this DocumentResponse object is equal to o. */
@@ -1105,7 +1305,9 @@ public class DocumentResponse {
             return false;
         }
         DocumentResponse documentResponse = (DocumentResponse) o;
-        return Objects.equals(this.testMode, documentResponse.testMode)
+        return Objects.equals(this.cfrPart11, documentResponse.cfrPart11)
+                && Objects.equals(this.cfrPart11SigningMode, documentResponse.cfrPart11SigningMode)
+                && Objects.equals(this.testMode, documentResponse.testMode)
                 && Objects.equals(this.id, documentResponse.id)
                 && Objects.equals(this.apiApplicationId, documentResponse.apiApplicationId)
                 && Objects.equals(
@@ -1122,6 +1324,7 @@ public class DocumentResponse {
                 && Objects.equals(this.status, documentResponse.status)
                 && Objects.equals(this.reminders, documentResponse.reminders)
                 && Objects.equals(this.archived, documentResponse.archived)
+                && Objects.equals(this.embedded, documentResponse.embedded)
                 && Objects.equals(this.embeddedSigning, documentResponse.embeddedSigning)
                 && Objects.equals(this.embeddedEditUrl, documentResponse.embeddedEditUrl)
                 && Objects.equals(this.embeddedPreviewUrl, documentResponse.embeddedPreviewUrl)
@@ -1144,12 +1347,17 @@ public class DocumentResponse {
                 && Objects.equals(this.allowDecline, documentResponse.allowDecline)
                 && Objects.equals(this.allowReassign, documentResponse.allowReassign)
                 && Objects.equals(this.labels, documentResponse.labels)
-                && Objects.equals(this.checkboxGroups, documentResponse.checkboxGroups);
+                && Objects.equals(this.checkboxGroups, documentResponse.checkboxGroups)
+                && Objects.equals(this.conditionalRules, documentResponse.conditionalRules)
+                && Objects.equals(
+                        this.conditionalLogicDecisions, documentResponse.conditionalLogicDecisions);
     }
 
     @Override
     public int hashCode() {
         return Objects.hash(
+                cfrPart11,
+                cfrPart11SigningMode,
                 testMode,
                 id,
                 apiApplicationId,
@@ -1166,6 +1374,7 @@ public class DocumentResponse {
                 status,
                 reminders,
                 archived,
+                embedded,
                 embeddedSigning,
                 embeddedEditUrl,
                 embeddedPreviewUrl,
@@ -1186,13 +1395,19 @@ public class DocumentResponse {
                 allowDecline,
                 allowReassign,
                 labels,
-                checkboxGroups);
+                checkboxGroups,
+                conditionalRules,
+                conditionalLogicDecisions);
     }
 
     @Override
     public String toString() {
         StringBuilder sb = new StringBuilder();
         sb.append("class DocumentResponse {\n");
+        sb.append("    cfrPart11: ").append(toIndentedString(cfrPart11)).append("\n");
+        sb.append("    cfrPart11SigningMode: ")
+                .append(toIndentedString(cfrPart11SigningMode))
+                .append("\n");
         sb.append("    testMode: ").append(toIndentedString(testMode)).append("\n");
         sb.append("    id: ").append(toIndentedString(id)).append("\n");
         sb.append("    apiApplicationId: ").append(toIndentedString(apiApplicationId)).append("\n");
@@ -1215,6 +1430,7 @@ public class DocumentResponse {
         sb.append("    status: ").append(toIndentedString(status)).append("\n");
         sb.append("    reminders: ").append(toIndentedString(reminders)).append("\n");
         sb.append("    archived: ").append(toIndentedString(archived)).append("\n");
+        sb.append("    embedded: ").append(toIndentedString(embedded)).append("\n");
         sb.append("    embeddedSigning: ").append(toIndentedString(embeddedSigning)).append("\n");
         sb.append("    embeddedEditUrl: ").append(toIndentedString(embeddedEditUrl)).append("\n");
         sb.append("    embeddedPreviewUrl: ")
@@ -1246,6 +1462,10 @@ public class DocumentResponse {
         sb.append("    allowReassign: ").append(toIndentedString(allowReassign)).append("\n");
         sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
         sb.append("    checkboxGroups: ").append(toIndentedString(checkboxGroups)).append("\n");
+        sb.append("    conditionalRules: ").append(toIndentedString(conditionalRules)).append("\n");
+        sb.append("    conditionalLogicDecisions: ")
+                .append(toIndentedString(conditionalLogicDecisions))
+                .append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -1255,10 +1475,7 @@ public class DocumentResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -1293,10 +1510,34 @@ public class DocumentResponse {
 
         StringJoiner joiner = new StringJoiner("&");
 
+        // add `cfr_part11` to the URL query string
+        if (getCfrPart11() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%scfr_part11%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getCfrPart11()))));
+        }
+
+        // add `cfr_part11_signing_mode` to the URL query string
+        if (getCfrPart11SigningMode() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%scfr_part11_signing_mode%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(
+                                    ApiClient.valueToString(getCfrPart11SigningMode()))));
+        }
+
         // add `test_mode` to the URL query string
         if (getTestMode() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stest_mode%s=%s",
                             prefix,
                             suffix,
@@ -1307,14 +1548,18 @@ public class DocumentResponse {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `api_application_id` to the URL query string
         if (getApiApplicationId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_application_id%s=%s",
                             prefix,
                             suffix,
@@ -1325,6 +1570,7 @@ public class DocumentResponse {
         if (getRequesterEmailAddress() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%srequester_email_address%s=%s",
                             prefix,
                             suffix,
@@ -1336,6 +1582,7 @@ public class DocumentResponse {
         if (getCustomRequesterName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scustom_requester_name%s=%s",
                             prefix,
                             suffix,
@@ -1347,6 +1594,7 @@ public class DocumentResponse {
         if (getCustomRequesterEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scustom_requester_email%s=%s",
                             prefix,
                             suffix,
@@ -1358,6 +1606,7 @@ public class DocumentResponse {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -1368,6 +1617,7 @@ public class DocumentResponse {
         if (getSubject() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssubject%s=%s",
                             prefix,
                             suffix,
@@ -1378,6 +1628,7 @@ public class DocumentResponse {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -1389,13 +1640,18 @@ public class DocumentResponse {
             for (String _key : getMetadata().keySet()) {
                 joiner.add(
                         String.format(
+                                java.util.Locale.ROOT,
                                 "%smetadata%s%s=%s",
                                 prefix,
                                 suffix,
                                 "".equals(suffix)
                                         ? ""
                                         : String.format(
-                                                "%s%d%s", containerPrefix, _key, containerSuffix),
+                                                java.util.Locale.ROOT,
+                                                "%s%d%s",
+                                                containerPrefix,
+                                                _key,
+                                                containerSuffix),
                                 getMetadata().get(_key),
                                 ApiClient.urlEncode(
                                         ApiClient.valueToString(getMetadata().get(_key)))));
@@ -1406,6 +1662,7 @@ public class DocumentResponse {
         if (getCreatedAt() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%screated_at%s=%s",
                             prefix,
                             suffix,
@@ -1416,6 +1673,7 @@ public class DocumentResponse {
         if (getUpdatedAt() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%supdated_at%s=%s",
                             prefix,
                             suffix,
@@ -1431,12 +1689,14 @@ public class DocumentResponse {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%srecipients%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
@@ -1449,6 +1709,7 @@ public class DocumentResponse {
         if (getStatus() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sstatus%s=%s",
                             prefix,
                             suffix,
@@ -1459,6 +1720,7 @@ public class DocumentResponse {
         if (getReminders() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sreminders%s=%s",
                             prefix,
                             suffix,
@@ -1469,16 +1731,23 @@ public class DocumentResponse {
         if (getArchived() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sarchived%s=%s",
                             prefix,
                             suffix,
                             ApiClient.urlEncode(ApiClient.valueToString(getArchived()))));
         }
 
+        // add `embedded` to the URL query string
+        if (getEmbedded() != null) {
+            joiner.add(getEmbedded().toUrlQueryString(prefix + "embedded" + suffix));
+        }
+
         // add `embedded_signing` to the URL query string
         if (getEmbeddedSigning() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sembedded_signing%s=%s",
                             prefix,
                             suffix,
@@ -1489,6 +1758,7 @@ public class DocumentResponse {
         if (getEmbeddedEditUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sembedded_edit_url%s=%s",
                             prefix,
                             suffix,
@@ -1499,6 +1769,7 @@ public class DocumentResponse {
         if (getEmbeddedPreviewUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sembedded_preview_url%s=%s",
                             prefix,
                             suffix,
@@ -1509,6 +1780,7 @@ public class DocumentResponse {
         if (getApplySigningOrder() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapply_signing_order%s=%s",
                             prefix,
                             suffix,
@@ -1519,6 +1791,7 @@ public class DocumentResponse {
         if (getRedirectUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sredirect_url%s=%s",
                             prefix,
                             suffix,
@@ -1529,6 +1802,7 @@ public class DocumentResponse {
         if (getDeclineRedirectUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdecline_redirect_url%s=%s",
                             prefix,
                             suffix,
@@ -1539,6 +1813,7 @@ public class DocumentResponse {
         if (getLanguage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%slanguage%s=%s",
                             prefix,
                             suffix,
@@ -1549,6 +1824,7 @@ public class DocumentResponse {
         if (getExpiresIn() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sexpires_in%s=%s",
                             prefix,
                             suffix,
@@ -1559,6 +1835,7 @@ public class DocumentResponse {
         if (getDeclineMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdecline_message%s=%s",
                             prefix,
                             suffix,
@@ -1569,6 +1846,7 @@ public class DocumentResponse {
         if (getErrorMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%serror_message%s=%s",
                             prefix,
                             suffix,
@@ -1579,6 +1857,7 @@ public class DocumentResponse {
         if (getTemplateId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stemplate_id%s=%s",
                             prefix,
                             suffix,
@@ -1591,13 +1870,18 @@ public class DocumentResponse {
                 if (getTemplateIds().get(i) != null) {
                     joiner.add(
                             String.format(
+                                    java.util.Locale.ROOT,
                                     "%stemplate_ids%s%s=%s",
                                     prefix,
                                     suffix,
                                     "".equals(suffix)
                                             ? ""
                                             : String.format(
-                                                    "%s%d%s", containerPrefix, i, containerSuffix),
+                                                    java.util.Locale.ROOT,
+                                                    "%s%d%s",
+                                                    containerPrefix,
+                                                    i,
+                                                    containerSuffix),
                                     ApiClient.urlEncode(
                                             ApiClient.valueToString(getTemplateIds().get(i)))));
                 }
@@ -1608,6 +1892,7 @@ public class DocumentResponse {
         if (getEmbeddedSigningNotifications() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sembedded_signing_notifications%s=%s",
                             prefix,
                             suffix,
@@ -1624,12 +1909,14 @@ public class DocumentResponse {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%sattachment_requests%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
@@ -1647,12 +1934,14 @@ public class DocumentResponse {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%sfiles%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
@@ -1670,12 +1959,14 @@ public class DocumentResponse {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%scopied_contacts%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
@@ -1690,13 +1981,18 @@ public class DocumentResponse {
                 if (getFields().get(i) != null) {
                     joiner.add(
                             String.format(
+                                    java.util.Locale.ROOT,
                                     "%sfields%s%s=%s",
                                     prefix,
                                     suffix,
                                     "".equals(suffix)
                                             ? ""
                                             : String.format(
-                                                    "%s%d%s", containerPrefix, i, containerSuffix),
+                                                    java.util.Locale.ROOT,
+                                                    "%s%d%s",
+                                                    containerPrefix,
+                                                    i,
+                                                    containerSuffix),
                                     ApiClient.urlEncode(
                                             ApiClient.valueToString(getFields().get(i)))));
                 }
@@ -1707,6 +2003,7 @@ public class DocumentResponse {
         if (getAllowDecline() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sallow_decline%s=%s",
                             prefix,
                             suffix,
@@ -1717,6 +2014,7 @@ public class DocumentResponse {
         if (getAllowReassign() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sallow_reassign%s=%s",
                             prefix,
                             suffix,
@@ -1732,12 +2030,14 @@ public class DocumentResponse {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%slabels%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
@@ -1755,12 +2055,64 @@ public class DocumentResponse {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%scheckbox_groups%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
+                                                                    "%s%d%s",
+                                                                    containerPrefix,
+                                                                    i,
+                                                                    containerSuffix))));
+                }
+            }
+        }
+
+        // add `conditional_rules` to the URL query string
+        if (getConditionalRules() != null) {
+            for (int i = 0; i < getConditionalRules().size(); i++) {
+                if (getConditionalRules().get(i) != null) {
+                    joiner.add(
+                            getConditionalRules()
+                                    .get(i)
+                                    .toUrlQueryString(
+                                            String.format(
+                                                    java.util.Locale.ROOT,
+                                                    "%sconditional_rules%s%s",
+                                                    prefix,
+                                                    suffix,
+                                                    "".equals(suffix)
+                                                            ? ""
+                                                            : String.format(
+                                                                    java.util.Locale.ROOT,
+                                                                    "%s%d%s",
+                                                                    containerPrefix,
+                                                                    i,
+                                                                    containerSuffix))));
+                }
+            }
+        }
+
+        // add `conditional_logic_decisions` to the URL query string
+        if (getConditionalLogicDecisions() != null) {
+            for (int i = 0; i < getConditionalLogicDecisions().size(); i++) {
+                if (getConditionalLogicDecisions().get(i) != null) {
+                    joiner.add(
+                            getConditionalLogicDecisions()
+                                    .get(i)
+                                    .toUrlQueryString(
+                                            String.format(
+                                                    java.util.Locale.ROOT,
+                                                    "%sconditional_logic_decisions%s%s",
+                                                    prefix,
+                                                    suffix,
+                                                    "".equals(suffix)
+                                                            ? ""
+                                                            : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,

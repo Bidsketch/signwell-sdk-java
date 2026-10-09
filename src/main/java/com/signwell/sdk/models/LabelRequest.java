@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({LabelRequest.JSON_PROPERTY_NAME})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class LabelRequest {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nonnull private String name;
@@ -45,13 +45,13 @@ public class LabelRequest {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -89,10 +89,7 @@ public class LabelRequest {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -131,6 +128,7 @@ public class LabelRequest {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,

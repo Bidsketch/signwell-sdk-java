@@ -24,11 +24,12 @@ import java.util.StringJoiner;
     PlaceholdersInner.JSON_PROPERTY_ID,
     PlaceholdersInner.JSON_PROPERTY_NAME,
     PlaceholdersInner.JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME,
-    PlaceholdersInner.JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL
+    PlaceholdersInner.JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL,
+    PlaceholdersInner.JSON_PROPERTY_PASSCODE_DELIVERY
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class PlaceholdersInner {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private String id;
@@ -44,6 +45,9 @@ public class PlaceholdersInner {
             "preassigned_recipient_email";
     @jakarta.annotation.Nullable private String preassignedRecipientEmail;
 
+    public static final String JSON_PROPERTY_PASSCODE_DELIVERY = "passcode_delivery";
+    @jakarta.annotation.Nullable private PlaceholdersInnerPasscodeDelivery passcodeDelivery;
+
     public PlaceholdersInner() {}
 
     public PlaceholdersInner id(@jakarta.annotation.Nonnull String id) {
@@ -58,13 +62,13 @@ public class PlaceholdersInner {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull String id) {
         this.id = id;
@@ -81,13 +85,13 @@ public class PlaceholdersInner {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -102,17 +106,18 @@ public class PlaceholdersInner {
     /**
      * In some cases, it may be necessary to pre-fill the name and email for a placeholder because
      * it will always be the same person for all documents created from this template. This sets the
-     * name.
+     * name. Every recipient on a 21 CFR Part 11 document needs a name, so leaving it unset means
+     * the name has to be supplied when the document is created.
      *
      * @return preassignedRecipientName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPreassignedRecipientName() {
         return preassignedRecipientName;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME)
+    @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreassignedRecipientName(
             @jakarta.annotation.Nullable String preassignedRecipientName) {
@@ -132,17 +137,41 @@ public class PlaceholdersInner {
      *
      * @return preassignedRecipientEmail
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPreassignedRecipientEmail() {
         return preassignedRecipientEmail;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreassignedRecipientEmail(
             @jakarta.annotation.Nullable String preassignedRecipientEmail) {
         this.preassignedRecipientEmail = preassignedRecipientEmail;
+    }
+
+    public PlaceholdersInner passcodeDelivery(
+            @jakarta.annotation.Nullable PlaceholdersInnerPasscodeDelivery passcodeDelivery) {
+        this.passcodeDelivery = passcodeDelivery;
+        return this;
+    }
+
+    /**
+     * Get passcodeDelivery
+     *
+     * @return passcodeDelivery
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public PlaceholdersInnerPasscodeDelivery getPasscodeDelivery() {
+        return passcodeDelivery;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setPasscodeDelivery(
+            @jakarta.annotation.Nullable PlaceholdersInnerPasscodeDelivery passcodeDelivery) {
+        this.passcodeDelivery = passcodeDelivery;
     }
 
     /** Return true if this Placeholders_inner object is equal to o. */
@@ -160,13 +189,14 @@ public class PlaceholdersInner {
                 && Objects.equals(
                         this.preassignedRecipientName, placeholdersInner.preassignedRecipientName)
                 && Objects.equals(
-                        this.preassignedRecipientEmail,
-                        placeholdersInner.preassignedRecipientEmail);
+                        this.preassignedRecipientEmail, placeholdersInner.preassignedRecipientEmail)
+                && Objects.equals(this.passcodeDelivery, placeholdersInner.passcodeDelivery);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, preassignedRecipientName, preassignedRecipientEmail);
+        return Objects.hash(
+                id, name, preassignedRecipientName, preassignedRecipientEmail, passcodeDelivery);
     }
 
     @Override
@@ -181,6 +211,7 @@ public class PlaceholdersInner {
         sb.append("    preassignedRecipientEmail: ")
                 .append(toIndentedString(preassignedRecipientEmail))
                 .append("\n");
+        sb.append("    passcodeDelivery: ").append(toIndentedString(passcodeDelivery)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -190,10 +221,7 @@ public class PlaceholdersInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -232,14 +260,18 @@ public class PlaceholdersInner {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -250,6 +282,7 @@ public class PlaceholdersInner {
         if (getPreassignedRecipientName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spreassigned_recipient_name%s=%s",
                             prefix,
                             suffix,
@@ -261,11 +294,18 @@ public class PlaceholdersInner {
         if (getPreassignedRecipientEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spreassigned_recipient_email%s=%s",
                             prefix,
                             suffix,
                             ApiClient.urlEncode(
                                     ApiClient.valueToString(getPreassignedRecipientEmail()))));
+        }
+
+        // add `passcode_delivery` to the URL query string
+        if (getPasscodeDelivery() != null) {
+            joiner.add(
+                    getPasscodeDelivery().toUrlQueryString(prefix + "passcode_delivery" + suffix));
         }
 
         return joiner.toString();

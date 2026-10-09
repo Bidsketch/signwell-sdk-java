@@ -34,6 +34,8 @@ import java.util.StringJoiner;
     FieldsInnerInner.JSON_PROPERTY_API_ID,
     FieldsInnerInner.JSON_PROPERTY_NAME,
     FieldsInnerInner.JSON_PROPERTY_VALIDATION,
+    FieldsInnerInner.JSON_PROPERTY_VALIDATION_REGEX,
+    FieldsInnerInner.JSON_PROPERTY_VALIDATION_REGEX_ERROR_MESSAGE,
     FieldsInnerInner.JSON_PROPERTY_FIXED_WIDTH,
     FieldsInnerInner.JSON_PROPERTY_LOCK_SIGN_DATE,
     FieldsInnerInner.JSON_PROPERTY_DATE_FORMAT,
@@ -45,7 +47,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class FieldsInnerInner {
     public static final String JSON_PROPERTY_X = "x";
     @jakarta.annotation.Nonnull private Float x;
@@ -79,6 +81,13 @@ public class FieldsInnerInner {
 
     public static final String JSON_PROPERTY_VALIDATION = "validation";
     @jakarta.annotation.Nullable private TextValidation validation;
+
+    public static final String JSON_PROPERTY_VALIDATION_REGEX = "validation_regex";
+    @jakarta.annotation.Nullable private String validationRegex;
+
+    public static final String JSON_PROPERTY_VALIDATION_REGEX_ERROR_MESSAGE =
+            "validation_regex_error_message";
+    @jakarta.annotation.Nullable private String validationRegexErrorMessage;
 
     public static final String JSON_PROPERTY_FIXED_WIDTH = "fixed_width";
     @jakarta.annotation.Nullable private Boolean fixedWidth = false;
@@ -118,13 +127,13 @@ public class FieldsInnerInner {
      * @return x
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_X)
+    @JsonProperty(value = JSON_PROPERTY_X, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Float getX() {
         return x;
     }
 
-    @JsonProperty(JSON_PROPERTY_X)
+    @JsonProperty(value = JSON_PROPERTY_X, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setX(@jakarta.annotation.Nonnull Float x) {
         this.x = x;
@@ -142,13 +151,13 @@ public class FieldsInnerInner {
      * @return y
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_Y)
+    @JsonProperty(value = JSON_PROPERTY_Y, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Float getY() {
         return y;
     }
 
-    @JsonProperty(JSON_PROPERTY_Y)
+    @JsonProperty(value = JSON_PROPERTY_Y, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setY(@jakarta.annotation.Nonnull Float y) {
         this.y = y;
@@ -166,13 +175,13 @@ public class FieldsInnerInner {
      * @return page
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_PAGE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getPage() {
         return page;
     }
 
-    @JsonProperty(JSON_PROPERTY_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_PAGE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setPage(@jakarta.annotation.Nonnull Integer page) {
         this.page = page;
@@ -190,13 +199,13 @@ public class FieldsInnerInner {
      * @return recipientId
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_RECIPIENT_ID)
+    @JsonProperty(value = JSON_PROPERTY_RECIPIENT_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getRecipientId() {
         return recipientId;
     }
 
-    @JsonProperty(JSON_PROPERTY_RECIPIENT_ID)
+    @JsonProperty(value = JSON_PROPERTY_RECIPIENT_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setRecipientId(@jakarta.annotation.Nonnull String recipientId) {
         this.recipientId = recipientId;
@@ -213,13 +222,13 @@ public class FieldsInnerInner {
      * @return type
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TYPE)
+    @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public FieldType getType() {
         return type;
     }
 
-    @JsonProperty(JSON_PROPERTY_TYPE)
+    @JsonProperty(value = JSON_PROPERTY_TYPE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setType(@jakarta.annotation.Nonnull FieldType type) {
         this.type = type;
@@ -236,13 +245,13 @@ public class FieldsInnerInner {
      *
      * @return required
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_REQUIRED)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_REQUIRED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getRequired() {
         return required;
     }
 
-    @JsonProperty(JSON_PROPERTY_REQUIRED)
+    @JsonProperty(value = JSON_PROPERTY_REQUIRED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setRequired(@jakarta.annotation.Nullable Boolean required) {
         this.required = required;
@@ -258,13 +267,13 @@ public class FieldsInnerInner {
      *
      * @return label
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_LABEL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_LABEL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getLabel() {
         return label;
     }
 
-    @JsonProperty(JSON_PROPERTY_LABEL)
+    @JsonProperty(value = JSON_PROPERTY_LABEL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setLabel(@jakarta.annotation.Nullable String label) {
         this.label = label;
@@ -281,13 +290,13 @@ public class FieldsInnerInner {
      *
      * @return value
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_VALUE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_VALUE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public AdditionalFieldsInnerInnerValue getValue() {
         return value;
     }
 
-    @JsonProperty(JSON_PROPERTY_VALUE)
+    @JsonProperty(value = JSON_PROPERTY_VALUE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setValue(@jakarta.annotation.Nullable AdditionalFieldsInnerInnerValue value) {
         this.value = value;
@@ -304,13 +313,13 @@ public class FieldsInnerInner {
      *
      * @return apiId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getApiId() {
         return apiId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiId(@jakarta.annotation.Nullable String apiId) {
         this.apiId = apiId;
@@ -327,13 +336,13 @@ public class FieldsInnerInner {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -349,16 +358,64 @@ public class FieldsInnerInner {
      *
      * @return validation
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_VALIDATION)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_VALIDATION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public TextValidation getValidation() {
         return validation;
     }
 
-    @JsonProperty(JSON_PROPERTY_VALIDATION)
+    @JsonProperty(value = JSON_PROPERTY_VALIDATION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setValidation(@jakarta.annotation.Nullable TextValidation validation) {
         this.validation = validation;
+    }
+
+    public FieldsInnerInner validationRegex(@jakarta.annotation.Nullable String validationRegex) {
+        this.validationRegex = validationRegex;
+        return this;
+    }
+
+    /**
+     * Text fields with custom validation only: the regex pattern used to validate field values.
+     * Required when validation is set to custom.
+     *
+     * @return validationRegex
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_VALIDATION_REGEX, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public String getValidationRegex() {
+        return validationRegex;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_VALIDATION_REGEX, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setValidationRegex(@jakarta.annotation.Nullable String validationRegex) {
+        this.validationRegex = validationRegex;
+    }
+
+    public FieldsInnerInner validationRegexErrorMessage(
+            @jakarta.annotation.Nullable String validationRegexErrorMessage) {
+        this.validationRegexErrorMessage = validationRegexErrorMessage;
+        return this;
+    }
+
+    /**
+     * Text fields with custom validation only: the error message shown to the recipient when their
+     * input doesn&#39;t match the regex pattern. Required when validation is set to custom.
+     *
+     * @return validationRegexErrorMessage
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_VALIDATION_REGEX_ERROR_MESSAGE, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public String getValidationRegexErrorMessage() {
+        return validationRegexErrorMessage;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_VALIDATION_REGEX_ERROR_MESSAGE, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setValidationRegexErrorMessage(
+            @jakarta.annotation.Nullable String validationRegexErrorMessage) {
+        this.validationRegexErrorMessage = validationRegexErrorMessage;
     }
 
     public FieldsInnerInner fixedWidth(@jakarta.annotation.Nullable Boolean fixedWidth) {
@@ -373,13 +430,13 @@ public class FieldsInnerInner {
      *
      * @return fixedWidth
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_FIXED_WIDTH)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_FIXED_WIDTH, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getFixedWidth() {
         return fixedWidth;
     }
 
-    @JsonProperty(JSON_PROPERTY_FIXED_WIDTH)
+    @JsonProperty(value = JSON_PROPERTY_FIXED_WIDTH, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setFixedWidth(@jakarta.annotation.Nullable Boolean fixedWidth) {
         this.fixedWidth = fixedWidth;
@@ -396,13 +453,13 @@ public class FieldsInnerInner {
      *
      * @return lockSignDate
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_LOCK_SIGN_DATE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_LOCK_SIGN_DATE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getLockSignDate() {
         return lockSignDate;
     }
 
-    @JsonProperty(JSON_PROPERTY_LOCK_SIGN_DATE)
+    @JsonProperty(value = JSON_PROPERTY_LOCK_SIGN_DATE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setLockSignDate(@jakarta.annotation.Nullable Boolean lockSignDate) {
         this.lockSignDate = lockSignDate;
@@ -418,13 +475,13 @@ public class FieldsInnerInner {
      *
      * @return dateFormat
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DATE_FORMAT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DATE_FORMAT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public DateFormat getDateFormat() {
         return dateFormat;
     }
 
-    @JsonProperty(JSON_PROPERTY_DATE_FORMAT)
+    @JsonProperty(value = JSON_PROPERTY_DATE_FORMAT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDateFormat(@jakarta.annotation.Nullable DateFormat dateFormat) {
         this.dateFormat = dateFormat;
@@ -442,13 +499,13 @@ public class FieldsInnerInner {
      *
      * @return height
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_HEIGHT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_HEIGHT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Float getHeight() {
         return height;
     }
 
-    @JsonProperty(JSON_PROPERTY_HEIGHT)
+    @JsonProperty(value = JSON_PROPERTY_HEIGHT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setHeight(@jakarta.annotation.Nullable Float height) {
         this.height = height;
@@ -465,13 +522,13 @@ public class FieldsInnerInner {
      *
      * @return width
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_WIDTH)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_WIDTH, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Float getWidth() {
         return width;
     }
 
-    @JsonProperty(JSON_PROPERTY_WIDTH)
+    @JsonProperty(value = JSON_PROPERTY_WIDTH, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setWidth(@jakarta.annotation.Nullable Float width) {
         this.width = width;
@@ -495,13 +552,13 @@ public class FieldsInnerInner {
      *
      * @return options
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_OPTIONS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_OPTIONS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<DropdownOption> getOptions() {
         return options;
     }
 
-    @JsonProperty(JSON_PROPERTY_OPTIONS)
+    @JsonProperty(value = JSON_PROPERTY_OPTIONS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setOptions(@jakarta.annotation.Nullable List<DropdownOption> options) {
         this.options = options;
@@ -517,13 +574,13 @@ public class FieldsInnerInner {
      *
      * @return defaultOption
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DEFAULT_OPTION)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DEFAULT_OPTION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getDefaultOption() {
         return defaultOption;
     }
 
-    @JsonProperty(JSON_PROPERTY_DEFAULT_OPTION)
+    @JsonProperty(value = JSON_PROPERTY_DEFAULT_OPTION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDefaultOption(@jakarta.annotation.Nullable String defaultOption) {
         this.defaultOption = defaultOption;
@@ -539,13 +596,13 @@ public class FieldsInnerInner {
      *
      * @return allowOther
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ALLOW_OTHER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ALLOW_OTHER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getAllowOther() {
         return allowOther;
     }
 
-    @JsonProperty(JSON_PROPERTY_ALLOW_OTHER)
+    @JsonProperty(value = JSON_PROPERTY_ALLOW_OTHER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setAllowOther(@jakarta.annotation.Nullable Boolean allowOther) {
         this.allowOther = allowOther;
@@ -572,6 +629,10 @@ public class FieldsInnerInner {
                 && Objects.equals(this.apiId, fieldsInnerInner.apiId)
                 && Objects.equals(this.name, fieldsInnerInner.name)
                 && Objects.equals(this.validation, fieldsInnerInner.validation)
+                && Objects.equals(this.validationRegex, fieldsInnerInner.validationRegex)
+                && Objects.equals(
+                        this.validationRegexErrorMessage,
+                        fieldsInnerInner.validationRegexErrorMessage)
                 && Objects.equals(this.fixedWidth, fieldsInnerInner.fixedWidth)
                 && Objects.equals(this.lockSignDate, fieldsInnerInner.lockSignDate)
                 && Objects.equals(this.dateFormat, fieldsInnerInner.dateFormat)
@@ -596,6 +657,8 @@ public class FieldsInnerInner {
                 apiId,
                 name,
                 validation,
+                validationRegex,
+                validationRegexErrorMessage,
                 fixedWidth,
                 lockSignDate,
                 dateFormat,
@@ -621,6 +684,10 @@ public class FieldsInnerInner {
         sb.append("    apiId: ").append(toIndentedString(apiId)).append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    validation: ").append(toIndentedString(validation)).append("\n");
+        sb.append("    validationRegex: ").append(toIndentedString(validationRegex)).append("\n");
+        sb.append("    validationRegexErrorMessage: ")
+                .append(toIndentedString(validationRegexErrorMessage))
+                .append("\n");
         sb.append("    fixedWidth: ").append(toIndentedString(fixedWidth)).append("\n");
         sb.append("    lockSignDate: ").append(toIndentedString(lockSignDate)).append("\n");
         sb.append("    dateFormat: ").append(toIndentedString(dateFormat)).append("\n");
@@ -638,10 +705,7 @@ public class FieldsInnerInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -680,22 +744,29 @@ public class FieldsInnerInner {
         if (getX() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sx%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getX()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getX()))));
         }
 
         // add `y` to the URL query string
         if (getY() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sy%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getY()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getY()))));
         }
 
         // add `page` to the URL query string
         if (getPage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spage%s=%s",
                             prefix,
                             suffix,
@@ -706,6 +777,7 @@ public class FieldsInnerInner {
         if (getRecipientId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%srecipient_id%s=%s",
                             prefix,
                             suffix,
@@ -716,6 +788,7 @@ public class FieldsInnerInner {
         if (getType() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stype%s=%s",
                             prefix,
                             suffix,
@@ -726,6 +799,7 @@ public class FieldsInnerInner {
         if (getRequired() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%srequired%s=%s",
                             prefix,
                             suffix,
@@ -736,6 +810,7 @@ public class FieldsInnerInner {
         if (getLabel() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%slabel%s=%s",
                             prefix,
                             suffix,
@@ -751,6 +826,7 @@ public class FieldsInnerInner {
         if (getApiId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_id%s=%s",
                             prefix,
                             suffix,
@@ -761,6 +837,7 @@ public class FieldsInnerInner {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -771,16 +848,41 @@ public class FieldsInnerInner {
         if (getValidation() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%svalidation%s=%s",
                             prefix,
                             suffix,
                             ApiClient.urlEncode(ApiClient.valueToString(getValidation()))));
         }
 
+        // add `validation_regex` to the URL query string
+        if (getValidationRegex() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%svalidation_regex%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getValidationRegex()))));
+        }
+
+        // add `validation_regex_error_message` to the URL query string
+        if (getValidationRegexErrorMessage() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%svalidation_regex_error_message%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(
+                                    ApiClient.valueToString(getValidationRegexErrorMessage()))));
+        }
+
         // add `fixed_width` to the URL query string
         if (getFixedWidth() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sfixed_width%s=%s",
                             prefix,
                             suffix,
@@ -791,6 +893,7 @@ public class FieldsInnerInner {
         if (getLockSignDate() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%slock_sign_date%s=%s",
                             prefix,
                             suffix,
@@ -801,6 +904,7 @@ public class FieldsInnerInner {
         if (getDateFormat() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdate_format%s=%s",
                             prefix,
                             suffix,
@@ -811,6 +915,7 @@ public class FieldsInnerInner {
         if (getHeight() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sheight%s=%s",
                             prefix,
                             suffix,
@@ -821,6 +926,7 @@ public class FieldsInnerInner {
         if (getWidth() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%swidth%s=%s",
                             prefix,
                             suffix,
@@ -836,12 +942,14 @@ public class FieldsInnerInner {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%soptions%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
@@ -854,6 +962,7 @@ public class FieldsInnerInner {
         if (getDefaultOption() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdefault_option%s=%s",
                             prefix,
                             suffix,
@@ -864,6 +973,7 @@ public class FieldsInnerInner {
         if (getAllowOther() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sallow_other%s=%s",
                             prefix,
                             suffix,

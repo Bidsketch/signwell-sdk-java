@@ -23,7 +23,7 @@ import java.util.List;
 import java.util.Objects;
 import java.util.StringJoiner;
 
-/** Passcode delivery settings. */
+/** Passcode delivery settings. Always on for 21 CFR Part 11 documents and cannot be disabled. */
 @JsonPropertyOrder({
     PasscodeDelivery.JSON_PROPERTY_ENABLED,
     PasscodeDelivery.JSON_PROPERTY_METHODS,
@@ -31,7 +31,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class PasscodeDelivery {
     public static final String JSON_PROPERTY_ENABLED = "enabled";
     @jakarta.annotation.Nullable private Boolean enabled;
@@ -83,17 +83,18 @@ public class PasscodeDelivery {
     }
 
     /**
-     * Enable or disable passcode delivery.
+     * Enable or disable passcode delivery. Cannot be set to &#x60;false&#x60; on a 21 CFR Part 11
+     * document: it returns a 422.
      *
      * @return enabled
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ENABLED)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ENABLED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getEnabled() {
         return enabled;
     }
 
-    @JsonProperty(JSON_PROPERTY_ENABLED)
+    @JsonProperty(value = JSON_PROPERTY_ENABLED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEnabled(@jakarta.annotation.Nullable Boolean enabled) {
         this.enabled = enabled;
@@ -117,13 +118,13 @@ public class PasscodeDelivery {
      *
      * @return methods
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_METHODS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_METHODS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<MethodsEnum> getMethods() {
         return methods;
     }
 
-    @JsonProperty(JSON_PROPERTY_METHODS)
+    @JsonProperty(value = JSON_PROPERTY_METHODS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMethods(@jakarta.annotation.Nullable List<MethodsEnum> methods) {
         this.methods = methods;
@@ -136,23 +137,25 @@ public class PasscodeDelivery {
     }
 
     /**
-     * Clear passcode after successful authentication.
+     * Clear passcode after successful authentication. If passcode_delivery is also enabled, a new
+     * passcode is auto-generated on the next send request. Otherwise the recipient will no longer
+     * need a passcode.
      *
      * @return expireAfterAccess
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EXPIRE_AFTER_ACCESS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EXPIRE_AFTER_ACCESS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getExpireAfterAccess() {
         return expireAfterAccess;
     }
 
-    @JsonProperty(JSON_PROPERTY_EXPIRE_AFTER_ACCESS)
+    @JsonProperty(value = JSON_PROPERTY_EXPIRE_AFTER_ACCESS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setExpireAfterAccess(@jakarta.annotation.Nullable Boolean expireAfterAccess) {
         this.expireAfterAccess = expireAfterAccess;
     }
 
-    /** Return true if this passcode_delivery object is equal to o. */
+    /** Return true if this PasscodeDelivery object is equal to o. */
     @Override
     public boolean equals(Object o) {
         if (this == o) {
@@ -190,10 +193,7 @@ public class PasscodeDelivery {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -232,6 +232,7 @@ public class PasscodeDelivery {
         if (getEnabled() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%senabled%s=%s",
                             prefix,
                             suffix,
@@ -243,13 +244,18 @@ public class PasscodeDelivery {
             for (int i = 0; i < getMethods().size(); i++) {
                 joiner.add(
                         String.format(
+                                java.util.Locale.ROOT,
                                 "%smethods%s%s=%s",
                                 prefix,
                                 suffix,
                                 "".equals(suffix)
                                         ? ""
                                         : String.format(
-                                                "%s%d%s", containerPrefix, i, containerSuffix),
+                                                java.util.Locale.ROOT,
+                                                "%s%d%s",
+                                                containerPrefix,
+                                                i,
+                                                containerSuffix),
                                 ApiClient.urlEncode(ApiClient.valueToString(getMethods().get(i)))));
             }
         }
@@ -258,6 +264,7 @@ public class PasscodeDelivery {
         if (getExpireAfterAccess() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sexpire_after_access%s=%s",
                             prefix,
                             suffix,

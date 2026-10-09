@@ -33,7 +33,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class Nom151CertificateResponseNom151 {
     public static final String JSON_PROPERTY_STATUS = "status";
     @jakarta.annotation.Nonnull private String status;
@@ -72,13 +72,13 @@ public class Nom151CertificateResponseNom151 {
      * @return status
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_STATUS)
+    @JsonProperty(value = JSON_PROPERTY_STATUS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getStatus() {
         return status;
     }
 
-    @JsonProperty(JSON_PROPERTY_STATUS)
+    @JsonProperty(value = JSON_PROPERTY_STATUS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setStatus(@jakarta.annotation.Nonnull String status) {
         this.status = status;
@@ -96,13 +96,13 @@ public class Nom151CertificateResponseNom151 {
      * @return transactionId
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+    @JsonProperty(value = JSON_PROPERTY_TRANSACTION_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getTransactionId() {
         return transactionId;
     }
 
-    @JsonProperty(JSON_PROPERTY_TRANSACTION_ID)
+    @JsonProperty(value = JSON_PROPERTY_TRANSACTION_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTransactionId(@jakarta.annotation.Nonnull String transactionId) {
         this.transactionId = transactionId;
@@ -119,13 +119,13 @@ public class Nom151CertificateResponseNom151 {
      * @return hash
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_HASH)
+    @JsonProperty(value = JSON_PROPERTY_HASH, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getHash() {
         return hash;
     }
 
-    @JsonProperty(JSON_PROPERTY_HASH)
+    @JsonProperty(value = JSON_PROPERTY_HASH, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setHash(@jakarta.annotation.Nonnull String hash) {
         this.hash = hash;
@@ -142,13 +142,13 @@ public class Nom151CertificateResponseNom151 {
      * @return folio
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_FOLIO)
+    @JsonProperty(value = JSON_PROPERTY_FOLIO, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getFolio() {
         return folio;
     }
 
-    @JsonProperty(JSON_PROPERTY_FOLIO)
+    @JsonProperty(value = JSON_PROPERTY_FOLIO, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setFolio(@jakarta.annotation.Nonnull String folio) {
         this.folio = folio;
@@ -166,13 +166,13 @@ public class Nom151CertificateResponseNom151 {
      * @return issuedAt
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ISSUED_AT)
+    @JsonProperty(value = JSON_PROPERTY_ISSUED_AT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public OffsetDateTime getIssuedAt() {
         return issuedAt;
     }
 
-    @JsonProperty(JSON_PROPERTY_ISSUED_AT)
+    @JsonProperty(value = JSON_PROPERTY_ISSUED_AT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setIssuedAt(@jakarta.annotation.Nonnull OffsetDateTime issuedAt) {
         this.issuedAt = issuedAt;
@@ -189,13 +189,13 @@ public class Nom151CertificateResponseNom151 {
      * @return provider
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_PROVIDER)
+    @JsonProperty(value = JSON_PROPERTY_PROVIDER, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getProvider() {
         return provider;
     }
 
-    @JsonProperty(JSON_PROPERTY_PROVIDER)
+    @JsonProperty(value = JSON_PROPERTY_PROVIDER, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setProvider(@jakarta.annotation.Nonnull String provider) {
         this.provider = provider;
@@ -213,13 +213,13 @@ public class Nom151CertificateResponseNom151 {
      * @return validationUrl
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_VALIDATION_URL)
+    @JsonProperty(value = JSON_PROPERTY_VALIDATION_URL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getValidationUrl() {
         return validationUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_VALIDATION_URL)
+    @JsonProperty(value = JSON_PROPERTY_VALIDATION_URL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setValidationUrl(@jakarta.annotation.Nonnull String validationUrl) {
         this.validationUrl = validationUrl;
@@ -237,13 +237,13 @@ public class Nom151CertificateResponseNom151 {
      * @return constancia
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_CONSTANCIA)
+    @JsonProperty(value = JSON_PROPERTY_CONSTANCIA, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getConstancia() {
         return constancia;
     }
 
-    @JsonProperty(JSON_PROPERTY_CONSTANCIA)
+    @JsonProperty(value = JSON_PROPERTY_CONSTANCIA, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setConstancia(@jakarta.annotation.Nonnull String constancia) {
         this.constancia = constancia;
@@ -297,10 +297,7 @@ public class Nom151CertificateResponseNom151 {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -339,6 +336,7 @@ public class Nom151CertificateResponseNom151 {
         if (getStatus() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sstatus%s=%s",
                             prefix,
                             suffix,
@@ -349,6 +347,7 @@ public class Nom151CertificateResponseNom151 {
         if (getTransactionId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stransactionId%s=%s",
                             prefix,
                             suffix,
@@ -359,6 +358,7 @@ public class Nom151CertificateResponseNom151 {
         if (getHash() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%shash%s=%s",
                             prefix,
                             suffix,
@@ -369,6 +369,7 @@ public class Nom151CertificateResponseNom151 {
         if (getFolio() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sfolio%s=%s",
                             prefix,
                             suffix,
@@ -379,6 +380,7 @@ public class Nom151CertificateResponseNom151 {
         if (getIssuedAt() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sissuedAt%s=%s",
                             prefix,
                             suffix,
@@ -389,6 +391,7 @@ public class Nom151CertificateResponseNom151 {
         if (getProvider() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sprovider%s=%s",
                             prefix,
                             suffix,
@@ -399,6 +402,7 @@ public class Nom151CertificateResponseNom151 {
         if (getValidationUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%svalidationUrl%s=%s",
                             prefix,
                             suffix,
@@ -409,6 +413,7 @@ public class Nom151CertificateResponseNom151 {
         if (getConstancia() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sconstancia%s=%s",
                             prefix,
                             suffix,

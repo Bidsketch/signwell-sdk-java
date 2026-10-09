@@ -23,7 +23,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({RateLimitErrorResponse.JSON_PROPERTY_ERROR})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class RateLimitErrorResponse {
     public static final String JSON_PROPERTY_ERROR = "error";
     @jakarta.annotation.Nonnull private String error;
@@ -41,13 +41,13 @@ public class RateLimitErrorResponse {
      * @return error
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ERROR)
+    @JsonProperty(value = JSON_PROPERTY_ERROR, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getError() {
         return error;
     }
 
-    @JsonProperty(JSON_PROPERTY_ERROR)
+    @JsonProperty(value = JSON_PROPERTY_ERROR, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setError(@jakarta.annotation.Nonnull String error) {
         this.error = error;
@@ -85,10 +85,7 @@ public class RateLimitErrorResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -127,6 +124,7 @@ public class RateLimitErrorResponse {
         if (getError() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%serror%s=%s",
                             prefix,
                             suffix,

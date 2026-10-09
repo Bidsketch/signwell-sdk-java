@@ -30,11 +30,12 @@ import java.util.StringJoiner;
     DocumentTemplateResponsePlaceholdersInner.JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME,
     DocumentTemplateResponsePlaceholdersInner.JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL,
     DocumentTemplateResponsePlaceholdersInner.JSON_PROPERTY_SIGNING_ORDER,
-    DocumentTemplateResponsePlaceholdersInner.JSON_PROPERTY_ATTACHMENT_REQUESTS
+    DocumentTemplateResponsePlaceholdersInner.JSON_PROPERTY_ATTACHMENT_REQUESTS,
+    DocumentTemplateResponsePlaceholdersInner.JSON_PROPERTY_PASSCODE_DELIVERY
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class DocumentTemplateResponsePlaceholdersInner {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nullable private String id;
@@ -63,6 +64,10 @@ public class DocumentTemplateResponsePlaceholdersInner {
 
     @jakarta.annotation.Nullable private List<AttachmentRequestInfo> attachmentRequests = new ArrayList<>();
 
+    public static final String JSON_PROPERTY_PASSCODE_DELIVERY = "passcode_delivery";
+
+    @jakarta.annotation.Nullable private DocumentResponseRecipientsInnerPasscodeDelivery passcodeDelivery;
+
     public DocumentTemplateResponsePlaceholdersInner() {}
 
     public DocumentTemplateResponsePlaceholdersInner id(@jakarta.annotation.Nullable String id) {
@@ -75,13 +80,13 @@ public class DocumentTemplateResponsePlaceholdersInner {
      *
      * @return id
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setId(@jakarta.annotation.Nullable String id) {
         this.id = id;
@@ -98,13 +103,13 @@ public class DocumentTemplateResponsePlaceholdersInner {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -121,13 +126,13 @@ public class DocumentTemplateResponsePlaceholdersInner {
      *
      * @return subject
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getSubject() {
         return subject;
     }
 
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSubject(@jakarta.annotation.Nullable String subject) {
         this.subject = subject;
@@ -144,13 +149,13 @@ public class DocumentTemplateResponsePlaceholdersInner {
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -167,13 +172,13 @@ public class DocumentTemplateResponsePlaceholdersInner {
      *
      * @return preassignedRecipientName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPreassignedRecipientName() {
         return preassignedRecipientName;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME)
+    @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreassignedRecipientName(
             @jakarta.annotation.Nullable String preassignedRecipientName) {
@@ -191,13 +196,13 @@ public class DocumentTemplateResponsePlaceholdersInner {
      *
      * @return preassignedRecipientEmail
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPreassignedRecipientEmail() {
         return preassignedRecipientEmail;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreassignedRecipientEmail(
             @jakarta.annotation.Nullable String preassignedRecipientEmail) {
@@ -215,13 +220,13 @@ public class DocumentTemplateResponsePlaceholdersInner {
      *
      * @return signingOrder
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SIGNING_ORDER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getSigningOrder() {
         return signingOrder;
     }
 
-    @JsonProperty(JSON_PROPERTY_SIGNING_ORDER)
+    @JsonProperty(value = JSON_PROPERTY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSigningOrder(@jakarta.annotation.Nullable Integer signingOrder) {
         this.signingOrder = signingOrder;
@@ -247,17 +252,41 @@ public class DocumentTemplateResponsePlaceholdersInner {
      *
      * @return attachmentRequests
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ATTACHMENT_REQUESTS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ATTACHMENT_REQUESTS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<AttachmentRequestInfo> getAttachmentRequests() {
         return attachmentRequests;
     }
 
-    @JsonProperty(JSON_PROPERTY_ATTACHMENT_REQUESTS)
+    @JsonProperty(value = JSON_PROPERTY_ATTACHMENT_REQUESTS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setAttachmentRequests(
             @jakarta.annotation.Nullable List<AttachmentRequestInfo> attachmentRequests) {
         this.attachmentRequests = attachmentRequests;
+    }
+
+    public DocumentTemplateResponsePlaceholdersInner passcodeDelivery(
+            @jakarta.annotation.Nullable DocumentResponseRecipientsInnerPasscodeDelivery passcodeDelivery) {
+        this.passcodeDelivery = passcodeDelivery;
+        return this;
+    }
+
+    /**
+     * Get passcodeDelivery
+     *
+     * @return passcodeDelivery
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public DocumentResponseRecipientsInnerPasscodeDelivery getPasscodeDelivery() {
+        return passcodeDelivery;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setPasscodeDelivery(
+            @jakarta.annotation.Nullable DocumentResponseRecipientsInnerPasscodeDelivery passcodeDelivery) {
+        this.passcodeDelivery = passcodeDelivery;
     }
 
     /** Return true if this DocumentTemplateResponse_placeholders_inner object is equal to o. */
@@ -285,7 +314,10 @@ public class DocumentTemplateResponsePlaceholdersInner {
                         this.signingOrder, documentTemplateResponsePlaceholdersInner.signingOrder)
                 && Objects.equals(
                         this.attachmentRequests,
-                        documentTemplateResponsePlaceholdersInner.attachmentRequests);
+                        documentTemplateResponsePlaceholdersInner.attachmentRequests)
+                && Objects.equals(
+                        this.passcodeDelivery,
+                        documentTemplateResponsePlaceholdersInner.passcodeDelivery);
     }
 
     @Override
@@ -298,7 +330,8 @@ public class DocumentTemplateResponsePlaceholdersInner {
                 preassignedRecipientName,
                 preassignedRecipientEmail,
                 signingOrder,
-                attachmentRequests);
+                attachmentRequests,
+                passcodeDelivery);
     }
 
     @Override
@@ -319,6 +352,7 @@ public class DocumentTemplateResponsePlaceholdersInner {
         sb.append("    attachmentRequests: ")
                 .append(toIndentedString(attachmentRequests))
                 .append("\n");
+        sb.append("    passcodeDelivery: ").append(toIndentedString(passcodeDelivery)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -328,10 +362,7 @@ public class DocumentTemplateResponsePlaceholdersInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -370,14 +401,18 @@ public class DocumentTemplateResponsePlaceholdersInner {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -388,6 +423,7 @@ public class DocumentTemplateResponsePlaceholdersInner {
         if (getSubject() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssubject%s=%s",
                             prefix,
                             suffix,
@@ -398,6 +434,7 @@ public class DocumentTemplateResponsePlaceholdersInner {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -408,6 +445,7 @@ public class DocumentTemplateResponsePlaceholdersInner {
         if (getPreassignedRecipientName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spreassigned_recipient_name%s=%s",
                             prefix,
                             suffix,
@@ -419,6 +457,7 @@ public class DocumentTemplateResponsePlaceholdersInner {
         if (getPreassignedRecipientEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spreassigned_recipient_email%s=%s",
                             prefix,
                             suffix,
@@ -430,6 +469,7 @@ public class DocumentTemplateResponsePlaceholdersInner {
         if (getSigningOrder() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssigning_order%s=%s",
                             prefix,
                             suffix,
@@ -445,18 +485,26 @@ public class DocumentTemplateResponsePlaceholdersInner {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%sattachment_requests%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
                                                                     containerSuffix))));
                 }
             }
+        }
+
+        // add `passcode_delivery` to the URL query string
+        if (getPasscodeDelivery() != null) {
+            joiner.add(
+                    getPasscodeDelivery().toUrlQueryString(prefix + "passcode_delivery" + suffix));
         }
 
         return joiner.toString();

@@ -13,7 +13,7 @@ import java.util.function.Consumer;
 /** Immutable client configuration. */
 public final class SignWellOptions {
     public static final String DEFAULT_BASE_URL = "https://www.signwell.com";
-    public static final String USER_AGENT = "SignWell Java SDK/" + sdkVersion();
+    public static final String USER_AGENT = "signwell-sdk-java/" + sdkVersion();
 
     private final String apiKey;
     private final URI baseUri;
@@ -84,7 +84,7 @@ public final class SignWellOptions {
 
     private static String sdkVersion() {
         String version = SignWellOptions.class.getPackage().getImplementationVersion();
-        return version == null ? "0.1.0-beta.1" : version;
+        return version == null ? "0.2.0-beta.1" : version;
     }
 
     private static String requireApiKey(String value) {

@@ -82,7 +82,7 @@ CompletableFuture<[**MeResponse**](MeResponse.md)>
 
 ## getMeWithHttpInfo
 
-> CompletableFuture<ApiResponse<MeResponse>> getMe getMeWithHttpInfo()
+> CompletableFuture<ApiResponse<MeResponse>> getMeWithHttpInfo()
 
 Get credentials
 

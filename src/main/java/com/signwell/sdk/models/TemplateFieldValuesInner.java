@@ -26,7 +26,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class TemplateFieldValuesInner {
     public static final String JSON_PROPERTY_API_ID = "api_id";
     @jakarta.annotation.Nonnull private String apiId;
@@ -47,13 +47,13 @@ public class TemplateFieldValuesInner {
      * @return apiId
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_API_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getApiId() {
         return apiId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setApiId(@jakarta.annotation.Nonnull String apiId) {
         this.apiId = apiId;
@@ -71,13 +71,13 @@ public class TemplateFieldValuesInner {
      * @return value
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_VALUE)
+    @JsonProperty(value = JSON_PROPERTY_VALUE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public TemplateFieldValuesInnerValue getValue() {
         return value;
     }
 
-    @JsonProperty(JSON_PROPERTY_VALUE)
+    @JsonProperty(value = JSON_PROPERTY_VALUE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setValue(@jakarta.annotation.Nonnull TemplateFieldValuesInnerValue value) {
         this.value = value;
@@ -117,10 +117,7 @@ public class TemplateFieldValuesInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -159,6 +156,7 @@ public class TemplateFieldValuesInner {
         if (getApiId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_id%s=%s",
                             prefix,
                             suffix,

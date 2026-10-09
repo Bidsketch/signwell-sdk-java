@@ -40,7 +40,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class BulkSendDocumentsResponse {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private UUID id;
@@ -91,13 +91,13 @@ public class BulkSendDocumentsResponse {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull UUID id) {
         this.id = id;
@@ -113,13 +113,13 @@ public class BulkSendDocumentsResponse {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -136,13 +136,13 @@ public class BulkSendDocumentsResponse {
      *
      * @return apiApplicationId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getApiApplicationId() {
         return apiApplicationId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiApplicationId(@jakarta.annotation.Nullable UUID apiApplicationId) {
         this.apiApplicationId = apiApplicationId;
@@ -159,13 +159,13 @@ public class BulkSendDocumentsResponse {
      *
      * @return createdAt
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCreatedAt(@jakarta.annotation.Nullable OffsetDateTime createdAt) {
         this.createdAt = createdAt;
@@ -181,13 +181,13 @@ public class BulkSendDocumentsResponse {
      *
      * @return userId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_USER_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_USER_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getUserId() {
         return userId;
     }
 
-    @JsonProperty(JSON_PROPERTY_USER_ID)
+    @JsonProperty(value = JSON_PROPERTY_USER_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setUserId(@jakarta.annotation.Nullable UUID userId) {
         this.userId = userId;
@@ -203,13 +203,13 @@ public class BulkSendDocumentsResponse {
      *
      * @return status
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_STATUS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_STATUS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getStatus() {
         return status;
     }
 
-    @JsonProperty(JSON_PROPERTY_STATUS)
+    @JsonProperty(value = JSON_PROPERTY_STATUS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setStatus(@jakarta.annotation.Nullable String status) {
         this.status = status;
@@ -235,13 +235,13 @@ public class BulkSendDocumentsResponse {
      * @return documents
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_DOCUMENTS)
+    @JsonProperty(value = JSON_PROPERTY_DOCUMENTS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public List<DocumentResponse> getDocuments() {
         return documents;
     }
 
-    @JsonProperty(JSON_PROPERTY_DOCUMENTS)
+    @JsonProperty(value = JSON_PROPERTY_DOCUMENTS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setDocuments(@jakarta.annotation.Nonnull List<DocumentResponse> documents) {
         this.documents = documents;
@@ -258,13 +258,13 @@ public class BulkSendDocumentsResponse {
      * @return currentPage
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_CURRENT_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_CURRENT_PAGE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getCurrentPage() {
         return currentPage;
     }
 
-    @JsonProperty(JSON_PROPERTY_CURRENT_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_CURRENT_PAGE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setCurrentPage(@jakarta.annotation.Nonnull Integer currentPage) {
         this.currentPage = currentPage;
@@ -280,13 +280,13 @@ public class BulkSendDocumentsResponse {
      *
      * @return nextPage
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NEXT_PAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getNextPage() {
         return nextPage;
     }
 
-    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_NEXT_PAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setNextPage(@jakarta.annotation.Nullable Integer nextPage) {
         this.nextPage = nextPage;
@@ -303,13 +303,13 @@ public class BulkSendDocumentsResponse {
      *
      * @return previousPage
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREVIOUS_PAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getPreviousPage() {
         return previousPage;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_PREVIOUS_PAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreviousPage(@jakarta.annotation.Nullable Integer previousPage) {
         this.previousPage = previousPage;
@@ -326,13 +326,13 @@ public class BulkSendDocumentsResponse {
      * @return totalCount
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TOTAL_COUNT)
+    @JsonProperty(value = JSON_PROPERTY_TOTAL_COUNT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getTotalCount() {
         return totalCount;
     }
 
-    @JsonProperty(JSON_PROPERTY_TOTAL_COUNT)
+    @JsonProperty(value = JSON_PROPERTY_TOTAL_COUNT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTotalCount(@jakarta.annotation.Nonnull Integer totalCount) {
         this.totalCount = totalCount;
@@ -349,13 +349,13 @@ public class BulkSendDocumentsResponse {
      * @return totalPages
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TOTAL_PAGES)
+    @JsonProperty(value = JSON_PROPERTY_TOTAL_PAGES, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getTotalPages() {
         return totalPages;
     }
 
-    @JsonProperty(JSON_PROPERTY_TOTAL_PAGES)
+    @JsonProperty(value = JSON_PROPERTY_TOTAL_PAGES, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTotalPages(@jakarta.annotation.Nonnull Integer totalPages) {
         this.totalPages = totalPages;
@@ -427,10 +427,7 @@ public class BulkSendDocumentsResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -469,14 +466,18 @@ public class BulkSendDocumentsResponse {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -487,6 +488,7 @@ public class BulkSendDocumentsResponse {
         if (getApiApplicationId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_application_id%s=%s",
                             prefix,
                             suffix,
@@ -497,6 +499,7 @@ public class BulkSendDocumentsResponse {
         if (getCreatedAt() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%screated_at%s=%s",
                             prefix,
                             suffix,
@@ -507,6 +510,7 @@ public class BulkSendDocumentsResponse {
         if (getUserId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%suser_id%s=%s",
                             prefix,
                             suffix,
@@ -517,6 +521,7 @@ public class BulkSendDocumentsResponse {
         if (getStatus() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sstatus%s=%s",
                             prefix,
                             suffix,
@@ -532,12 +537,14 @@ public class BulkSendDocumentsResponse {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%sdocuments%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
@@ -550,6 +557,7 @@ public class BulkSendDocumentsResponse {
         if (getCurrentPage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scurrent_page%s=%s",
                             prefix,
                             suffix,
@@ -560,6 +568,7 @@ public class BulkSendDocumentsResponse {
         if (getNextPage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%snext_page%s=%s",
                             prefix,
                             suffix,
@@ -570,6 +579,7 @@ public class BulkSendDocumentsResponse {
         if (getPreviousPage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sprevious_page%s=%s",
                             prefix,
                             suffix,
@@ -580,6 +590,7 @@ public class BulkSendDocumentsResponse {
         if (getTotalCount() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stotal_count%s=%s",
                             prefix,
                             suffix,
@@ -590,6 +601,7 @@ public class BulkSendDocumentsResponse {
         if (getTotalPages() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stotal_pages%s=%s",
                             prefix,
                             suffix,

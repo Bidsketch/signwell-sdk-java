@@ -35,7 +35,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class BulkSendValidateCsvResponse {
     public static final String JSON_PROPERTY_BULK_SEND_CSV = "bulk_send_csv";
     @jakarta.annotation.Nonnull private String bulkSendCsv;
@@ -74,13 +74,13 @@ public class BulkSendValidateCsvResponse {
      * @return bulkSendCsv
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_BULK_SEND_CSV)
+    @JsonProperty(value = JSON_PROPERTY_BULK_SEND_CSV, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getBulkSendCsv() {
         return bulkSendCsv;
     }
 
-    @JsonProperty(JSON_PROPERTY_BULK_SEND_CSV)
+    @JsonProperty(value = JSON_PROPERTY_BULK_SEND_CSV, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setBulkSendCsv(@jakarta.annotation.Nonnull String bulkSendCsv) {
         this.bulkSendCsv = bulkSendCsv;
@@ -106,13 +106,13 @@ public class BulkSendValidateCsvResponse {
      * @return templateIds
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public List<UUID> getTemplateIds() {
         return templateIds;
     }
 
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTemplateIds(@jakarta.annotation.Nonnull List<UUID> templateIds) {
         this.templateIds = templateIds;
@@ -129,13 +129,13 @@ public class BulkSendValidateCsvResponse {
      *
      * @return skipRowErrors
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SKIP_ROW_ERRORS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SKIP_ROW_ERRORS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getSkipRowErrors() {
         return skipRowErrors;
     }
 
-    @JsonProperty(JSON_PROPERTY_SKIP_ROW_ERRORS)
+    @JsonProperty(value = JSON_PROPERTY_SKIP_ROW_ERRORS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSkipRowErrors(@jakarta.annotation.Nullable Boolean skipRowErrors) {
         this.skipRowErrors = skipRowErrors;
@@ -152,13 +152,13 @@ public class BulkSendValidateCsvResponse {
      *
      * @return apiApplicationId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getApiApplicationId() {
         return apiApplicationId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiApplicationId(@jakarta.annotation.Nullable UUID apiApplicationId) {
         this.apiApplicationId = apiApplicationId;
@@ -174,13 +174,13 @@ public class BulkSendValidateCsvResponse {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -196,13 +196,13 @@ public class BulkSendValidateCsvResponse {
      *
      * @return subject
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getSubject() {
         return subject;
     }
 
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSubject(@jakarta.annotation.Nullable String subject) {
         this.subject = subject;
@@ -218,13 +218,13 @@ public class BulkSendValidateCsvResponse {
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -241,13 +241,13 @@ public class BulkSendValidateCsvResponse {
      *
      * @return applySigningOrder
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_APPLY_SIGNING_ORDER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_APPLY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getApplySigningOrder() {
         return applySigningOrder;
     }
 
-    @JsonProperty(JSON_PROPERTY_APPLY_SIGNING_ORDER)
+    @JsonProperty(value = JSON_PROPERTY_APPLY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApplySigningOrder(@jakarta.annotation.Nullable Boolean applySigningOrder) {
         this.applySigningOrder = applySigningOrder;
@@ -311,10 +311,7 @@ public class BulkSendValidateCsvResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -353,6 +350,7 @@ public class BulkSendValidateCsvResponse {
         if (getBulkSendCsv() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sbulk_send_csv%s=%s",
                             prefix,
                             suffix,
@@ -365,13 +363,18 @@ public class BulkSendValidateCsvResponse {
                 if (getTemplateIds().get(i) != null) {
                     joiner.add(
                             String.format(
+                                    java.util.Locale.ROOT,
                                     "%stemplate_ids%s%s=%s",
                                     prefix,
                                     suffix,
                                     "".equals(suffix)
                                             ? ""
                                             : String.format(
-                                                    "%s%d%s", containerPrefix, i, containerSuffix),
+                                                    java.util.Locale.ROOT,
+                                                    "%s%d%s",
+                                                    containerPrefix,
+                                                    i,
+                                                    containerSuffix),
                                     ApiClient.urlEncode(
                                             ApiClient.valueToString(getTemplateIds().get(i)))));
                 }
@@ -382,6 +385,7 @@ public class BulkSendValidateCsvResponse {
         if (getSkipRowErrors() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sskip_row_errors%s=%s",
                             prefix,
                             suffix,
@@ -392,6 +396,7 @@ public class BulkSendValidateCsvResponse {
         if (getApiApplicationId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_application_id%s=%s",
                             prefix,
                             suffix,
@@ -402,6 +407,7 @@ public class BulkSendValidateCsvResponse {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -412,6 +418,7 @@ public class BulkSendValidateCsvResponse {
         if (getSubject() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssubject%s=%s",
                             prefix,
                             suffix,
@@ -422,6 +429,7 @@ public class BulkSendValidateCsvResponse {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -432,6 +440,7 @@ public class BulkSendValidateCsvResponse {
         if (getApplySigningOrder() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapply_signing_order%s=%s",
                             prefix,
                             suffix,

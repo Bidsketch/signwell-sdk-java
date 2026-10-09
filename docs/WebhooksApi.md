@@ -19,7 +19,7 @@ All URIs are relative to *https://www.signwell.com*
 
 Create Webhook
 
-Register a callback URL that we will post document events to.
+Register a callback URL that we will post document events to. Note: a &#x60;document_signed&#x60; event is not emitted solely because a pre-signed template signature/initials was copied as document content, and &#x60;event.related_signer&#x60; only identifies a real recipient signing action. Two additional event types cover SMS delivery outcomes: &#x60;document_sms_failed&#x60; fires when an SMS reaches a terminal failure (undelivered or failed), and &#x60;document_sms_opted_out&#x60; fires when a phone number is newly added to the SMS suppression list. Both carry &#x60;event.related_recipient&#x60; (id, name, email when present, &#x60;phone_number_masked&#x60;, and &#x60;delivery_method&#x60;) instead of &#x60;event.related_signer&#x60;, and each recipient in &#x60;data.object.recipients[]&#x60; whose delivery method includes SMS carries a nested &#x60;sms&#x60; object (&#x60;phone_number_masked&#x60;, &#x60;send_sms&#x60;, &#x60;send_sms_delay&#x60;, &#x60;delivery_status&#x60;, &#x60;message_type&#x60;, &#x60;failed&#x60;, &#x60;failed_details&#x60;). Email-only recipients keep their existing payload shape unchanged. Only webhooks registered on API-type hooks receive these two events.
 
 ### Example
 
@@ -90,11 +90,11 @@ CompletableFuture<[**WebhookResponse**](WebhookResponse.md)>
 
 ## createWebhookWithHttpInfo
 
-> CompletableFuture<ApiResponse<WebhookResponse>> createWebhook createWebhookWithHttpInfo(createWebhookRequest)
+> CompletableFuture<ApiResponse<WebhookResponse>> createWebhookWithHttpInfo(createWebhookRequest)
 
 Create Webhook
 
-Register a callback URL that we will post document events to.
+Register a callback URL that we will post document events to. Note: a &#x60;document_signed&#x60; event is not emitted solely because a pre-signed template signature/initials was copied as document content, and &#x60;event.related_signer&#x60; only identifies a real recipient signing action. Two additional event types cover SMS delivery outcomes: &#x60;document_sms_failed&#x60; fires when an SMS reaches a terminal failure (undelivered or failed), and &#x60;document_sms_opted_out&#x60; fires when a phone number is newly added to the SMS suppression list. Both carry &#x60;event.related_recipient&#x60; (id, name, email when present, &#x60;phone_number_masked&#x60;, and &#x60;delivery_method&#x60;) instead of &#x60;event.related_signer&#x60;, and each recipient in &#x60;data.object.recipients[]&#x60; whose delivery method includes SMS carries a nested &#x60;sms&#x60; object (&#x60;phone_number_masked&#x60;, &#x60;send_sms&#x60;, &#x60;send_sms_delay&#x60;, &#x60;delivery_status&#x60;, &#x60;message_type&#x60;, &#x60;failed&#x60;, &#x60;failed_details&#x60;). Email-only recipients keep their existing payload shape unchanged. Only webhooks registered on API-type hooks receive these two events.
 
 ### Example
 
@@ -250,7 +250,7 @@ CompletableFuture<void> (empty response body)
 
 ## deleteWebhookWithHttpInfo
 
-> CompletableFuture<ApiResponse<Void>> deleteWebhook deleteWebhookWithHttpInfo(id)
+> CompletableFuture<ApiResponse<Void>> deleteWebhookWithHttpInfo(id)
 
 Delete Webhook
 
@@ -405,7 +405,7 @@ CompletableFuture<[**List&lt;WebhookResponse&gt;**](WebhookResponse.md)>
 
 ## listWebhooksWithHttpInfo
 
-> CompletableFuture<ApiResponse<List<WebhookResponse>>> listWebhooks listWebhooksWithHttpInfo()
+> CompletableFuture<ApiResponse<List<WebhookResponse>>> listWebhooksWithHttpInfo()
 
 List Webhooks
 

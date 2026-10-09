@@ -15,6 +15,7 @@
 |**preassignedRecipientEmail** | **String** |  |  [optional] |
 |**signingOrder** | **Integer** |  |  [optional] |
 |**attachmentRequests** | [**List&lt;AttachmentRequestInfo&gt;**](AttachmentRequestInfo.md) |  |  [optional] |
+|**passcodeDelivery** | [**DocumentResponseRecipientsInnerPasscodeDelivery**](DocumentResponseRecipientsInnerPasscodeDelivery.md) |  |  [optional] |
 
 
 

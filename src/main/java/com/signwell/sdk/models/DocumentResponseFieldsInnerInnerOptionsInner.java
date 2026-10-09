@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class DocumentResponseFieldsInnerInnerOptionsInner {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nullable private String name;
@@ -51,13 +51,13 @@ public class DocumentResponseFieldsInnerInnerOptionsInner {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -74,13 +74,13 @@ public class DocumentResponseFieldsInnerInnerOptionsInner {
      *
      * @return apiId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getApiId() {
         return apiId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiId(@jakarta.annotation.Nullable String apiId) {
         this.apiId = apiId;
@@ -97,13 +97,13 @@ public class DocumentResponseFieldsInnerInnerOptionsInner {
      *
      * @return isOther
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_IS_OTHER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_IS_OTHER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getIsOther() {
         return isOther;
     }
 
-    @JsonProperty(JSON_PROPERTY_IS_OTHER)
+    @JsonProperty(value = JSON_PROPERTY_IS_OTHER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setIsOther(@jakarta.annotation.Nullable Boolean isOther) {
         this.isOther = isOther;
@@ -149,10 +149,7 @@ public class DocumentResponseFieldsInnerInnerOptionsInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -191,6 +188,7 @@ public class DocumentResponseFieldsInnerInnerOptionsInner {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -201,6 +199,7 @@ public class DocumentResponseFieldsInnerInnerOptionsInner {
         if (getApiId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_id%s=%s",
                             prefix,
                             suffix,
@@ -211,6 +210,7 @@ public class DocumentResponseFieldsInnerInnerOptionsInner {
         if (getIsOther() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sis_other%s=%s",
                             prefix,
                             suffix,

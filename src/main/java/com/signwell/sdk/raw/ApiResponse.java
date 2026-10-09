@@ -22,7 +22,7 @@ import java.util.Map;
  */
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class ApiResponse<T> {
     private final int statusCode;
     private final Map<String, List<String>> headers;

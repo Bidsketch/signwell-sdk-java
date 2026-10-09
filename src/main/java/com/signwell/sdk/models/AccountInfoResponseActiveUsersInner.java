@@ -18,7 +18,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.signwell.sdk.raw.ApiClient;
 import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.UUID;
 
 /** AccountInfoResponseActiveUsersInner */
 @JsonPropertyOrder({
@@ -29,10 +28,10 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class AccountInfoResponseActiveUsersInner {
     public static final String JSON_PROPERTY_ID = "id";
-    @jakarta.annotation.Nonnull private UUID id;
+    @jakarta.annotation.Nonnull private String id;
 
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nonnull private String name;
@@ -45,7 +44,7 @@ public class AccountInfoResponseActiveUsersInner {
 
     public AccountInfoResponseActiveUsersInner() {}
 
-    public AccountInfoResponseActiveUsersInner id(@jakarta.annotation.Nonnull UUID id) {
+    public AccountInfoResponseActiveUsersInner id(@jakarta.annotation.Nonnull String id) {
         this.id = id;
         return this;
     }
@@ -56,15 +55,15 @@ public class AccountInfoResponseActiveUsersInner {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
-    public void setId(@jakarta.annotation.Nonnull UUID id) {
+    public void setId(@jakarta.annotation.Nonnull String id) {
         this.id = id;
     }
 
@@ -79,13 +78,13 @@ public class AccountInfoResponseActiveUsersInner {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -102,13 +101,13 @@ public class AccountInfoResponseActiveUsersInner {
      * @return email
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getEmail() {
         return email;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setEmail(@jakarta.annotation.Nonnull String email) {
         this.email = email;
@@ -125,13 +124,13 @@ public class AccountInfoResponseActiveUsersInner {
      *
      * @return hasGoogleRegistration
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_HAS_GOOGLE_REGISTRATION)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_HAS_GOOGLE_REGISTRATION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getHasGoogleRegistration() {
         return hasGoogleRegistration;
     }
 
-    @JsonProperty(JSON_PROPERTY_HAS_GOOGLE_REGISTRATION)
+    @JsonProperty(value = JSON_PROPERTY_HAS_GOOGLE_REGISTRATION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setHasGoogleRegistration(
             @jakarta.annotation.Nullable Boolean hasGoogleRegistration) {
@@ -181,10 +180,7 @@ public class AccountInfoResponseActiveUsersInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -223,14 +219,18 @@ public class AccountInfoResponseActiveUsersInner {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -241,6 +241,7 @@ public class AccountInfoResponseActiveUsersInner {
         if (getEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%semail%s=%s",
                             prefix,
                             suffix,
@@ -251,6 +252,7 @@ public class AccountInfoResponseActiveUsersInner {
         if (getHasGoogleRegistration() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%shas_google_registration%s=%s",
                             prefix,
                             suffix,

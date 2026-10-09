@@ -31,6 +31,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -38,15 +39,36 @@ import java.util.function.Consumer;
 
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class BulkSendApi {
+    /** Utility class for extending HttpRequest.Builder functionality. */
+    private static class HttpRequestBuilderExtensions {
+        /**
+         * Adds additional headers to the provided HttpRequest.Builder. Useful for adding
+         * method/endpoint specific headers.
+         *
+         * @param builder the HttpRequest.Builder to which headers will be added
+         * @param headers a map of header names and values to add; may be null
+         * @return the same HttpRequest.Builder instance with the additional headers set
+         */
+        static HttpRequest.Builder withAdditionalHeaders(
+                HttpRequest.Builder builder, Map<String, String> headers) {
+            if (headers != null) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    builder.header(entry.getKey(), entry.getValue());
+                }
+            }
+            return builder;
+        }
+    }
+
     private final HttpClient memberVarHttpClient;
     private final ObjectMapper memberVarObjectMapper;
     private final String memberVarBaseUri;
     private final Consumer<HttpRequest.Builder> memberVarInterceptor;
     private final Duration memberVarReadTimeout;
     private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-    private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+    private final Consumer<HttpResponse<InputStream>> memberVarAsyncResponseInterceptor;
 
     public BulkSendApi() {
         this(Configuration.getDefaultApiClient());
@@ -62,15 +84,78 @@ public class BulkSendApi {
         memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
     }
 
-    private ApiException getApiException(String operationId, HttpResponse<String> response) {
-        String message =
-                formatExceptionMessage(operationId, response.statusCode(), response.body());
-        return new ApiException(
-                response.statusCode(), message, response.headers(), response.body());
+    private ApiException getApiException(String operationId, HttpResponse<InputStream> response) {
+        try {
+            InputStream responseBody = ApiClient.getResponseBody(response);
+            String body = null;
+            if (responseBody != null) {
+                body = new String(responseBody.readAllBytes());
+                responseBody.close();
+            }
+            String message = formatExceptionMessage(operationId, response.statusCode(), body);
+            return new ApiException(response.statusCode(), message, response.headers(), body);
+        } catch (IOException e) {
+            return new ApiException(e);
+        }
     }
 
     private String formatExceptionMessage(String operationId, int statusCode, String body) {
         return "SignWell API request failed with HTTP status " + statusCode + ".";
+    }
+
+    /**
+     * Download file from the given response.
+     *
+     * @param response Response
+     * @return File
+     * @throws ApiException If fail to read file content from response and write to disk
+     */
+    public File downloadFileFromResponse(
+            HttpResponse<InputStream> response, InputStream responseBody) throws ApiException {
+        if (responseBody == null) {
+            throw new ApiException(new IOException("Response body is empty"));
+        }
+        try {
+            File file = prepareDownloadFile(response);
+            java.nio.file.Files.copy(
+                    responseBody, file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            return file;
+        } catch (IOException e) {
+            throw new ApiException(e);
+        }
+    }
+
+    /**
+     * Prepare the file for download from the response.
+     *
+     * @param response a {@link java.net.http.HttpResponse} object.
+     * @return a {@link java.io.File} object.
+     * @throws java.io.IOException if any.
+     */
+    private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
+        String filename = null;
+        java.util.Optional<String> contentDisposition =
+                response.headers().firstValue("Content-Disposition");
+        if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
+            // Get filename from the Content-Disposition header.
+            java.util.regex.Pattern pattern =
+                    java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
+            java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
+            if (matcher.find()) filename = matcher.group(1);
+        }
+        File file = null;
+        if (filename != null) {
+            java.nio.file.Path tempDir =
+                    java.nio.file.Files.createTempDirectory("swagger-gen-native");
+            java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
+            file = filePath.toFile();
+            tempDir.toFile().deleteOnExit(); // best effort cleanup
+            file.deleteOnExit(); // best effort cleanup
+        } else {
+            file = java.nio.file.Files.createTempFile("download-", "").toFile();
+            file.deleteOnExit(); // best effort cleanup
+        }
+        return file;
     }
 
     /**
@@ -82,31 +167,27 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<BulkSendCreateResponse> createBulkSend(
-            CreateBulkSendRequest createBulkSendRequest) throws ApiException {
+            @jakarta.annotation.Nonnull CreateBulkSendRequest createBulkSendRequest)
+            throws ApiException {
+        return createBulkSend(createBulkSendRequest, null);
+    }
+
+    /**
+     * Create Bulk Send Creates a bulk send, and it validates the CSV file before creating the bulk
+     * send.
+     *
+     * @param createBulkSendRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;BulkSendCreateResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<BulkSendCreateResponse> createBulkSend(
+            @jakarta.annotation.Nonnull CreateBulkSendRequest createBulkSendRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    createBulkSendRequestBuilder(createBulkSendRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("createBulkSend", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    BulkSendCreateResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return createBulkSendWithHttpInfo(createBulkSendRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -121,12 +202,31 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<BulkSendCreateResponse>> createBulkSendWithHttpInfo(
-            CreateBulkSendRequest createBulkSendRequest) throws ApiException {
+            @jakarta.annotation.Nonnull CreateBulkSendRequest createBulkSendRequest)
+            throws ApiException {
+        return createBulkSendWithHttpInfo(createBulkSendRequest, null);
+    }
+
+    /**
+     * Create Bulk Send Creates a bulk send, and it validates the CSV file before creating the bulk
+     * send.
+     *
+     * @param createBulkSendRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;BulkSendCreateResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<BulkSendCreateResponse>> createBulkSendWithHttpInfo(
+            @jakarta.annotation.Nonnull CreateBulkSendRequest createBulkSendRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    createBulkSendRequestBuilder(createBulkSendRequest);
+                    createBulkSendRequestBuilder(createBulkSendRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -137,17 +237,37 @@ public class BulkSendApi {
                                             getApiException("createBulkSend", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<BulkSendCreateResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            BulkSendCreateResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<BulkSendCreateResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(localVarResponseBody.readAllBytes());
+                                        BulkSendCreateResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        BulkSendCreateResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<BulkSendCreateResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -158,7 +278,9 @@ public class BulkSendApi {
     }
 
     private HttpRequest.Builder createBulkSendRequestBuilder(
-            CreateBulkSendRequest createBulkSendRequest) throws ApiException {
+            @jakarta.annotation.Nonnull CreateBulkSendRequest createBulkSendRequest,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'createBulkSendRequest' is set
         if (createBulkSendRequest == null) {
             throw new ApiException(
@@ -187,6 +309,9 @@ public class BulkSendApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -200,30 +325,23 @@ public class BulkSendApi {
      * @return CompletableFuture&lt;BulkSendResponse&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<BulkSendResponse> getBulkSend(UUID id) throws ApiException {
+    public CompletableFuture<BulkSendResponse> getBulkSend(@jakarta.annotation.Nonnull UUID id)
+            throws ApiException {
+        return getBulkSend(id, null);
+    }
+
+    /**
+     * Get Bulk Send Returns information about the Bulk Send.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;BulkSendResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<BulkSendResponse> getBulkSend(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = getBulkSendRequestBuilder(id);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("getBulkSend", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    BulkSendResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return getBulkSendWithHttpInfo(id, headers).thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -236,12 +354,27 @@ public class BulkSendApi {
      * @return CompletableFuture&lt;ApiResponse&lt;BulkSendResponse&gt;&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<ApiResponse<BulkSendResponse>> getBulkSendWithHttpInfo(UUID id)
-            throws ApiException {
+    public CompletableFuture<ApiResponse<BulkSendResponse>> getBulkSendWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id) throws ApiException {
+        return getBulkSendWithHttpInfo(id, null);
+    }
+
+    /**
+     * Get Bulk Send Returns information about the Bulk Send.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;BulkSendResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<BulkSendResponse>> getBulkSendWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = getBulkSendRequestBuilder(id);
+            HttpRequest.Builder localVarRequestBuilder = getBulkSendRequestBuilder(id, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -252,17 +385,37 @@ public class BulkSendApi {
                                             getApiException("getBulkSend", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<BulkSendResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            BulkSendResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<BulkSendResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(localVarResponseBody.readAllBytes());
+                                        BulkSendResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        BulkSendResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<BulkSendResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -272,7 +425,8 @@ public class BulkSendApi {
         }
     }
 
-    private HttpRequest.Builder getBulkSendRequestBuilder(UUID id) throws ApiException {
+    private HttpRequest.Builder getBulkSendRequestBuilder(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -292,6 +446,9 @@ public class BulkSendApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -311,32 +468,35 @@ public class BulkSendApi {
      * @return CompletableFuture&lt;File&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<File> getBulkSendCsvTemplate(List<UUID> templateIds, Boolean base64)
+    public CompletableFuture<File> getBulkSendCsvTemplate(
+            @jakarta.annotation.Nonnull List<UUID> templateIds,
+            @jakarta.annotation.Nullable Boolean base64)
+            throws ApiException {
+        return getBulkSendCsvTemplate(templateIds, base64, null);
+    }
+
+    /**
+     * Get Bulk Send CSV Template Fetches a CSV template that corresponds to the provided document
+     * template IDs. CSV templates are blank CSV files that have columns containing required and
+     * optional data that can be sent when creating a bulk send. Fields can be referenced by the
+     * field label. Example: [placeholder name]_[field label] could be something like
+     * customer_address or signer_company_name (if &#39;Customer&#39; and &#39;Signer&#39; were
+     * placeholder names for templates set up in SignWell).
+     *
+     * @param templateIds (required)
+     * @param base64 (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;File&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<File> getBulkSendCsvTemplate(
+            @jakarta.annotation.Nonnull List<UUID> templateIds,
+            @jakarta.annotation.Nullable Boolean base64,
+            Map<String, String> headers)
             throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    getBulkSendCsvTemplateRequestBuilder(templateIds, base64);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException(
-                                                    "getBulkSendCsvTemplate", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<File>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return getBulkSendCsvTemplateWithHttpInfo(templateIds, base64, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -356,12 +516,38 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<File>> getBulkSendCsvTemplateWithHttpInfo(
-            List<UUID> templateIds, Boolean base64) throws ApiException {
+            @jakarta.annotation.Nonnull List<UUID> templateIds,
+            @jakarta.annotation.Nullable Boolean base64)
+            throws ApiException {
+        return getBulkSendCsvTemplateWithHttpInfo(templateIds, base64, null);
+    }
+
+    /**
+     * Get Bulk Send CSV Template Fetches a CSV template that corresponds to the provided document
+     * template IDs. CSV templates are blank CSV files that have columns containing required and
+     * optional data that can be sent when creating a bulk send. Fields can be referenced by the
+     * field label. Example: [placeholder name]_[field label] could be something like
+     * customer_address or signer_company_name (if &#39;Customer&#39; and &#39;Signer&#39; were
+     * placeholder names for templates set up in SignWell).
+     *
+     * @param templateIds (required)
+     * @param base64 (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;File&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<File>> getBulkSendCsvTemplateWithHttpInfo(
+            @jakarta.annotation.Nonnull List<UUID> templateIds,
+            @jakarta.annotation.Nullable Boolean base64,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    getBulkSendCsvTemplateRequestBuilder(templateIds, base64);
+                    getBulkSendCsvTemplateRequestBuilder(templateIds, base64, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -373,16 +559,33 @@ public class BulkSendApi {
                                                     "getBulkSendCsvTemplate", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<File>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<File>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<File>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        File responseValue =
+                                                downloadFileFromResponse(
+                                                        localVarResponse, localVarResponseBody);
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<File>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
+                                } catch (ApiException e) {
+                                    return CompletableFuture.failedFuture(e);
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -393,7 +596,10 @@ public class BulkSendApi {
     }
 
     private HttpRequest.Builder getBulkSendCsvTemplateRequestBuilder(
-            List<UUID> templateIds, Boolean base64) throws ApiException {
+            @jakarta.annotation.Nonnull List<UUID> templateIds,
+            @jakarta.annotation.Nullable Boolean base64,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'templateIds' is set
         if (templateIds == null) {
             throw new ApiException(
@@ -433,6 +639,9 @@ public class BulkSendApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -449,32 +658,32 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<BulkSendDocumentsResponse> getBulkSendDocuments(
-            UUID id, Integer limit, Integer page) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable Integer page)
+            throws ApiException {
+        return getBulkSendDocuments(id, limit, page, null);
+    }
+
+    /**
+     * Get Bulk Send Documents Returns information about the Bulk Send.
+     *
+     * @param id (required)
+     * @param limit (optional, default to 10)
+     * @param page (optional, default to 1)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;BulkSendDocumentsResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<BulkSendDocumentsResponse> getBulkSendDocuments(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable Integer page,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    getBulkSendDocumentsRequestBuilder(id, limit, page);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException(
-                                                    "getBulkSendDocuments", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    BulkSendDocumentsResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return getBulkSendDocumentsWithHttpInfo(id, limit, page, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -490,13 +699,38 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<BulkSendDocumentsResponse>>
-            getBulkSendDocumentsWithHttpInfo(UUID id, Integer limit, Integer page)
+            getBulkSendDocumentsWithHttpInfo(
+                    @jakarta.annotation.Nonnull UUID id,
+                    @jakarta.annotation.Nullable Integer limit,
+                    @jakarta.annotation.Nullable Integer page)
+                    throws ApiException {
+        return getBulkSendDocumentsWithHttpInfo(id, limit, page, null);
+    }
+
+    /**
+     * Get Bulk Send Documents Returns information about the Bulk Send.
+     *
+     * @param id (required)
+     * @param limit (optional, default to 10)
+     * @param page (optional, default to 1)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;BulkSendDocumentsResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<BulkSendDocumentsResponse>>
+            getBulkSendDocumentsWithHttpInfo(
+                    @jakarta.annotation.Nonnull UUID id,
+                    @jakarta.annotation.Nullable Integer limit,
+                    @jakarta.annotation.Nullable Integer page,
+                    Map<String, String> headers)
                     throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    getBulkSendDocumentsRequestBuilder(id, limit, page);
+                    getBulkSendDocumentsRequestBuilder(id, limit, page, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -508,17 +742,37 @@ public class BulkSendApi {
                                                     "getBulkSendDocuments", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<BulkSendDocumentsResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            BulkSendDocumentsResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<BulkSendDocumentsResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(localVarResponseBody.readAllBytes());
+                                        BulkSendDocumentsResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        BulkSendDocumentsResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<BulkSendDocumentsResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -529,7 +783,11 @@ public class BulkSendApi {
     }
 
     private HttpRequest.Builder getBulkSendDocumentsRequestBuilder(
-            UUID id, Integer limit, Integer page) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable Integer page,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -568,6 +826,9 @@ public class BulkSendApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -585,32 +846,35 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<BulkSendListResponse> listBulkSends(
-            String userEmail, Integer limit, Integer page, UUID apiApplicationId)
+            @jakarta.annotation.Nullable String userEmail,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable UUID apiApplicationId)
+            throws ApiException {
+        return listBulkSends(userEmail, limit, page, apiApplicationId, null);
+    }
+
+    /**
+     * List Bulk Sendings Returns information about the Bulk Send.
+     *
+     * @param userEmail (optional)
+     * @param limit (optional, default to 10)
+     * @param page (optional, default to 1)
+     * @param apiApplicationId (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;BulkSendListResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<BulkSendListResponse> listBulkSends(
+            @jakarta.annotation.Nullable String userEmail,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable UUID apiApplicationId,
+            Map<String, String> headers)
             throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    listBulkSendsRequestBuilder(userEmail, limit, page, apiApplicationId);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("listBulkSends", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    BulkSendListResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return listBulkSendsWithHttpInfo(userEmail, limit, page, apiApplicationId, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -627,13 +891,39 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<BulkSendListResponse>> listBulkSendsWithHttpInfo(
-            String userEmail, Integer limit, Integer page, UUID apiApplicationId)
+            @jakarta.annotation.Nullable String userEmail,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable UUID apiApplicationId)
+            throws ApiException {
+        return listBulkSendsWithHttpInfo(userEmail, limit, page, apiApplicationId, null);
+    }
+
+    /**
+     * List Bulk Sendings Returns information about the Bulk Send.
+     *
+     * @param userEmail (optional)
+     * @param limit (optional, default to 10)
+     * @param page (optional, default to 1)
+     * @param apiApplicationId (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;BulkSendListResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<BulkSendListResponse>> listBulkSendsWithHttpInfo(
+            @jakarta.annotation.Nullable String userEmail,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable UUID apiApplicationId,
+            Map<String, String> headers)
             throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    listBulkSendsRequestBuilder(userEmail, limit, page, apiApplicationId);
+                    listBulkSendsRequestBuilder(userEmail, limit, page, apiApplicationId, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -644,17 +934,37 @@ public class BulkSendApi {
                                             getApiException("listBulkSends", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<BulkSendListResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            BulkSendListResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<BulkSendListResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(localVarResponseBody.readAllBytes());
+                                        BulkSendListResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        BulkSendListResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<BulkSendListResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -665,7 +975,11 @@ public class BulkSendApi {
     }
 
     private HttpRequest.Builder listBulkSendsRequestBuilder(
-            String userEmail, Integer limit, Integer page, UUID apiApplicationId)
+            @jakarta.annotation.Nullable String userEmail,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable UUID apiApplicationId,
+            Map<String, String> headers)
             throws ApiException {
 
         HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
@@ -703,6 +1017,9 @@ public class BulkSendApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -718,32 +1035,26 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<BulkSendValidateCsvResponse> validateBulkSendCsv(
-            BulkSendCsvRequest bulkSendCsvRequest) throws ApiException {
+            @jakarta.annotation.Nonnull BulkSendCsvRequest bulkSendCsvRequest) throws ApiException {
+        return validateBulkSendCsv(bulkSendCsvRequest, null);
+    }
+
+    /**
+     * Validate Bulk Send CSV Validates a Bulk Send CSV file before creating the Bulk Send. It will
+     * check the structure of the CSV and the data it contains, and return any errors found.
+     *
+     * @param bulkSendCsvRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;BulkSendValidateCsvResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<BulkSendValidateCsvResponse> validateBulkSendCsv(
+            @jakarta.annotation.Nonnull BulkSendCsvRequest bulkSendCsvRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    validateBulkSendCsvRequestBuilder(bulkSendCsvRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException(
-                                                    "validateBulkSendCsv", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    BulkSendValidateCsvResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return validateBulkSendCsvWithHttpInfo(bulkSendCsvRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -758,13 +1069,33 @@ public class BulkSendApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<BulkSendValidateCsvResponse>>
-            validateBulkSendCsvWithHttpInfo(BulkSendCsvRequest bulkSendCsvRequest)
+            validateBulkSendCsvWithHttpInfo(
+                    @jakarta.annotation.Nonnull BulkSendCsvRequest bulkSendCsvRequest)
+                    throws ApiException {
+        return validateBulkSendCsvWithHttpInfo(bulkSendCsvRequest, null);
+    }
+
+    /**
+     * Validate Bulk Send CSV Validates a Bulk Send CSV file before creating the Bulk Send. It will
+     * check the structure of the CSV and the data it contains, and return any errors found.
+     *
+     * @param bulkSendCsvRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;BulkSendValidateCsvResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<BulkSendValidateCsvResponse>>
+            validateBulkSendCsvWithHttpInfo(
+                    @jakarta.annotation.Nonnull BulkSendCsvRequest bulkSendCsvRequest,
+                    Map<String, String> headers)
                     throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    validateBulkSendCsvRequestBuilder(bulkSendCsvRequest);
+                    validateBulkSendCsvRequestBuilder(bulkSendCsvRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -776,17 +1107,37 @@ public class BulkSendApi {
                                                     "validateBulkSendCsv", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<BulkSendValidateCsvResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            BulkSendValidateCsvResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<BulkSendValidateCsvResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(localVarResponseBody.readAllBytes());
+                                        BulkSendValidateCsvResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        BulkSendValidateCsvResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<BulkSendValidateCsvResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -797,7 +1148,9 @@ public class BulkSendApi {
     }
 
     private HttpRequest.Builder validateBulkSendCsvRequestBuilder(
-            BulkSendCsvRequest bulkSendCsvRequest) throws ApiException {
+            @jakarta.annotation.Nonnull BulkSendCsvRequest bulkSendCsvRequest,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'bulkSendCsvRequest' is set
         if (bulkSendCsvRequest == null) {
             throw new ApiException(
@@ -825,6 +1178,9 @@ public class BulkSendApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }

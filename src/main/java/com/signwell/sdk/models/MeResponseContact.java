@@ -34,7 +34,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class MeResponseContact {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private UUID id;
@@ -76,13 +76,13 @@ public class MeResponseContact {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull UUID id) {
         this.id = id;
@@ -99,13 +99,13 @@ public class MeResponseContact {
      * @return email
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getEmail() {
         return email;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setEmail(@jakarta.annotation.Nonnull String email) {
         this.email = email;
@@ -122,13 +122,13 @@ public class MeResponseContact {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -144,13 +144,13 @@ public class MeResponseContact {
      *
      * @return companyName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_COMPANY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_COMPANY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getCompanyName() {
         return companyName;
     }
 
-    @JsonProperty(JSON_PROPERTY_COMPANY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_COMPANY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCompanyName(@jakarta.annotation.Nullable String companyName) {
         this.companyName = companyName;
@@ -166,13 +166,13 @@ public class MeResponseContact {
      *
      * @return phoneNumber
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PHONE_NUMBER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PHONE_NUMBER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPhoneNumber() {
         return phoneNumber;
     }
 
-    @JsonProperty(JSON_PROPERTY_PHONE_NUMBER)
+    @JsonProperty(value = JSON_PROPERTY_PHONE_NUMBER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPhoneNumber(@jakarta.annotation.Nullable String phoneNumber) {
         this.phoneNumber = phoneNumber;
@@ -188,13 +188,13 @@ public class MeResponseContact {
      *
      * @return altPhoneNumber
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ALT_PHONE_NUMBER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ALT_PHONE_NUMBER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getAltPhoneNumber() {
         return altPhoneNumber;
     }
 
-    @JsonProperty(JSON_PROPERTY_ALT_PHONE_NUMBER)
+    @JsonProperty(value = JSON_PROPERTY_ALT_PHONE_NUMBER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setAltPhoneNumber(@jakarta.annotation.Nullable String altPhoneNumber) {
         this.altPhoneNumber = altPhoneNumber;
@@ -210,13 +210,13 @@ public class MeResponseContact {
      *
      * @return website
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_WEBSITE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_WEBSITE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getWebsite() {
         return website;
     }
 
-    @JsonProperty(JSON_PROPERTY_WEBSITE)
+    @JsonProperty(value = JSON_PROPERTY_WEBSITE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setWebsite(@jakarta.annotation.Nullable String website) {
         this.website = website;
@@ -232,13 +232,13 @@ public class MeResponseContact {
      *
      * @return initials
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_INITIALS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_INITIALS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getInitials() {
         return initials;
     }
 
-    @JsonProperty(JSON_PROPERTY_INITIALS)
+    @JsonProperty(value = JSON_PROPERTY_INITIALS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setInitials(@jakarta.annotation.Nullable String initials) {
         this.initials = initials;
@@ -254,13 +254,13 @@ public class MeResponseContact {
      *
      * @return archived
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ARCHIVED)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ARCHIVED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getArchived() {
         return archived;
     }
 
-    @JsonProperty(JSON_PROPERTY_ARCHIVED)
+    @JsonProperty(value = JSON_PROPERTY_ARCHIVED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setArchived(@jakarta.annotation.Nullable Boolean archived) {
         this.archived = archived;
@@ -323,10 +323,7 @@ public class MeResponseContact {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -365,14 +362,18 @@ public class MeResponseContact {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `email` to the URL query string
         if (getEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%semail%s=%s",
                             prefix,
                             suffix,
@@ -383,6 +384,7 @@ public class MeResponseContact {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -393,6 +395,7 @@ public class MeResponseContact {
         if (getCompanyName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scompany_name%s=%s",
                             prefix,
                             suffix,
@@ -403,6 +406,7 @@ public class MeResponseContact {
         if (getPhoneNumber() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sphone_number%s=%s",
                             prefix,
                             suffix,
@@ -413,6 +417,7 @@ public class MeResponseContact {
         if (getAltPhoneNumber() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%salt_phone_number%s=%s",
                             prefix,
                             suffix,
@@ -423,6 +428,7 @@ public class MeResponseContact {
         if (getWebsite() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%swebsite%s=%s",
                             prefix,
                             suffix,
@@ -433,6 +439,7 @@ public class MeResponseContact {
         if (getInitials() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sinitials%s=%s",
                             prefix,
                             suffix,
@@ -443,6 +450,7 @@ public class MeResponseContact {
         if (getArchived() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sarchived%s=%s",
                             prefix,
                             suffix,

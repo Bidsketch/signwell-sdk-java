@@ -95,7 +95,7 @@ CompletableFuture<[**DocumentTemplateResponse**](DocumentTemplateResponse.md)>
 
 ## createTemplateWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentTemplateResponse>> createTemplate createTemplateWithHttpInfo(documentTemplateRequest)
+> CompletableFuture<ApiResponse<DocumentTemplateResponse>> createTemplateWithHttpInfo(documentTemplateRequest)
 
 Create Template
 
@@ -256,7 +256,7 @@ CompletableFuture<void> (empty response body)
 
 ## deleteTemplateWithHttpInfo
 
-> CompletableFuture<ApiResponse<Void>> deleteTemplate deleteTemplateWithHttpInfo(id)
+> CompletableFuture<ApiResponse<Void>> deleteTemplateWithHttpInfo(id)
 
 Delete Template
 
@@ -416,7 +416,7 @@ CompletableFuture<[**DocumentTemplateResponse**](DocumentTemplateResponse.md)>
 
 ## getTemplateWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentTemplateResponse>> getTemplate getTemplateWithHttpInfo(id)
+> CompletableFuture<ApiResponse<DocumentTemplateResponse>> getTemplateWithHttpInfo(id)
 
 Get Template
 
@@ -581,7 +581,7 @@ CompletableFuture<[**DocumentTemplateListResponse**](DocumentTemplateListRespons
 
 ## listTemplatesWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentTemplateListResponse>> listTemplates listTemplatesWithHttpInfo(page, limit, query)
+> CompletableFuture<ApiResponse<DocumentTemplateListResponse>> listTemplatesWithHttpInfo(page, limit, query)
 
 List Templates
 
@@ -749,7 +749,7 @@ CompletableFuture<[**DocumentTemplateResponse**](DocumentTemplateResponse.md)>
 
 ## updateTemplateWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentTemplateResponse>> updateTemplate updateTemplateWithHttpInfo(id, documentTemplateUpdateRequest)
+> CompletableFuture<ApiResponse<DocumentTemplateResponse>> updateTemplateWithHttpInfo(id, documentTemplateUpdateRequest)
 
 Update Template
 

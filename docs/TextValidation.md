@@ -27,6 +27,8 @@
 
 * `US_BANK_ACCOUNT_NUMBER` (value: `"us_bank_account_number"`)
 
+* `CUSTOM` (value: `"custom"`)
+
 * `UNKNOWN_DEFAULT_OPEN_API` (value: `"unknown_default_open_api"`)
 
 

@@ -24,7 +24,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({UpdateAuthenticationRequest.JSON_PROPERTY_RECIPIENTS})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class UpdateAuthenticationRequest {
     public static final String JSON_PROPERTY_RECIPIENTS = "recipients";
 
@@ -55,13 +55,13 @@ public class UpdateAuthenticationRequest {
      * @return recipients
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_RECIPIENTS)
+    @JsonProperty(value = JSON_PROPERTY_RECIPIENTS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public List<UpdateAuthenticationRequestRecipientsInner> getRecipients() {
         return recipients;
     }
 
-    @JsonProperty(JSON_PROPERTY_RECIPIENTS)
+    @JsonProperty(value = JSON_PROPERTY_RECIPIENTS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setRecipients(
             @jakarta.annotation.Nonnull
@@ -101,10 +101,7 @@ public class UpdateAuthenticationRequest {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -148,12 +145,14 @@ public class UpdateAuthenticationRequest {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%srecipients%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,

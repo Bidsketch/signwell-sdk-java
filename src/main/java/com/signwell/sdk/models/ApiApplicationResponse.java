@@ -35,7 +35,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class ApiApplicationResponse {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private UUID id;
@@ -71,13 +71,13 @@ public class ApiApplicationResponse {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull UUID id) {
         this.id = id;
@@ -94,13 +94,13 @@ public class ApiApplicationResponse {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -125,13 +125,13 @@ public class ApiApplicationResponse {
      *
      * @return callbackUrls
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CALLBACK_URLS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CALLBACK_URLS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<String> getCallbackUrls() {
         return callbackUrls;
     }
 
-    @JsonProperty(JSON_PROPERTY_CALLBACK_URLS)
+    @JsonProperty(value = JSON_PROPERTY_CALLBACK_URLS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCallbackUrls(@jakarta.annotation.Nullable List<String> callbackUrls) {
         this.callbackUrls = callbackUrls;
@@ -147,13 +147,13 @@ public class ApiApplicationResponse {
      *
      * @return createdAt
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public OffsetDateTime getCreatedAt() {
         return createdAt;
     }
 
-    @JsonProperty(JSON_PROPERTY_CREATED_AT)
+    @JsonProperty(value = JSON_PROPERTY_CREATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCreatedAt(@jakarta.annotation.Nullable OffsetDateTime createdAt) {
         this.createdAt = createdAt;
@@ -169,13 +169,13 @@ public class ApiApplicationResponse {
      *
      * @return updatedAt
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_UPDATED_AT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public OffsetDateTime getUpdatedAt() {
         return updatedAt;
     }
 
-    @JsonProperty(JSON_PROPERTY_UPDATED_AT)
+    @JsonProperty(value = JSON_PROPERTY_UPDATED_AT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setUpdatedAt(@jakarta.annotation.Nullable OffsetDateTime updatedAt) {
         this.updatedAt = updatedAt;
@@ -192,13 +192,13 @@ public class ApiApplicationResponse {
      *
      * @return owner
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_OWNER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_OWNER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public ApiApplicationResponseOwner getOwner() {
         return owner;
     }
 
-    @JsonProperty(JSON_PROPERTY_OWNER)
+    @JsonProperty(value = JSON_PROPERTY_OWNER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setOwner(@jakarta.annotation.Nullable ApiApplicationResponseOwner owner) {
         this.owner = owner;
@@ -215,13 +215,13 @@ public class ApiApplicationResponse {
      *
      * @return preferences
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREFERENCES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREFERENCES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public ApiApplicationResponsePreferences getPreferences() {
         return preferences;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREFERENCES)
+    @JsonProperty(value = JSON_PROPERTY_PREFERENCES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreferences(
             @jakarta.annotation.Nullable ApiApplicationResponsePreferences preferences) {
@@ -272,10 +272,7 @@ public class ApiApplicationResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -314,14 +311,18 @@ public class ApiApplicationResponse {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -333,13 +334,18 @@ public class ApiApplicationResponse {
             for (int i = 0; i < getCallbackUrls().size(); i++) {
                 joiner.add(
                         String.format(
+                                java.util.Locale.ROOT,
                                 "%scallback_urls%s%s=%s",
                                 prefix,
                                 suffix,
                                 "".equals(suffix)
                                         ? ""
                                         : String.format(
-                                                "%s%d%s", containerPrefix, i, containerSuffix),
+                                                java.util.Locale.ROOT,
+                                                "%s%d%s",
+                                                containerPrefix,
+                                                i,
+                                                containerSuffix),
                                 ApiClient.urlEncode(
                                         ApiClient.valueToString(getCallbackUrls().get(i)))));
             }
@@ -349,6 +355,7 @@ public class ApiApplicationResponse {
         if (getCreatedAt() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%screated_at%s=%s",
                             prefix,
                             suffix,
@@ -359,6 +366,7 @@ public class ApiApplicationResponse {
         if (getUpdatedAt() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%supdated_at%s=%s",
                             prefix,
                             suffix,

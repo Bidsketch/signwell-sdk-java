@@ -9,7 +9,7 @@
   <properties>
     <maven.compiler.release>11</maven.compiler.release>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-    <signwell.sdk.version>0.1.0-beta.1</signwell.sdk.version>
+    <signwell.sdk.version>0.2.0-beta.1</signwell.sdk.version>
   </properties>
   <dependencies>
     <dependency>

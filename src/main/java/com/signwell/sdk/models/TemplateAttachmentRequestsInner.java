@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class TemplateAttachmentRequestsInner {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nonnull private String name;
@@ -51,13 +51,13 @@ public class TemplateAttachmentRequestsInner {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -75,13 +75,13 @@ public class TemplateAttachmentRequestsInner {
      * @return placeholderId
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_PLACEHOLDER_ID)
+    @JsonProperty(value = JSON_PROPERTY_PLACEHOLDER_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getPlaceholderId() {
         return placeholderId;
     }
 
-    @JsonProperty(JSON_PROPERTY_PLACEHOLDER_ID)
+    @JsonProperty(value = JSON_PROPERTY_PLACEHOLDER_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setPlaceholderId(@jakarta.annotation.Nonnull String placeholderId) {
         this.placeholderId = placeholderId;
@@ -98,13 +98,13 @@ public class TemplateAttachmentRequestsInner {
      *
      * @return required
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_REQUIRED)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_REQUIRED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getRequired() {
         return required;
     }
 
-    @JsonProperty(JSON_PROPERTY_REQUIRED)
+    @JsonProperty(value = JSON_PROPERTY_REQUIRED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setRequired(@jakarta.annotation.Nullable Boolean required) {
         this.required = required;
@@ -147,10 +147,7 @@ public class TemplateAttachmentRequestsInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -189,6 +186,7 @@ public class TemplateAttachmentRequestsInner {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -199,6 +197,7 @@ public class TemplateAttachmentRequestsInner {
         if (getPlaceholderId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%splaceholder_id%s=%s",
                             prefix,
                             suffix,
@@ -209,6 +208,7 @@ public class TemplateAttachmentRequestsInner {
         if (getRequired() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%srequired%s=%s",
                             prefix,
                             suffix,

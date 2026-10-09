@@ -12,14 +12,14 @@ Maven:
 <dependency>
   <groupId>com.signwell</groupId>
   <artifactId>signwell-sdk</artifactId>
-  <version>0.1.0-beta.1</version>
+  <version>0.2.0-beta.1</version>
 </dependency>
 ```
 
 Gradle:
 
 ```groovy
-implementation "com.signwell:signwell-sdk:0.1.0-beta.1"
+implementation "com.signwell:signwell-sdk:0.2.0-beta.1"
 ```
 
 ## Quick Start

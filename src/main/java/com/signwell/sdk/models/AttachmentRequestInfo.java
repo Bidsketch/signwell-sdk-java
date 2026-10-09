@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class AttachmentRequestInfo {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nonnull private String name;
@@ -51,13 +51,13 @@ public class AttachmentRequestInfo {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -73,13 +73,13 @@ public class AttachmentRequestInfo {
      *
      * @return url
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getUrl() {
         return url;
     }
 
-    @JsonProperty(JSON_PROPERTY_URL)
+    @JsonProperty(value = JSON_PROPERTY_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setUrl(@jakarta.annotation.Nullable String url) {
         this.url = url;
@@ -96,13 +96,13 @@ public class AttachmentRequestInfo {
      * @return required
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_REQUIRED)
+    @JsonProperty(value = JSON_PROPERTY_REQUIRED, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Boolean getRequired() {
         return required;
     }
 
-    @JsonProperty(JSON_PROPERTY_REQUIRED)
+    @JsonProperty(value = JSON_PROPERTY_REQUIRED, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setRequired(@jakarta.annotation.Nonnull Boolean required) {
         this.required = required;
@@ -144,10 +144,7 @@ public class AttachmentRequestInfo {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -186,6 +183,7 @@ public class AttachmentRequestInfo {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -196,6 +194,7 @@ public class AttachmentRequestInfo {
         if (getUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%surl%s=%s",
                             prefix,
                             suffix,
@@ -206,6 +205,7 @@ public class AttachmentRequestInfo {
         if (getRequired() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%srequired%s=%s",
                             prefix,
                             suffix,

@@ -33,7 +33,7 @@ All URIs are relative to *https://www.signwell.com*
 
 Create Document
 
-Creates and optionally sends a new document for signing. If &#x60;draft&#x60; is set to true the document will not be sent.
+Creates and optionally sends a new document for signing. If &#x60;draft&#x60; is set to true the document will not be sent. Recipients are notified by email, SMS, or both based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available only to workspaces that are eligible for SMS and have it enabled, and requires a &#x60;phone_number&#x60; in E.164 format.
 
 ### Example
 
@@ -105,11 +105,11 @@ CompletableFuture<[**DocumentResponse**](DocumentResponse.md)>
 
 ## createDocumentWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentResponse>> createDocument createDocumentWithHttpInfo(documentRequest)
+> CompletableFuture<ApiResponse<DocumentResponse>> createDocumentWithHttpInfo(documentRequest)
 
 Create Document
 
-Creates and optionally sends a new document for signing. If &#x60;draft&#x60; is set to true the document will not be sent.
+Creates and optionally sends a new document for signing. If &#x60;draft&#x60; is set to true the document will not be sent. Recipients are notified by email, SMS, or both based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available only to workspaces that are eligible for SMS and have it enabled, and requires a &#x60;phone_number&#x60; in E.164 format.
 
 ### Example
 
@@ -196,7 +196,7 @@ CompletableFuture<ApiResponse<[**DocumentResponse**](DocumentResponse.md)>>
 
 Create Document from Template
 
-Creates and optionally sends a new document for signing. If &#x60;draft&#x60; is set to true the document will not be sent.
+Creates and optionally sends a new document for signing. If &#x60;draft&#x60; is set to true the document will not be sent. Pre-signed template signatures and initials are copied to the new document as document content — they remain visible on the document but do not generate a signing event, do not emit a &#x60;document_signed&#x60; webhook, and the recipient&#39;s status will not reflect them as a real signing action. If the template was pre-signed for a signer and the request adds new unsigned signature/initials fields for that same signer, the pre-applied ratifications are cleared silently so the signer is asked to sign once. Recipients are notified by email, SMS, or both based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available only to workspaces that are eligible for SMS and have it enabled, and requires a &#x60;phone_number&#x60; in E.164 format.
 
 ### Example
 
@@ -268,11 +268,11 @@ CompletableFuture<[**DocumentFromTemplateResponse**](DocumentFromTemplateRespons
 
 ## createDocumentFromTemplateWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentFromTemplateResponse>> createDocumentFromTemplate createDocumentFromTemplateWithHttpInfo(documentFromTemplateRequest)
+> CompletableFuture<ApiResponse<DocumentFromTemplateResponse>> createDocumentFromTemplateWithHttpInfo(documentFromTemplateRequest)
 
 Create Document from Template
 
-Creates and optionally sends a new document for signing. If &#x60;draft&#x60; is set to true the document will not be sent.
+Creates and optionally sends a new document for signing. If &#x60;draft&#x60; is set to true the document will not be sent. Pre-signed template signatures and initials are copied to the new document as document content — they remain visible on the document but do not generate a signing event, do not emit a &#x60;document_signed&#x60; webhook, and the recipient&#39;s status will not reflect them as a real signing action. If the template was pre-signed for a signer and the request adds new unsigned signature/initials fields for that same signer, the pre-applied ratifications are cleared silently so the signer is asked to sign once. Recipients are notified by email, SMS, or both based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available only to workspaces that are eligible for SMS and have it enabled, and requires a &#x60;phone_number&#x60; in E.164 format.
 
 ### Example
 
@@ -429,7 +429,7 @@ CompletableFuture<void> (empty response body)
 
 ## deleteDocumentWithHttpInfo
 
-> CompletableFuture<ApiResponse<Void>> deleteDocument deleteDocumentWithHttpInfo(id)
+> CompletableFuture<ApiResponse<Void>> deleteDocumentWithHttpInfo(id)
 
 Delete Document
 
@@ -595,7 +595,7 @@ CompletableFuture<[**CompletedPdfResponse**](CompletedPdfResponse.md)>
 
 ## getCompletedPdfWithHttpInfo
 
-> CompletableFuture<ApiResponse<CompletedPdfResponse>> getCompletedPdf getCompletedPdfWithHttpInfo(id, urlOnly, auditPage, fileFormat)
+> CompletableFuture<ApiResponse<CompletedPdfResponse>> getCompletedPdfWithHttpInfo(id, urlOnly, auditPage, fileFormat)
 
 Completed PDF
 
@@ -691,7 +691,7 @@ CompletableFuture<ApiResponse<[**CompletedPdfResponse**](CompletedPdfResponse.md
 
 Get Document
 
-Returns a document and all associated document data. Supply the unique document ID from either a document creation request or Document page URL.
+Returns a document and all associated document data. Supply the unique document ID from either a document creation request or Document page URL. Each recipient includes its &#x60;delivery_method&#x60;, and recipients whose delivery includes SMS also include an &#x60;sms&#x60; object with the masked phone number and SMS delivery status.
 
 ### Example
 
@@ -762,11 +762,11 @@ CompletableFuture<[**DocumentResponse**](DocumentResponse.md)>
 
 ## getDocumentWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentResponse>> getDocument getDocumentWithHttpInfo(id)
+> CompletableFuture<ApiResponse<DocumentResponse>> getDocumentWithHttpInfo(id)
 
 Get Document
 
-Returns a document and all associated document data. Supply the unique document ID from either a document creation request or Document page URL.
+Returns a document and all associated document data. Supply the unique document ID from either a document creation request or Document page URL. Each recipient includes its &#x60;delivery_method&#x60;, and recipients whose delivery includes SMS also include an &#x60;sms&#x60; object with the masked phone number and SMS delivery status.
 
 ### Example
 
@@ -927,7 +927,7 @@ CompletableFuture<[**DocumentListResponse**](DocumentListResponse.md)>
 
 ## listDocumentsWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentListResponse>> listDocuments listDocumentsWithHttpInfo(page, limit, query)
+> CompletableFuture<ApiResponse<DocumentListResponse>> listDocumentsWithHttpInfo(page, limit, query)
 
 List Documents
 
@@ -1021,7 +1021,7 @@ CompletableFuture<ApiResponse<[**DocumentListResponse**](DocumentListResponse.md
 
 Update and Send Document
 
-Updates a draft document and sends it to be signed by recipients.
+Updates a draft document and sends it to be signed by recipients. &#x60;subject&#x60; and &#x60;message&#x60; apply to email notifications only; SMS notifications always use fixed system templates.
 
 ### Example
 
@@ -1094,11 +1094,11 @@ CompletableFuture<[**DocumentResponse**](DocumentResponse.md)>
 
 ## sendDocumentWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentResponse>> sendDocument sendDocumentWithHttpInfo(id, updateDocumentAndSendRequest)
+> CompletableFuture<ApiResponse<DocumentResponse>> sendDocumentWithHttpInfo(id, updateDocumentAndSendRequest)
 
 Update and Send Document
 
-Updates a draft document and sends it to be signed by recipients.
+Updates a draft document and sends it to be signed by recipients. &#x60;subject&#x60; and &#x60;message&#x60; apply to email notifications only; SMS notifications always use fixed system templates.
 
 ### Example
 
@@ -1186,7 +1186,7 @@ CompletableFuture<ApiResponse<[**DocumentResponse**](DocumentResponse.md)>>
 
 Send Reminder
 
-Sends a reminder email to recipients that have not signed yet.
+Sends a reminder to recipients who have not signed yet. Each recipient is reminded through their delivery method (email, SMS, or both). SMS reminders are only sent to recipients whose delivery method includes SMS, and only when the workspace is eligible for SMS and has it enabled.
 
 ### Example
 
@@ -1253,17 +1253,17 @@ CompletableFuture<void> (empty response body)
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | created |  -  |
-| **422** | unprocessable entity |  -  |
 | **404** | not found |  -  |
+| **422** | unprocessable entity |  -  |
 | **429** | rate limit exceeded |  -  |
 
 ## sendReminderWithHttpInfo
 
-> CompletableFuture<ApiResponse<Void>> sendReminder sendReminderWithHttpInfo(id, sendReminderRequest)
+> CompletableFuture<ApiResponse<Void>> sendReminderWithHttpInfo(id, sendReminderRequest)
 
 Send Reminder
 
-Sends a reminder email to recipients that have not signed yet.
+Sends a reminder to recipients who have not signed yet. Each recipient is reminded through their delivery method (email, SMS, or both). SMS reminders are only sent to recipients whose delivery method includes SMS, and only when the workspace is eligible for SMS and has it enabled.
 
 ### Example
 
@@ -1340,8 +1340,8 @@ CompletableFuture<ApiResponse<Void>>
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | created |  -  |
-| **422** | unprocessable entity |  -  |
 | **404** | not found |  -  |
+| **422** | unprocessable entity |  -  |
 | **429** | rate limit exceeded |  -  |
 
 
@@ -1419,13 +1419,14 @@ CompletableFuture<[**DocumentResponse**](DocumentResponse.md)>
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | successful |  -  |
+| **400** | bad request - invalid delivery methods |  -  |
 | **404** | not found |  -  |
-| **422** | unprocessable entity |  -  |
+| **422** | unprocessable entity - invalid delivery methods |  -  |
 | **429** | rate limit exceeded |  -  |
 
 ## updateAuthenticationWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentResponse>> updateAuthentication updateAuthenticationWithHttpInfo(id, updateAuthenticationRequest)
+> CompletableFuture<ApiResponse<DocumentResponse>> updateAuthenticationWithHttpInfo(id, updateAuthenticationRequest)
 
 Update Authentication
 
@@ -1507,8 +1508,9 @@ CompletableFuture<ApiResponse<[**DocumentResponse**](DocumentResponse.md)>>
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | successful |  -  |
+| **400** | bad request - invalid delivery methods |  -  |
 | **404** | not found |  -  |
-| **422** | unprocessable entity |  -  |
+| **422** | unprocessable entity - invalid delivery methods |  -  |
 | **429** | rate limit exceeded |  -  |
 
 
@@ -1518,7 +1520,7 @@ CompletableFuture<ApiResponse<[**DocumentResponse**](DocumentResponse.md)>>
 
 Update Recipients
 
-Updates one or more recipients on a document that has already been sent. Only recipients who have not started signing may be updated. Recipient IDs must be retrieved from the Get Document response. Allowed document statuses: sent, viewed, pending, bounced. For non-embedded documents, updated recipients will receive a new notification email. For embedded signing documents, email behavior follows each recipient&#39;s send_email setting.
+Updates one or more recipients on a document that has already been sent. Only recipients who have not started signing may be updated. Recipient IDs must be retrieved from the Get Document response. Allowed document statuses: sent, viewed, pending, bounced. For non-embedded documents, updated recipients will receive a new notification email. For embedded signing documents, email behavior follows each recipient&#39;s send_email setting. This endpoint does not support changing a recipient&#39;s &#x60;delivery_method&#x60; or &#x60;phone_number&#x60;; SMS delivery settings are set when the document is created.
 
 ### Example
 
@@ -1586,19 +1588,19 @@ CompletableFuture<[**DocumentResponse**](DocumentResponse.md)>
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | successful |  -  |
-| **409** | conflict - document not in eligible state |  -  |
 | **400** | bad request - invalid structure |  -  |
-| **422** | unprocessable entity - business rule violation |  -  |
 | **404** | not found |  -  |
+| **409** | conflict - document not in eligible state |  -  |
+| **422** | unprocessable entity - business rule violation |  -  |
 | **429** | rate limit exceeded |  -  |
 
 ## updateRecipientsWithHttpInfo
 
-> CompletableFuture<ApiResponse<DocumentResponse>> updateRecipients updateRecipientsWithHttpInfo(id, updateRecipientsRequest)
+> CompletableFuture<ApiResponse<DocumentResponse>> updateRecipientsWithHttpInfo(id, updateRecipientsRequest)
 
 Update Recipients
 
-Updates one or more recipients on a document that has already been sent. Only recipients who have not started signing may be updated. Recipient IDs must be retrieved from the Get Document response. Allowed document statuses: sent, viewed, pending, bounced. For non-embedded documents, updated recipients will receive a new notification email. For embedded signing documents, email behavior follows each recipient&#39;s send_email setting.
+Updates one or more recipients on a document that has already been sent. Only recipients who have not started signing may be updated. Recipient IDs must be retrieved from the Get Document response. Allowed document statuses: sent, viewed, pending, bounced. For non-embedded documents, updated recipients will receive a new notification email. For embedded signing documents, email behavior follows each recipient&#39;s send_email setting. This endpoint does not support changing a recipient&#39;s &#x60;delivery_method&#x60; or &#x60;phone_number&#x60;; SMS delivery settings are set when the document is created.
 
 ### Example
 
@@ -1676,9 +1678,9 @@ CompletableFuture<ApiResponse<[**DocumentResponse**](DocumentResponse.md)>>
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | successful |  -  |
-| **409** | conflict - document not in eligible state |  -  |
 | **400** | bad request - invalid structure |  -  |
-| **422** | unprocessable entity - business rule violation |  -  |
 | **404** | not found |  -  |
+| **409** | conflict - document not in eligible state |  -  |
+| **422** | unprocessable entity - business rule violation |  -  |
 | **429** | rate limit exceeded |  -  |
 

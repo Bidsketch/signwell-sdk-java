@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({ValidationErrorResponse.JSON_PROPERTY_ERRORS})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class ValidationErrorResponse {
     public static final String JSON_PROPERTY_ERRORS = "errors";
     @jakarta.annotation.Nonnull private Map<String, ValidationErrorValue> errors = new HashMap<>();
@@ -56,13 +56,13 @@ public class ValidationErrorResponse {
      * @return errors
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ERRORS)
+    @JsonProperty(value = JSON_PROPERTY_ERRORS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Map<String, ValidationErrorValue> getErrors() {
         return errors;
     }
 
-    @JsonProperty(JSON_PROPERTY_ERRORS)
+    @JsonProperty(value = JSON_PROPERTY_ERRORS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setErrors(@jakarta.annotation.Nonnull Map<String, ValidationErrorValue> errors) {
         this.errors = errors;
@@ -100,10 +100,7 @@ public class ValidationErrorResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -147,12 +144,14 @@ public class ValidationErrorResponse {
                                     .get(_key)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%serrors%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     _key,

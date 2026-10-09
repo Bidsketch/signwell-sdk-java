@@ -91,13 +91,13 @@ CompletableFuture<[**BulkSendCreateResponse**](BulkSendCreateResponse.md)>
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | successful |  -  |
-| **422** | unprocessable entity |  -  |
 | **401** | unauthorized |  -  |
+| **422** | unprocessable entity |  -  |
 | **429** | rate limit exceeded |  -  |
 
 ## createBulkSendWithHttpInfo
 
-> CompletableFuture<ApiResponse<BulkSendCreateResponse>> createBulkSend createBulkSendWithHttpInfo(createBulkSendRequest)
+> CompletableFuture<ApiResponse<BulkSendCreateResponse>> createBulkSendWithHttpInfo(createBulkSendRequest)
 
 Create Bulk Send
 
@@ -177,8 +177,8 @@ CompletableFuture<ApiResponse<[**BulkSendCreateResponse**](BulkSendCreateRespons
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **201** | successful |  -  |
-| **422** | unprocessable entity |  -  |
 | **401** | unauthorized |  -  |
+| **422** | unprocessable entity |  -  |
 | **429** | rate limit exceeded |  -  |
 
 
@@ -260,7 +260,7 @@ CompletableFuture<[**BulkSendResponse**](BulkSendResponse.md)>
 
 ## getBulkSendWithHttpInfo
 
-> CompletableFuture<ApiResponse<BulkSendResponse>> getBulkSend getBulkSendWithHttpInfo(id)
+> CompletableFuture<ApiResponse<BulkSendResponse>> getBulkSendWithHttpInfo(id)
 
 Get Bulk Send
 
@@ -425,7 +425,7 @@ CompletableFuture<[**File**](File.md)>
 
 ## getBulkSendCsvTemplateWithHttpInfo
 
-> CompletableFuture<ApiResponse<File>> getBulkSendCsvTemplate getBulkSendCsvTemplateWithHttpInfo(templateIds, base64)
+> CompletableFuture<ApiResponse<File>> getBulkSendCsvTemplateWithHttpInfo(templateIds, base64)
 
 Get Bulk Send CSV Template
 
@@ -594,7 +594,7 @@ CompletableFuture<[**BulkSendDocumentsResponse**](BulkSendDocumentsResponse.md)>
 
 ## getBulkSendDocumentsWithHttpInfo
 
-> CompletableFuture<ApiResponse<BulkSendDocumentsResponse>> getBulkSendDocuments getBulkSendDocumentsWithHttpInfo(id, limit, page)
+> CompletableFuture<ApiResponse<BulkSendDocumentsResponse>> getBulkSendDocumentsWithHttpInfo(id, limit, page)
 
 Get Bulk Send Documents
 
@@ -766,7 +766,7 @@ CompletableFuture<[**BulkSendListResponse**](BulkSendListResponse.md)>
 
 ## listBulkSendsWithHttpInfo
 
-> CompletableFuture<ApiResponse<BulkSendListResponse>> listBulkSends listBulkSendsWithHttpInfo(userEmail, limit, page, apiApplicationId)
+> CompletableFuture<ApiResponse<BulkSendListResponse>> listBulkSendsWithHttpInfo(userEmail, limit, page, apiApplicationId)
 
 List Bulk Sendings
 
@@ -928,13 +928,13 @@ CompletableFuture<[**BulkSendValidateCsvResponse**](BulkSendValidateCsvResponse.
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | successful |  -  |
-| **422** | unprocessable entity |  -  |
 | **401** | unauthorized |  -  |
+| **422** | unprocessable entity |  -  |
 | **429** | rate limit exceeded |  -  |
 
 ## validateBulkSendCsvWithHttpInfo
 
-> CompletableFuture<ApiResponse<BulkSendValidateCsvResponse>> validateBulkSendCsv validateBulkSendCsvWithHttpInfo(bulkSendCsvRequest)
+> CompletableFuture<ApiResponse<BulkSendValidateCsvResponse>> validateBulkSendCsvWithHttpInfo(bulkSendCsvRequest)
 
 Validate Bulk Send CSV
 
@@ -1014,7 +1014,7 @@ CompletableFuture<ApiResponse<[**BulkSendValidateCsvResponse**](BulkSendValidate
 | Status code | Description | Response headers |
 |-------------|-------------|------------------|
 | **200** | successful |  -  |
-| **422** | unprocessable entity |  -  |
 | **401** | unauthorized |  -  |
+| **422** | unprocessable entity |  -  |
 | **429** | rate limit exceeded |  -  |
 

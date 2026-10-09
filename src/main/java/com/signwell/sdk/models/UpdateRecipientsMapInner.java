@@ -26,11 +26,12 @@ import java.util.StringJoiner;
     UpdateRecipientsMapInner.JSON_PROPERTY_EMAIL,
     UpdateRecipientsMapInner.JSON_PROPERTY_SUBJECT,
     UpdateRecipientsMapInner.JSON_PROPERTY_MESSAGE,
-    UpdateRecipientsMapInner.JSON_PROPERTY_PASSCODE
+    UpdateRecipientsMapInner.JSON_PROPERTY_PASSCODE,
+    UpdateRecipientsMapInner.JSON_PROPERTY_PASSCODE_DELIVERY
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class UpdateRecipientsMapInner {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private String id;
@@ -50,6 +51,9 @@ public class UpdateRecipientsMapInner {
     public static final String JSON_PROPERTY_PASSCODE = "passcode";
     @jakarta.annotation.Nullable private String passcode;
 
+    public static final String JSON_PROPERTY_PASSCODE_DELIVERY = "passcode_delivery";
+    @jakarta.annotation.Nullable private PasscodeDelivery passcodeDelivery;
+
     public UpdateRecipientsMapInner() {}
 
     public UpdateRecipientsMapInner id(@jakarta.annotation.Nonnull String id) {
@@ -63,13 +67,13 @@ public class UpdateRecipientsMapInner {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull String id) {
         this.id = id;
@@ -86,13 +90,13 @@ public class UpdateRecipientsMapInner {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -109,13 +113,13 @@ public class UpdateRecipientsMapInner {
      * @return email
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getEmail() {
         return email;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setEmail(@jakarta.annotation.Nonnull String email) {
         this.email = email;
@@ -131,13 +135,13 @@ public class UpdateRecipientsMapInner {
      *
      * @return subject
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getSubject() {
         return subject;
     }
 
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSubject(@jakarta.annotation.Nullable String subject) {
         this.subject = subject;
@@ -153,13 +157,13 @@ public class UpdateRecipientsMapInner {
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -172,20 +176,45 @@ public class UpdateRecipientsMapInner {
 
     /**
      * Updated passcode for the recipient. If set, the signer will be required to enter the passcode
-     * before viewing and completing the document.
+     * before viewing and completing the document. On a 21 CFR Part 11 document SignWell generates
+     * the passcode, so a sender-defined passcode returns a 422.
      *
      * @return passcode
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PASSCODE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PASSCODE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPasscode() {
         return passcode;
     }
 
-    @JsonProperty(JSON_PROPERTY_PASSCODE)
+    @JsonProperty(value = JSON_PROPERTY_PASSCODE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPasscode(@jakarta.annotation.Nullable String passcode) {
         this.passcode = passcode;
+    }
+
+    public UpdateRecipientsMapInner passcodeDelivery(
+            @jakarta.annotation.Nullable PasscodeDelivery passcodeDelivery) {
+        this.passcodeDelivery = passcodeDelivery;
+        return this;
+    }
+
+    /**
+     * Get passcodeDelivery
+     *
+     * @return passcodeDelivery
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public PasscodeDelivery getPasscodeDelivery() {
+        return passcodeDelivery;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setPasscodeDelivery(
+            @jakarta.annotation.Nullable PasscodeDelivery passcodeDelivery) {
+        this.passcodeDelivery = passcodeDelivery;
     }
 
     /** Return true if this update_recipients_map_inner object is equal to o. */
@@ -203,12 +232,13 @@ public class UpdateRecipientsMapInner {
                 && Objects.equals(this.email, updateRecipientsMapInner.email)
                 && Objects.equals(this.subject, updateRecipientsMapInner.subject)
                 && Objects.equals(this.message, updateRecipientsMapInner.message)
-                && Objects.equals(this.passcode, updateRecipientsMapInner.passcode);
+                && Objects.equals(this.passcode, updateRecipientsMapInner.passcode)
+                && Objects.equals(this.passcodeDelivery, updateRecipientsMapInner.passcodeDelivery);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, subject, message, passcode);
+        return Objects.hash(id, name, email, subject, message, passcode, passcodeDelivery);
     }
 
     @Override
@@ -221,6 +251,7 @@ public class UpdateRecipientsMapInner {
         sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
         sb.append("    message: ").append(toIndentedString(message)).append("\n");
         sb.append("    passcode: ").append(toIndentedString(passcode)).append("\n");
+        sb.append("    passcodeDelivery: ").append(toIndentedString(passcodeDelivery)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -230,10 +261,7 @@ public class UpdateRecipientsMapInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -272,14 +300,18 @@ public class UpdateRecipientsMapInner {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -290,6 +322,7 @@ public class UpdateRecipientsMapInner {
         if (getEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%semail%s=%s",
                             prefix,
                             suffix,
@@ -300,6 +333,7 @@ public class UpdateRecipientsMapInner {
         if (getSubject() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssubject%s=%s",
                             prefix,
                             suffix,
@@ -310,6 +344,7 @@ public class UpdateRecipientsMapInner {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -320,10 +355,17 @@ public class UpdateRecipientsMapInner {
         if (getPasscode() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spasscode%s=%s",
                             prefix,
                             suffix,
                             ApiClient.urlEncode(ApiClient.valueToString(getPasscode()))));
+        }
+
+        // add `passcode_delivery` to the URL query string
+        if (getPasscodeDelivery() != null) {
+            joiner.add(
+                    getPasscodeDelivery().toUrlQueryString(prefix + "passcode_delivery" + suffix));
         }
 
         return joiner.toString();

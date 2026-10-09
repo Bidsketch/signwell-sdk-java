@@ -31,7 +31,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class DocumentTemplateResponseCopiedPlaceholdersInner {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nullable private String id;
@@ -69,13 +69,13 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
      *
      * @return id
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setId(@jakarta.annotation.Nullable String id) {
         this.id = id;
@@ -92,13 +92,13 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
      *
      * @return placeholderId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PLACEHOLDER_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PLACEHOLDER_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPlaceholderId() {
         return placeholderId;
     }
 
-    @JsonProperty(JSON_PROPERTY_PLACEHOLDER_ID)
+    @JsonProperty(value = JSON_PROPERTY_PLACEHOLDER_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPlaceholderId(@jakarta.annotation.Nullable String placeholderId) {
         this.placeholderId = placeholderId;
@@ -116,13 +116,13 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -139,13 +139,13 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
      *
      * @return subject
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getSubject() {
         return subject;
     }
 
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSubject(@jakarta.annotation.Nullable String subject) {
         this.subject = subject;
@@ -162,13 +162,13 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -185,13 +185,13 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
      *
      * @return preassignedRecipientName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPreassignedRecipientName() {
         return preassignedRecipientName;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME)
+    @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreassignedRecipientName(
             @jakarta.annotation.Nullable String preassignedRecipientName) {
@@ -209,13 +209,13 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
      *
      * @return preassignedRecipientEmail
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPreassignedRecipientEmail() {
         return preassignedRecipientEmail;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreassignedRecipientEmail(
             @jakarta.annotation.Nullable String preassignedRecipientEmail) {
@@ -289,10 +289,7 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -331,14 +328,18 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `placeholder_id` to the URL query string
         if (getPlaceholderId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%splaceholder_id%s=%s",
                             prefix,
                             suffix,
@@ -349,6 +350,7 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -359,6 +361,7 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
         if (getSubject() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssubject%s=%s",
                             prefix,
                             suffix,
@@ -369,6 +372,7 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -379,6 +383,7 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
         if (getPreassignedRecipientName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spreassigned_recipient_name%s=%s",
                             prefix,
                             suffix,
@@ -390,6 +395,7 @@ public class DocumentTemplateResponseCopiedPlaceholdersInner {
         if (getPreassignedRecipientEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spreassigned_recipient_email%s=%s",
                             prefix,
                             suffix,

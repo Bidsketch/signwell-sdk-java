@@ -12,9 +12,11 @@
 
 package com.signwell.sdk.models;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import com.fasterxml.jackson.annotation.JsonPropertyOrder;
+import com.fasterxml.jackson.annotation.JsonValue;
 import com.signwell.sdk.raw.ApiClient;
 import java.util.Objects;
 import java.util.StringJoiner;
@@ -25,14 +27,19 @@ import java.util.StringJoiner;
     RecipientsInner.JSON_PROPERTY_NAME,
     RecipientsInner.JSON_PROPERTY_EMAIL,
     RecipientsInner.JSON_PROPERTY_PASSCODE,
+    RecipientsInner.JSON_PROPERTY_PASSCODE_DELIVERY,
     RecipientsInner.JSON_PROPERTY_SUBJECT,
     RecipientsInner.JSON_PROPERTY_MESSAGE,
     RecipientsInner.JSON_PROPERTY_SEND_EMAIL,
-    RecipientsInner.JSON_PROPERTY_SEND_EMAIL_DELAY
+    RecipientsInner.JSON_PROPERTY_SEND_EMAIL_DELAY,
+    RecipientsInner.JSON_PROPERTY_DELIVERY_METHOD,
+    RecipientsInner.JSON_PROPERTY_PHONE_NUMBER,
+    RecipientsInner.JSON_PROPERTY_SEND_SMS,
+    RecipientsInner.JSON_PROPERTY_SEND_SMS_DELAY
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class RecipientsInner {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private String id;
@@ -41,10 +48,13 @@ public class RecipientsInner {
     @jakarta.annotation.Nullable private String name;
 
     public static final String JSON_PROPERTY_EMAIL = "email";
-    @jakarta.annotation.Nonnull private String email;
+    @jakarta.annotation.Nullable private String email;
 
     public static final String JSON_PROPERTY_PASSCODE = "passcode";
     @jakarta.annotation.Nullable private String passcode;
+
+    public static final String JSON_PROPERTY_PASSCODE_DELIVERY = "passcode_delivery";
+    @jakarta.annotation.Nullable private RecipientsInnerPasscodeDelivery passcodeDelivery;
 
     public static final String JSON_PROPERTY_SUBJECT = "subject";
     @jakarta.annotation.Nullable private String subject;
@@ -57,6 +67,65 @@ public class RecipientsInner {
 
     public static final String JSON_PROPERTY_SEND_EMAIL_DELAY = "send_email_delay";
     @jakarta.annotation.Nullable private Integer sendEmailDelay = 0;
+
+    /**
+     * How the recipient is notified and receives the signing link: &#x60;email&#x60; (default),
+     * &#x60;sms&#x60;, or &#x60;email_and_sms&#x60;. SMS delivery is available only to workspaces
+     * that are eligible for SMS and have it enabled. &#x60;email&#x60; requires &#x60;email&#x60;,
+     * &#x60;sms&#x60; requires &#x60;phone_number&#x60;, and &#x60;email_and_sms&#x60; requires
+     * both. SMS content always uses fixed system templates; &#x60;subject&#x60; and
+     * &#x60;message&#x60; apply to email notifications only. A 21 CFR Part 11 document records one
+     * verified channel per recipient: &#x60;email&#x60; and &#x60;sms&#x60; are both accepted,
+     * while &#x60;email_and_sms&#x60; returns a 422.
+     */
+    public enum DeliveryMethodEnum {
+        EMAIL(String.valueOf("email")),
+
+        SMS(String.valueOf("sms")),
+
+        EMAIL_AND_SMS(String.valueOf("email_and_sms")),
+
+        UNKNOWN_DEFAULT_OPEN_API(String.valueOf("unknown_default_open_api"));
+
+        private String value;
+
+        DeliveryMethodEnum(String value) {
+            this.value = value;
+        }
+
+        @JsonValue
+        public String getValue() {
+            return value;
+        }
+
+        @Override
+        public String toString() {
+            return String.valueOf(value);
+        }
+
+        @JsonCreator
+        public static DeliveryMethodEnum fromValue(String value) {
+            for (DeliveryMethodEnum b : DeliveryMethodEnum.values()) {
+                if (b.value.equals(value)) {
+                    return b;
+                }
+            }
+            return UNKNOWN_DEFAULT_OPEN_API;
+        }
+    }
+
+    public static final String JSON_PROPERTY_DELIVERY_METHOD = "delivery_method";
+
+    @jakarta.annotation.Nullable private DeliveryMethodEnum deliveryMethod = DeliveryMethodEnum.EMAIL;
+
+    public static final String JSON_PROPERTY_PHONE_NUMBER = "phone_number";
+    @jakarta.annotation.Nullable private String phoneNumber;
+
+    public static final String JSON_PROPERTY_SEND_SMS = "send_sms";
+    @jakarta.annotation.Nullable private Boolean sendSms = false;
+
+    public static final String JSON_PROPERTY_SEND_SMS_DELAY = "send_sms_delay";
+    @jakarta.annotation.Nullable private Integer sendSmsDelay = 0;
 
     public RecipientsInner() {}
 
@@ -72,13 +141,13 @@ public class RecipientsInner {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull String id) {
         this.id = id;
@@ -90,42 +159,43 @@ public class RecipientsInner {
     }
 
     /**
-     * Name of the recipient.
+     * Name of the recipient. Required on 21 CFR Part 11 documents: a recipient without a name
+     * returns a 422.
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
     }
 
-    public RecipientsInner email(@jakarta.annotation.Nonnull String email) {
+    public RecipientsInner email(@jakarta.annotation.Nullable String email) {
         this.email = email;
         return this;
     }
 
     /**
-     * Email address for the recipient.
+     * Email address for the recipient. Required unless the recipient&#39;s
+     * &#x60;delivery_method&#x60; is &#x60;sms&#x60;.
      *
      * @return email
      */
-    @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_EMAIL)
-    @JsonInclude(value = JsonInclude.Include.ALWAYS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMAIL, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getEmail() {
         return email;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMAIL)
-    @JsonInclude(value = JsonInclude.Include.ALWAYS)
-    public void setEmail(@jakarta.annotation.Nonnull String email) {
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setEmail(@jakarta.annotation.Nullable String email) {
         this.email = email;
     }
 
@@ -136,20 +206,45 @@ public class RecipientsInner {
 
     /**
      * If set, signers assigned with a passcode will be required to enter the passcode before
-     * they’re able to view and complete the document.
+     * they’re able to view and complete the document. On a 21 CFR Part 11 document SignWell
+     * generates the passcode, so a sender-defined passcode returns a 422.
      *
      * @return passcode
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PASSCODE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PASSCODE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPasscode() {
         return passcode;
     }
 
-    @JsonProperty(JSON_PROPERTY_PASSCODE)
+    @JsonProperty(value = JSON_PROPERTY_PASSCODE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPasscode(@jakarta.annotation.Nullable String passcode) {
         this.passcode = passcode;
+    }
+
+    public RecipientsInner passcodeDelivery(
+            @jakarta.annotation.Nullable RecipientsInnerPasscodeDelivery passcodeDelivery) {
+        this.passcodeDelivery = passcodeDelivery;
+        return this;
+    }
+
+    /**
+     * Get passcodeDelivery
+     *
+     * @return passcodeDelivery
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public RecipientsInnerPasscodeDelivery getPasscodeDelivery() {
+        return passcodeDelivery;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setPasscodeDelivery(
+            @jakarta.annotation.Nullable RecipientsInnerPasscodeDelivery passcodeDelivery) {
+        this.passcodeDelivery = passcodeDelivery;
     }
 
     public RecipientsInner subject(@jakarta.annotation.Nullable String subject) {
@@ -163,13 +258,13 @@ public class RecipientsInner {
      *
      * @return subject
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getSubject() {
         return subject;
     }
 
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSubject(@jakarta.annotation.Nullable String subject) {
         this.subject = subject;
@@ -186,13 +281,13 @@ public class RecipientsInner {
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -211,13 +306,13 @@ public class RecipientsInner {
      *
      * @return sendEmail
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SEND_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SEND_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getSendEmail() {
         return sendEmail;
     }
 
-    @JsonProperty(JSON_PROPERTY_SEND_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_SEND_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSendEmail(@jakarta.annotation.Nullable Boolean sendEmail) {
         this.sendEmail = sendEmail;
@@ -237,16 +332,121 @@ public class RecipientsInner {
      *
      * @return sendEmailDelay
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SEND_EMAIL_DELAY)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SEND_EMAIL_DELAY, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getSendEmailDelay() {
         return sendEmailDelay;
     }
 
-    @JsonProperty(JSON_PROPERTY_SEND_EMAIL_DELAY)
+    @JsonProperty(value = JSON_PROPERTY_SEND_EMAIL_DELAY, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSendEmailDelay(@jakarta.annotation.Nullable Integer sendEmailDelay) {
         this.sendEmailDelay = sendEmailDelay;
+    }
+
+    public RecipientsInner deliveryMethod(
+            @jakarta.annotation.Nullable DeliveryMethodEnum deliveryMethod) {
+        this.deliveryMethod = deliveryMethod;
+        return this;
+    }
+
+    /**
+     * How the recipient is notified and receives the signing link: &#x60;email&#x60; (default),
+     * &#x60;sms&#x60;, or &#x60;email_and_sms&#x60;. SMS delivery is available only to workspaces
+     * that are eligible for SMS and have it enabled. &#x60;email&#x60; requires &#x60;email&#x60;,
+     * &#x60;sms&#x60; requires &#x60;phone_number&#x60;, and &#x60;email_and_sms&#x60; requires
+     * both. SMS content always uses fixed system templates; &#x60;subject&#x60; and
+     * &#x60;message&#x60; apply to email notifications only. A 21 CFR Part 11 document records one
+     * verified channel per recipient: &#x60;email&#x60; and &#x60;sms&#x60; are both accepted,
+     * while &#x60;email_and_sms&#x60; returns a 422.
+     *
+     * @return deliveryMethod
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DELIVERY_METHOD, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public DeliveryMethodEnum getDeliveryMethod() {
+        return deliveryMethod;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_DELIVERY_METHOD, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setDeliveryMethod(@jakarta.annotation.Nullable DeliveryMethodEnum deliveryMethod) {
+        this.deliveryMethod = deliveryMethod;
+    }
+
+    public RecipientsInner phoneNumber(@jakarta.annotation.Nullable String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+        return this;
+    }
+
+    /**
+     * Recipient phone number in E.164 format (for example &#x60;+14155551234&#x60;). Required when
+     * &#x60;delivery_method&#x60; is &#x60;sms&#x60; or &#x60;email_and_sms&#x60;. Only phone
+     * numbers from the country codes currently enabled for SMS are accepted.
+     *
+     * @return phoneNumber
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PHONE_NUMBER, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public String getPhoneNumber() {
+        return phoneNumber;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_PHONE_NUMBER, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setPhoneNumber(@jakarta.annotation.Nullable String phoneNumber) {
+        this.phoneNumber = phoneNumber;
+    }
+
+    public RecipientsInner sendSms(@jakarta.annotation.Nullable Boolean sendSms) {
+        this.sendSms = sendSms;
+        return this;
+    }
+
+    /**
+     * Applies only when &#x60;embedded_signing&#x60; is &#x60;true&#x60; and the recipient&#39;s
+     * &#x60;delivery_method&#x60; includes SMS. By default, recipients are not notified through SMS
+     * when doing embedded signing. Setting this to &#x60;true&#x60; will send the SMS notification
+     * to the recipient. Default is &#x60;false&#x60;.
+     *
+     * @return sendSms
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SEND_SMS, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public Boolean getSendSms() {
+        return sendSms;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_SEND_SMS, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setSendSms(@jakarta.annotation.Nullable Boolean sendSms) {
+        this.sendSms = sendSms;
+    }
+
+    public RecipientsInner sendSmsDelay(@jakarta.annotation.Nullable Integer sendSmsDelay) {
+        this.sendSmsDelay = sendSmsDelay;
+        return this;
+    }
+
+    /**
+     * If &#x60;send_sms&#x60; is &#x60;true&#x60; the recipient will receive the SMS notification
+     * immediately. In the case of embedded signing, you can delay this notification to only send if
+     * the document is not completed within a few minutes. The SMS will not go out if the document
+     * is completed before the delay time is over. Valid values are in minutes ranging from
+     * &#x60;0&#x60; to &#x60;60&#x60;. Defaults to &#x60;0&#x60;.
+     *
+     * @return sendSmsDelay
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SEND_SMS_DELAY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public Integer getSendSmsDelay() {
+        return sendSmsDelay;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_SEND_SMS_DELAY, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setSendSmsDelay(@jakarta.annotation.Nullable Integer sendSmsDelay) {
+        this.sendSmsDelay = sendSmsDelay;
     }
 
     /** Return true if this Recipients_inner object is equal to o. */
@@ -263,15 +463,33 @@ public class RecipientsInner {
                 && Objects.equals(this.name, recipientsInner.name)
                 && Objects.equals(this.email, recipientsInner.email)
                 && Objects.equals(this.passcode, recipientsInner.passcode)
+                && Objects.equals(this.passcodeDelivery, recipientsInner.passcodeDelivery)
                 && Objects.equals(this.subject, recipientsInner.subject)
                 && Objects.equals(this.message, recipientsInner.message)
                 && Objects.equals(this.sendEmail, recipientsInner.sendEmail)
-                && Objects.equals(this.sendEmailDelay, recipientsInner.sendEmailDelay);
+                && Objects.equals(this.sendEmailDelay, recipientsInner.sendEmailDelay)
+                && Objects.equals(this.deliveryMethod, recipientsInner.deliveryMethod)
+                && Objects.equals(this.phoneNumber, recipientsInner.phoneNumber)
+                && Objects.equals(this.sendSms, recipientsInner.sendSms)
+                && Objects.equals(this.sendSmsDelay, recipientsInner.sendSmsDelay);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(id, name, email, passcode, subject, message, sendEmail, sendEmailDelay);
+        return Objects.hash(
+                id,
+                name,
+                email,
+                passcode,
+                passcodeDelivery,
+                subject,
+                message,
+                sendEmail,
+                sendEmailDelay,
+                deliveryMethod,
+                phoneNumber,
+                sendSms,
+                sendSmsDelay);
     }
 
     @Override
@@ -282,10 +500,15 @@ public class RecipientsInner {
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    email: ").append(toIndentedString(email)).append("\n");
         sb.append("    passcode: ").append(toIndentedString(passcode)).append("\n");
+        sb.append("    passcodeDelivery: ").append(toIndentedString(passcodeDelivery)).append("\n");
         sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
         sb.append("    message: ").append(toIndentedString(message)).append("\n");
         sb.append("    sendEmail: ").append(toIndentedString(sendEmail)).append("\n");
         sb.append("    sendEmailDelay: ").append(toIndentedString(sendEmailDelay)).append("\n");
+        sb.append("    deliveryMethod: ").append(toIndentedString(deliveryMethod)).append("\n");
+        sb.append("    phoneNumber: ").append(toIndentedString(phoneNumber)).append("\n");
+        sb.append("    sendSms: ").append(toIndentedString(sendSms)).append("\n");
+        sb.append("    sendSmsDelay: ").append(toIndentedString(sendSmsDelay)).append("\n");
         sb.append("}");
         return sb.toString();
     }
@@ -295,10 +518,7 @@ public class RecipientsInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -337,14 +557,18 @@ public class RecipientsInner {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -355,6 +579,7 @@ public class RecipientsInner {
         if (getEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%semail%s=%s",
                             prefix,
                             suffix,
@@ -365,16 +590,24 @@ public class RecipientsInner {
         if (getPasscode() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spasscode%s=%s",
                             prefix,
                             suffix,
                             ApiClient.urlEncode(ApiClient.valueToString(getPasscode()))));
         }
 
+        // add `passcode_delivery` to the URL query string
+        if (getPasscodeDelivery() != null) {
+            joiner.add(
+                    getPasscodeDelivery().toUrlQueryString(prefix + "passcode_delivery" + suffix));
+        }
+
         // add `subject` to the URL query string
         if (getSubject() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssubject%s=%s",
                             prefix,
                             suffix,
@@ -385,6 +618,7 @@ public class RecipientsInner {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -395,6 +629,7 @@ public class RecipientsInner {
         if (getSendEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssend_email%s=%s",
                             prefix,
                             suffix,
@@ -405,10 +640,55 @@ public class RecipientsInner {
         if (getSendEmailDelay() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssend_email_delay%s=%s",
                             prefix,
                             suffix,
                             ApiClient.urlEncode(ApiClient.valueToString(getSendEmailDelay()))));
+        }
+
+        // add `delivery_method` to the URL query string
+        if (getDeliveryMethod() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%sdelivery_method%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getDeliveryMethod()))));
+        }
+
+        // add `phone_number` to the URL query string
+        if (getPhoneNumber() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%sphone_number%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getPhoneNumber()))));
+        }
+
+        // add `send_sms` to the URL query string
+        if (getSendSms() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%ssend_sms%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getSendSms()))));
+        }
+
+        // add `send_sms_delay` to the URL query string
+        if (getSendSmsDelay() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%ssend_sms_delay%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getSendSmsDelay()))));
         }
 
         return joiner.toString();

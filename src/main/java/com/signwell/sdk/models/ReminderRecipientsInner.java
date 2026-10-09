@@ -26,7 +26,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class ReminderRecipientsInner {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nullable private String name;
@@ -46,13 +46,13 @@ public class ReminderRecipientsInner {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -64,17 +64,18 @@ public class ReminderRecipientsInner {
     }
 
     /**
-     * Recipient&#39;s email address.
+     * Recipient&#39;s email address. Used to match the recipient to remind; not required for
+     * SMS-only recipients, who can be identified by name instead.
      *
      * @return email
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getEmail() {
         return email;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEmail(@jakarta.annotation.Nullable String email) {
         this.email = email;
@@ -114,10 +115,7 @@ public class ReminderRecipientsInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -156,6 +154,7 @@ public class ReminderRecipientsInner {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -166,6 +165,7 @@ public class ReminderRecipientsInner {
         if (getEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%semail%s=%s",
                             prefix,
                             suffix,

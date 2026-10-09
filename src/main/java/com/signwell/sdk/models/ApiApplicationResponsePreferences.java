@@ -29,7 +29,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class ApiApplicationResponsePreferences {
     public static final String JSON_PROPERTY_BUTTON_TEXT_COLOR = "button_text_color";
     @jakarta.annotation.Nullable private String buttonTextColor;
@@ -59,13 +59,13 @@ public class ApiApplicationResponsePreferences {
      *
      * @return buttonTextColor
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_BUTTON_TEXT_COLOR)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_BUTTON_TEXT_COLOR, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getButtonTextColor() {
         return buttonTextColor;
     }
 
-    @JsonProperty(JSON_PROPERTY_BUTTON_TEXT_COLOR)
+    @JsonProperty(value = JSON_PROPERTY_BUTTON_TEXT_COLOR, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setButtonTextColor(@jakarta.annotation.Nullable String buttonTextColor) {
         this.buttonTextColor = buttonTextColor;
@@ -82,13 +82,13 @@ public class ApiApplicationResponsePreferences {
      *
      * @return buttonsBorderRadius
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_BUTTONS_BORDER_RADIUS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_BUTTONS_BORDER_RADIUS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getButtonsBorderRadius() {
         return buttonsBorderRadius;
     }
 
-    @JsonProperty(JSON_PROPERTY_BUTTONS_BORDER_RADIUS)
+    @JsonProperty(value = JSON_PROPERTY_BUTTONS_BORDER_RADIUS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setButtonsBorderRadius(@jakarta.annotation.Nullable Integer buttonsBorderRadius) {
         this.buttonsBorderRadius = buttonsBorderRadius;
@@ -105,13 +105,13 @@ public class ApiApplicationResponsePreferences {
      *
      * @return customLogoFile
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_LOGO_FILE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CUSTOM_LOGO_FILE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getCustomLogoFile() {
         return customLogoFile;
     }
 
-    @JsonProperty(JSON_PROPERTY_CUSTOM_LOGO_FILE)
+    @JsonProperty(value = JSON_PROPERTY_CUSTOM_LOGO_FILE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCustomLogoFile(@jakarta.annotation.Nullable String customLogoFile) {
         this.customLogoFile = customLogoFile;
@@ -128,13 +128,13 @@ public class ApiApplicationResponsePreferences {
      *
      * @return linkTextColor
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_LINK_TEXT_COLOR)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_LINK_TEXT_COLOR, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getLinkTextColor() {
         return linkTextColor;
     }
 
-    @JsonProperty(JSON_PROPERTY_LINK_TEXT_COLOR)
+    @JsonProperty(value = JSON_PROPERTY_LINK_TEXT_COLOR, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setLinkTextColor(@jakarta.annotation.Nullable String linkTextColor) {
         this.linkTextColor = linkTextColor;
@@ -151,13 +151,13 @@ public class ApiApplicationResponsePreferences {
      *
      * @return primaryColor
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PRIMARY_COLOR)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PRIMARY_COLOR, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPrimaryColor() {
         return primaryColor;
     }
 
-    @JsonProperty(JSON_PROPERTY_PRIMARY_COLOR)
+    @JsonProperty(value = JSON_PROPERTY_PRIMARY_COLOR, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPrimaryColor(@jakarta.annotation.Nullable String primaryColor) {
         this.primaryColor = primaryColor;
@@ -213,10 +213,7 @@ public class ApiApplicationResponsePreferences {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -255,6 +252,7 @@ public class ApiApplicationResponsePreferences {
         if (getButtonTextColor() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sbutton_text_color%s=%s",
                             prefix,
                             suffix,
@@ -265,6 +263,7 @@ public class ApiApplicationResponsePreferences {
         if (getButtonsBorderRadius() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sbuttons_border_radius%s=%s",
                             prefix,
                             suffix,
@@ -276,6 +275,7 @@ public class ApiApplicationResponsePreferences {
         if (getCustomLogoFile() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scustom_logo_file%s=%s",
                             prefix,
                             suffix,
@@ -286,6 +286,7 @@ public class ApiApplicationResponsePreferences {
         if (getLinkTextColor() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%slink_text_color%s=%s",
                             prefix,
                             suffix,
@@ -296,6 +297,7 @@ public class ApiApplicationResponsePreferences {
         if (getPrimaryColor() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sprimary_color%s=%s",
                             prefix,
                             suffix,
