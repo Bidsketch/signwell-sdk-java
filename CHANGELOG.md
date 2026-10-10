@@ -17,6 +17,7 @@
 ### Dependencies
 
 - Update compatible JUnit and Maven build/validation plugins.
+- Update Jakarta Annotations to 3.0.0, verified compatible with Java 11, and complete the CodeQL/OSV scanner Action updates.
 
 ### Migration
 

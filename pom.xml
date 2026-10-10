@@ -44,7 +44,7 @@
     <java.compiler.lint>all,-serial,-deprecation</java.compiler.lint>
     <google-java-format.version>1.23.0</google-java-format.version>
     <jackson.version>2.22.3</jackson.version>
-    <jakarta.annotation.version>2.1.1</jakarta.annotation.version>
+    <jakarta.annotation.version>3.0.0</jakarta.annotation.version>
     <junit.version>5.14.4</junit.version>
   </properties>
 
