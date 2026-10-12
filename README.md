@@ -211,7 +211,15 @@ workflow.
 
 ## HTTP and Framework Integration
 
-The SDK uses Java's native `HttpClient`, a 30-second timeout, and no automatic retries. Customize the builder when your application has an idempotency-aware resilience policy:
+The SDK uses Java's native `HttpClient` and a 30-second timeout per HTTP attempt.
+Explicit HTTP 429 responses retry up to two times, including POST requests and
+downloads. The client honors `Retry-After` seconds or dates, or waits one then
+two seconds when the header is absent or invalid. A requested wait longer than
+60 seconds returns the rate-limit error immediately. Cancelling the returned
+future stops pending retries. Network failures and other status codes are not
+retried. Disable retries with `maxRateLimitRetries(0)` on the options builder or
+`setMaxRateLimitRetries(0)` on the raw `ApiClient`. Customize the HTTP builder for
+other application-specific settings:
 
 ```java
 var options = SignWellOptions.builder(System.getenv("SIGNWELL_API_KEY"))

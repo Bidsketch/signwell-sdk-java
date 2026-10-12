@@ -153,6 +153,37 @@ class SdkParityTest {
     }
 
     @Test
+    void dropdownPasscodeAndScalarUnionValuesUseTheApiShapes() throws Exception {
+        ObjectMapper mapper = SignWellOptions.builder("key").build().createObjectMapper();
+        assertEquals("\"A\"", mapper.writeValueAsString(new DropdownOption("A")));
+        DropdownOption detailed = new DropdownOption(new DetailedOption().name("B").apiId("b"));
+        assertEquals(
+                "B", mapper.readTree(mapper.writeValueAsString(detailed)).get("name").asText());
+        assertEquals("A", mapper.readValue("\"A\"", DropdownOption.class).getActualInstance());
+        RecipientsInnerPasscodeDelivery delivery =
+                new RecipientsInnerPasscodeDelivery()
+                        .methods(List.of(RecipientsInnerPasscodeDelivery.MethodsEnum.EMAIL));
+        assertEquals(
+                "email",
+                mapper.readTree(mapper.writeValueAsString(delivery))
+                        .get("methods")
+                        .get(0)
+                        .asText());
+        assertEquals(
+                Boolean.FALSE,
+                mapper.readValue("false", DocumentResponseFieldsInnerInnerValue.class)
+                        .getActualInstance());
+        assertEquals(
+                "t",
+                mapper.readValue("\"t\"", DocumentResponseFieldsInnerInnerValue.class)
+                        .getActualInstance());
+        assertEquals(
+                "123",
+                mapper.readValue("\"123\"", DocumentResponseFieldsInnerInnerValue.class)
+                        .getActualInstance());
+    }
+
+    @Test
     void checkboxValuesNormalizeOnlyForCheckboxRequestFields() throws Exception {
         ObjectMapper mapper = SignWellOptions.builder("key").build().createObjectMapper();
         FieldsInnerInner checkbox =

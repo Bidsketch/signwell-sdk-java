@@ -3,6 +3,7 @@ package com.signwell.sdk;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.signwell.sdk.internal.CheckboxValueModule;
+import com.signwell.sdk.internal.RateLimitHttpClient;
 import com.signwell.sdk.raw.ApiClient;
 import java.net.URI;
 import java.net.http.HttpClient;
@@ -18,6 +19,7 @@ public final class SignWellOptions {
     private final String apiKey;
     private final URI baseUri;
     private final Duration timeout;
+    private final int maxRateLimitRetries;
     private final Consumer<HttpClient.Builder> httpClientCustomizer;
     private final Consumer<ObjectMapper> objectMapperCustomizer;
 
@@ -27,6 +29,9 @@ public final class SignWellOptions {
         timeout = Objects.requireNonNull(builder.timeout, "timeout");
         if (timeout.isZero() || timeout.isNegative())
             throw new IllegalArgumentException("Timeout must be positive.");
+        maxRateLimitRetries = builder.maxRateLimitRetries;
+        if (maxRateLimitRetries < 0 || maxRateLimitRetries > 10)
+            throw new IllegalArgumentException("Rate limit retries must be between zero and ten.");
         httpClientCustomizer = builder.httpClientCustomizer;
         objectMapperCustomizer = builder.objectMapperCustomizer;
     }
@@ -41,6 +46,7 @@ public final class SignWellOptions {
         mapper.registerModule(new CheckboxValueModule());
         if (objectMapperCustomizer != null) objectMapperCustomizer.accept(mapper);
         return new ApiClient(httpClientBuilder(), mapper, baseUri.toString())
+                .setMaxRateLimitRetries(maxRateLimitRetries)
                 .setReadTimeout(timeout)
                 .setRequestInterceptor(
                         request -> {
@@ -50,7 +56,7 @@ public final class SignWellOptions {
     }
 
     public HttpClient createHttpClient() {
-        return httpClientBuilder().build();
+        return new RateLimitHttpClient(httpClientBuilder().build(), maxRateLimitRetries);
     }
 
     public ObjectMapper createObjectMapper() {
@@ -111,6 +117,7 @@ public final class SignWellOptions {
         private final String apiKey;
         private URI baseUri = URI.create(DEFAULT_BASE_URL);
         private Duration timeout = Duration.ofSeconds(30);
+        private int maxRateLimitRetries = 2;
         private Consumer<HttpClient.Builder> httpClientCustomizer;
         private Consumer<ObjectMapper> objectMapperCustomizer;
 
@@ -125,6 +132,12 @@ public final class SignWellOptions {
 
         public Builder timeout(Duration value) {
             timeout = value;
+            return this;
+        }
+
+        /** Retries explicit HTTP 429 responses. Zero disables retries. */
+        public Builder maxRateLimitRetries(int value) {
+            maxRateLimitRetries = value;
             return this;
         }
 

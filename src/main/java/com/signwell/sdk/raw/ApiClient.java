@@ -60,6 +60,7 @@ public class ApiClient {
 
     protected HttpClient.Builder builder;
     private HttpClient httpClient;
+    private int maxRateLimitRetries = 2;
     protected ObjectMapper mapper;
     protected String scheme;
     protected String host;
@@ -245,9 +246,20 @@ public class ApiClient {
      */
     public HttpClient getHttpClient() {
         if (httpClient == null) {
-            httpClient = builder.build();
+            httpClient =
+                    new com.signwell.sdk.internal.RateLimitHttpClient(
+                            builder.build(), maxRateLimitRetries);
         }
         return httpClient;
+    }
+
+    /** Configures retries after explicit HTTP 429 responses. Zero disables retries. */
+    public ApiClient setMaxRateLimitRetries(int retries) {
+        if (retries < 0 || retries > 10)
+            throw new IllegalArgumentException("Rate limit retries must be between zero and ten.");
+        this.maxRateLimitRetries = retries;
+        this.httpClient = null;
+        return this;
     }
 
     /**

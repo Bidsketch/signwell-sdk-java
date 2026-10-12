@@ -19,6 +19,10 @@
 - Update compatible JUnit and Maven build/validation plugins.
 - Update Jakarta Annotations to 3.0.0, verified compatible with Java 11, and complete the CodeQL/OSV scanner Action updates.
 
+### Fixed
+
+- Retry explicit HTTP 429 responses up to two times across raw APIs, resource helpers, and downloads. Honor `Retry-After` seconds or dates, fall back to exponential backoff, and stop waits on cancellation. Network failures and other status codes are not retried. Use `maxRateLimitRetries(0)` to disable.
+
 ### Migration
 
 - Code that explicitly uses `UUID` for user IDs should use `String`. This does not change membership, account, or contact ID types.

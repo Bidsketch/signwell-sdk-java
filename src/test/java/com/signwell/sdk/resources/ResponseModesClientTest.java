@@ -8,6 +8,7 @@ import com.signwell.sdk.errors.ApiTimeoutException;
 import com.signwell.sdk.errors.RateLimitException;
 import com.signwell.sdk.errors.SignWellException;
 import com.signwell.sdk.errors.UnsupportedContentTypeException;
+import com.signwell.sdk.internal.RateLimitHttpClient;
 import com.signwell.sdk.models.CompletedPdfUrlResponse;
 import com.signwell.sdk.models.MeResponse;
 import com.signwell.sdk.raw.ApiClient;
@@ -17,6 +18,7 @@ import com.signwell.sdk.raw.DocumentApi;
 import com.signwell.sdk.raw.MeApi;
 import java.io.ByteArrayInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.Authenticator;
 import java.net.CookieHandler;
 import java.net.ProxySelector;
@@ -37,12 +39,154 @@ import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.concurrent.CompletionException;
 import java.util.concurrent.Executor;
+import java.util.concurrent.TimeUnit;
 import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLParameters;
 import javax.net.ssl.SSLSession;
 import org.junit.jupiter.api.Test;
 
 class ResponseModesClientTest {
+    @Test
+    void rawClientRetriesRateLimitsAndReplaysTheSamePostBody() throws ApiException {
+        QueueHttpClient http = new QueueHttpClient();
+        TrackingStream rejected = new TrackingStream(new byte[] {1});
+        http.enqueue(429, Map.of("Retry-After", List.of("0")), rejected);
+        http.enqueue(
+                201,
+                Map.of("Content-Type", List.of("application/json")),
+                "{\"id\":\"3c1e4f50-6c2d-4c41-a793-e8e507ab9e77\"}");
+        DocumentApi raw = new DocumentApi(rawApiClient(http));
+        assertEquals(
+                UUID.fromString("3c1e4f50-6c2d-4c41-a793-e8e507ab9e77"),
+                raw.createDocument(
+                                new com.signwell.sdk.models.DocumentRequest()
+                                        .name("Retry document")
+                                        .testMode(true))
+                        .join()
+                        .getId());
+        assertEquals(2, http.requests.size());
+        assertEquals("POST", http.lastRequest.method());
+        assertEquals(requestBody(http.requests.get(0)), requestBody(http.requests.get(1)));
+        assertTrue(requestBody(http.lastRequest).contains("\"name\":\"Retry document\""));
+        assertTrue(rejected.closed);
+    }
+
+    @Test
+    void rawClientRetryLimitAndOptOutPreserveRateLimitErrors() {
+        for (int retries : new int[] {0, 2}) {
+            QueueHttpClient http = new QueueHttpClient();
+            for (int i = 0; i <= retries; i++)
+                http.enqueue(
+                        429,
+                        Map.of(
+                                "Retry-After",
+                                List.of("0"),
+                                "Content-Type",
+                                List.of("application/json")),
+                        "{\"message\":\"limited\"}");
+            MeResource resource =
+                    new MeResource(new MeApi(rawApiClient(http).setMaxRateLimitRetries(retries)));
+            assertInstanceOf(RateLimitException.class, failure(resource.get()));
+            assertEquals(retries + 1, http.requests.size());
+        }
+    }
+
+    @Test
+    void downloadRetriesCloseRejectedStreamsAndCancellationStopsRetries() throws IOException {
+        QueueHttpClient http = new QueueHttpClient();
+        TrackingStream rejected = new TrackingStream(new byte[] {1});
+        TrackingStream pdf = new TrackingStream(new byte[] {2});
+        http.enqueue(429, Map.of("Retry-After", List.of("0")), rejected);
+        http.enqueue(200, Map.of("Content-Type", List.of("application/pdf")), pdf);
+        SignWellOptions options = SignWellOptions.builder("test-key").build();
+        ResponseModesClient modes =
+                new ResponseModesClient(
+                        options, new RateLimitHttpClient(http, 2), options.createObjectMapper());
+        try (OwnedResponseStream stream =
+                modes.completedPdfStream(UUID.randomUUID(), true, null).join()) {
+            assertEquals(200, stream.getStatusCode());
+            assertEquals(2, http.requests.size());
+            assertTrue(rejected.closed);
+        }
+        assertTrue(pdf.closed);
+
+        QueueHttpClient waiting = new QueueHttpClient();
+        TrackingStream limited = new TrackingStream(new byte[] {1});
+        waiting.enqueue(429, Map.of("Retry-After", List.of("30")), limited);
+        CompletableFuture<HttpResponse<InputStream>> pending =
+                new RateLimitHttpClient(waiting, 2)
+                        .sendAsync(
+                                HttpRequest.newBuilder(URI.create("https://example.com"))
+                                        .GET()
+                                        .build(),
+                                HttpResponse.BodyHandlers.ofInputStream());
+        assertTrue(pending.cancel(true));
+        assertTrue(pending.isCancelled());
+        assertEquals(1, waiting.requests.size());
+        assertTrue(limited.closed);
+    }
+
+    @Test
+    void serverErrorsAndExcessiveRetryAfterAreNotRetried() {
+        for (int status : new int[] {500, 429}) {
+            QueueHttpClient http = new QueueHttpClient();
+            http.enqueue(
+                    status,
+                    Map.of(
+                            "Retry-After",
+                            List.of("120"),
+                            "Content-Type",
+                            List.of("application/json")),
+                    "{}");
+            assertInstanceOf(
+                    com.signwell.sdk.errors.ApiStatusException.class,
+                    failure(new MeResource(new MeApi(rawApiClient(http))).get()));
+            assertEquals(1, http.requests.size());
+        }
+    }
+
+    @Test
+    void cancellingThePublicResourceFutureStopsScheduledRetries() throws InterruptedException {
+        QueueHttpClient http = new QueueHttpClient();
+        http.enqueue(429, Map.of("Retry-After", List.of("1")), new TrackingStream(new byte[] {1}));
+        http.enqueue(200, Map.of("Content-Type", List.of("application/json")), "{}");
+        CompletableFuture<?> result = new MeResource(new MeApi(rawApiClient(http))).get();
+        assertTrue(result.cancel(true));
+        TimeUnit.MILLISECONDS.sleep(1100);
+        assertEquals(1, http.requests.size());
+    }
+
+    private static String requestBody(HttpRequest request) {
+        CompletableFuture<String> result = new CompletableFuture<>();
+        StringBuilder body = new StringBuilder();
+        request.bodyPublisher()
+                .orElseThrow()
+                .subscribe(
+                        new java.util.concurrent.Flow.Subscriber<java.nio.ByteBuffer>() {
+                            @Override
+                            public void onSubscribe(
+                                    java.util.concurrent.Flow.Subscription subscription) {
+                                subscription.request(Long.MAX_VALUE);
+                            }
+
+                            @Override
+                            public void onNext(java.nio.ByteBuffer buffer) {
+                                body.append(StandardCharsets.UTF_8.decode(buffer));
+                            }
+
+                            @Override
+                            public void onError(Throwable failure) {
+                                result.completeExceptionally(failure);
+                            }
+
+                            @Override
+                            public void onComplete() {
+                                result.complete(body.toString());
+                            }
+                        });
+        return result.join();
+    }
+
     @Test
     void getMePreservesUuidMembershipIds() throws ApiException {
         // Membership ids are AccountRole external ids, always UUIDs (Trello 2708, AC-04), so
@@ -313,6 +457,7 @@ class ResponseModesClientTest {
 
     private static final class QueueHttpClient extends HttpClient {
         private final Queue<Object> outcomes = new ArrayDeque<>();
+        private final java.util.List<HttpRequest> requests = new java.util.ArrayList<>();
         private HttpRequest lastRequest;
 
         private void enqueue(int status, Map<String, List<String>> headers, Object body) {
@@ -328,6 +473,7 @@ class ResponseModesClientTest {
         public <T> CompletableFuture<HttpResponse<T>> sendAsync(
                 HttpRequest request, HttpResponse.BodyHandler<T> handler) {
             lastRequest = request;
+            requests.add(request);
             Object outcome = outcomes.remove();
             if (outcome instanceof Throwable)
                 return CompletableFuture.failedFuture((Throwable) outcome);
