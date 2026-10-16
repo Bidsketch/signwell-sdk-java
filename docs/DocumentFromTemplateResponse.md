@@ -7,6 +7,8 @@
 
 | Name | Type | Description | Notes |
 |------------ | ------------- | ------------- | -------------|
+|**cfrPart11** | **Boolean** | Whether 21 CFR Part 11 controls apply to this document. Read-only: the value is taken from the workspace setting when the document is created and never changes afterwards. |  [optional] |
+|**cfrPart11SigningMode** | [**CfrPart11SigningModeEnum**](#CfrPart11SigningModeEnum) | The signing mode of a 21 CFR Part 11 document: streamlined (one final authentication) or per_signature (authentication at every signature and initials field). Null when Part 11 does not apply. |  [optional] |
 |**testMode** | **Boolean** |  |  |
 |**id** | **UUID** |  |  |
 |**templateId** | **UUID** |  |  [optional] |
@@ -25,6 +27,7 @@
 |**status** | **String** | Possible values: Draft, Created, Sending, Sent, Pending, Viewed, Completed, Manually completed, Declined, Canceled, Bounced, Blocked, Error, Expired |  [optional] |
 |**reminders** | **Boolean** |  |  [optional] |
 |**archived** | **Boolean** |  |  [optional] |
+|**embedded** | [**EmbeddedBranding**](EmbeddedBranding.md) |  |  [optional] |
 |**embeddedSigning** | **Boolean** |  |  [optional] |
 |**embeddedEditUrl** | **String** |  |  [optional] |
 |**embeddedPreviewUrl** | **String** |  |  [optional] |
@@ -44,6 +47,18 @@
 |**allowReassign** | **Boolean** |  |  [optional] |
 |**labels** | [**List&lt;LabelInfo&gt;**](LabelInfo.md) |  |  [optional] |
 |**checkboxGroups** | [**List&lt;CheckboxGroupInfo&gt;**](CheckboxGroupInfo.md) |  |  [optional] |
+|**conditionalRules** | [**List&lt;ConditionalRuleInfo&gt;**](ConditionalRuleInfo.md) |  |  [optional] |
+|**conditionalLogicDecisions** | [**List&lt;ConditionalLogicDecisionInfo&gt;**](ConditionalLogicDecisionInfo.md) |  |  [optional] |
+
+
+
+## Enum: CfrPart11SigningModeEnum
+
+| Name | Value |
+|---- | -----|
+| STREAMLINED | &quot;streamlined&quot; |
+| PER_SIGNATURE | &quot;per_signature&quot; |
+| UNKNOWN_DEFAULT_OPEN_API | &quot;unknown_default_open_api&quot; |
 
 
 

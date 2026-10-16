@@ -23,7 +23,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({CompletedPdfUrlResponse.JSON_PROPERTY_FILE_URL})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class CompletedPdfUrlResponse {
     public static final String JSON_PROPERTY_FILE_URL = "file_url";
     @jakarta.annotation.Nonnull private String fileUrl;
@@ -41,13 +41,13 @@ public class CompletedPdfUrlResponse {
      * @return fileUrl
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_FILE_URL)
+    @JsonProperty(value = JSON_PROPERTY_FILE_URL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getFileUrl() {
         return fileUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_FILE_URL)
+    @JsonProperty(value = JSON_PROPERTY_FILE_URL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setFileUrl(@jakarta.annotation.Nonnull String fileUrl) {
         this.fileUrl = fileUrl;
@@ -85,10 +85,7 @@ public class CompletedPdfUrlResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -127,6 +124,7 @@ public class CompletedPdfUrlResponse {
         if (getFileUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sfile_url%s=%s",
                             prefix,
                             suffix,

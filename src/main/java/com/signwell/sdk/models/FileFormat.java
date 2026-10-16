@@ -15,7 +15,11 @@ package com.signwell.sdk.models;
 import com.fasterxml.jackson.annotation.JsonCreator;
 import com.fasterxml.jackson.annotation.JsonValue;
 
-/** Format of the file to be downloaded. Supported formats are &#39;pdf&#39; and &#39;zip&#39;. */
+/**
+ * Format of the file to be downloaded. Supported formats are &#39;pdf&#39; and &#39;zip&#39;.
+ * &#x60;zip&#x60; is unavailable on a 21 CFR Part 11 document, whose completed PDF, E-Signature
+ * page and audit page stay together as one record.
+ */
 public enum FileFormat {
     PDF("pdf"),
 
@@ -60,6 +64,6 @@ public enum FileFormat {
             prefix = "";
         }
 
-        return String.format("%s=%s", prefix, this.toString());
+        return String.format(java.util.Locale.ROOT, "%s=%s", prefix, this.toString());
     }
 }

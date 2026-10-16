@@ -26,7 +26,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class DocumentResponseFieldsInnerInnerRecipient {
     public static final String JSON_PROPERTY_EMAIL = "email";
     @jakarta.annotation.Nonnull private String email;
@@ -48,13 +48,13 @@ public class DocumentResponseFieldsInnerInnerRecipient {
      * @return email
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getEmail() {
         return email;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setEmail(@jakarta.annotation.Nonnull String email) {
         this.email = email;
@@ -71,13 +71,13 @@ public class DocumentResponseFieldsInnerInnerRecipient {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -118,10 +118,7 @@ public class DocumentResponseFieldsInnerInnerRecipient {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -160,6 +157,7 @@ public class DocumentResponseFieldsInnerInnerRecipient {
         if (getEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%semail%s=%s",
                             prefix,
                             suffix,
@@ -170,6 +168,7 @@ public class DocumentResponseFieldsInnerInnerRecipient {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,

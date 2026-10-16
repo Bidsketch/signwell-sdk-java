@@ -38,7 +38,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class AccountInfoResponsePreferences {
     public static final String JSON_PROPERTY_DATE_FORMAT = "date_format";
     @jakarta.annotation.Nullable private String dateFormat;
@@ -98,13 +98,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return dateFormat
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DATE_FORMAT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DATE_FORMAT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getDateFormat() {
         return dateFormat;
     }
 
-    @JsonProperty(JSON_PROPERTY_DATE_FORMAT)
+    @JsonProperty(value = JSON_PROPERTY_DATE_FORMAT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDateFormat(@jakarta.annotation.Nullable String dateFormat) {
         this.dateFormat = dateFormat;
@@ -121,13 +121,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return daysUntilLinksExpire
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DAYS_UNTIL_LINKS_EXPIRE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DAYS_UNTIL_LINKS_EXPIRE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getDaysUntilLinksExpire() {
         return daysUntilLinksExpire;
     }
 
-    @JsonProperty(JSON_PROPERTY_DAYS_UNTIL_LINKS_EXPIRE)
+    @JsonProperty(value = JSON_PROPERTY_DAYS_UNTIL_LINKS_EXPIRE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDaysUntilLinksExpire(@jakarta.annotation.Nullable Integer daysUntilLinksExpire) {
         this.daysUntilLinksExpire = daysUntilLinksExpire;
@@ -144,13 +144,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return disableApplyEverywhere
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DISABLE_APPLY_EVERYWHERE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DISABLE_APPLY_EVERYWHERE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getDisableApplyEverywhere() {
         return disableApplyEverywhere;
     }
 
-    @JsonProperty(JSON_PROPERTY_DISABLE_APPLY_EVERYWHERE)
+    @JsonProperty(value = JSON_PROPERTY_DISABLE_APPLY_EVERYWHERE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDisableApplyEverywhere(
             @jakarta.annotation.Nullable Boolean disableApplyEverywhere) {
@@ -168,13 +168,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return disableApplyEverywhereEffective
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DISABLE_APPLY_EVERYWHERE_EFFECTIVE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DISABLE_APPLY_EVERYWHERE_EFFECTIVE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getDisableApplyEverywhereEffective() {
         return disableApplyEverywhereEffective;
     }
 
-    @JsonProperty(JSON_PROPERTY_DISABLE_APPLY_EVERYWHERE_EFFECTIVE)
+    @JsonProperty(value = JSON_PROPERTY_DISABLE_APPLY_EVERYWHERE_EFFECTIVE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDisableApplyEverywhereEffective(
             @jakarta.annotation.Nullable Boolean disableApplyEverywhereEffective) {
@@ -192,13 +192,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return disableDrawnSignatures
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DISABLE_DRAWN_SIGNATURES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DISABLE_DRAWN_SIGNATURES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getDisableDrawnSignatures() {
         return disableDrawnSignatures;
     }
 
-    @JsonProperty(JSON_PROPERTY_DISABLE_DRAWN_SIGNATURES)
+    @JsonProperty(value = JSON_PROPERTY_DISABLE_DRAWN_SIGNATURES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDisableDrawnSignatures(
             @jakarta.annotation.Nullable Boolean disableDrawnSignatures) {
@@ -216,13 +216,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return disableTypedSignatures
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DISABLE_TYPED_SIGNATURES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DISABLE_TYPED_SIGNATURES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getDisableTypedSignatures() {
         return disableTypedSignatures;
     }
 
-    @JsonProperty(JSON_PROPERTY_DISABLE_TYPED_SIGNATURES)
+    @JsonProperty(value = JSON_PROPERTY_DISABLE_TYPED_SIGNATURES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDisableTypedSignatures(
             @jakarta.annotation.Nullable Boolean disableTypedSignatures) {
@@ -240,13 +240,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return disableUploadedSignatures
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DISABLE_UPLOADED_SIGNATURES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DISABLE_UPLOADED_SIGNATURES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getDisableUploadedSignatures() {
         return disableUploadedSignatures;
     }
 
-    @JsonProperty(JSON_PROPERTY_DISABLE_UPLOADED_SIGNATURES)
+    @JsonProperty(value = JSON_PROPERTY_DISABLE_UPLOADED_SIGNATURES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDisableUploadedSignatures(
             @jakarta.annotation.Nullable Boolean disableUploadedSignatures) {
@@ -264,13 +264,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return enableRedirect
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ENABLE_REDIRECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ENABLE_REDIRECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getEnableRedirect() {
         return enableRedirect;
     }
 
-    @JsonProperty(JSON_PROPERTY_ENABLE_REDIRECT)
+    @JsonProperty(value = JSON_PROPERTY_ENABLE_REDIRECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEnableRedirect(@jakarta.annotation.Nullable Boolean enableRedirect) {
         this.enableRedirect = enableRedirect;
@@ -287,13 +287,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return hideDocumentIdInAudit
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_HIDE_DOCUMENT_ID_IN_AUDIT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_HIDE_DOCUMENT_ID_IN_AUDIT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getHideDocumentIdInAudit() {
         return hideDocumentIdInAudit;
     }
 
-    @JsonProperty(JSON_PROPERTY_HIDE_DOCUMENT_ID_IN_AUDIT)
+    @JsonProperty(value = JSON_PROPERTY_HIDE_DOCUMENT_ID_IN_AUDIT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setHideDocumentIdInAudit(
             @jakarta.annotation.Nullable Boolean hideDocumentIdInAudit) {
@@ -311,13 +311,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return muteBranding
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MUTE_BRANDING)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MUTE_BRANDING, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getMuteBranding() {
         return muteBranding;
     }
 
-    @JsonProperty(JSON_PROPERTY_MUTE_BRANDING)
+    @JsonProperty(value = JSON_PROPERTY_MUTE_BRANDING, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMuteBranding(@jakarta.annotation.Nullable Boolean muteBranding) {
         this.muteBranding = muteBranding;
@@ -334,13 +334,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return redirectUrl
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_REDIRECT_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getRedirectUrl() {
         return redirectUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_REDIRECT_URL)
+    @JsonProperty(value = JSON_PROPERTY_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setRedirectUrl(@jakarta.annotation.Nullable String redirectUrl) {
         this.redirectUrl = redirectUrl;
@@ -357,13 +357,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return separateAuditPdf
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SEPARATE_AUDIT_PDF)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SEPARATE_AUDIT_PDF, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getSeparateAuditPdf() {
         return separateAuditPdf;
     }
 
-    @JsonProperty(JSON_PROPERTY_SEPARATE_AUDIT_PDF)
+    @JsonProperty(value = JSON_PROPERTY_SEPARATE_AUDIT_PDF, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSeparateAuditPdf(@jakarta.annotation.Nullable Boolean separateAuditPdf) {
         this.separateAuditPdf = separateAuditPdf;
@@ -380,13 +380,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return separateCompletedFile
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SEPARATE_COMPLETED_FILE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SEPARATE_COMPLETED_FILE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getSeparateCompletedFile() {
         return separateCompletedFile;
     }
 
-    @JsonProperty(JSON_PROPERTY_SEPARATE_COMPLETED_FILE)
+    @JsonProperty(value = JSON_PROPERTY_SEPARATE_COMPLETED_FILE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSeparateCompletedFile(
             @jakarta.annotation.Nullable Boolean separateCompletedFile) {
@@ -404,13 +404,13 @@ public class AccountInfoResponsePreferences {
      *
      * @return enableNom151Compliance
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ENABLE_NOM151_COMPLIANCE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ENABLE_NOM151_COMPLIANCE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getEnableNom151Compliance() {
         return enableNom151Compliance;
     }
 
-    @JsonProperty(JSON_PROPERTY_ENABLE_NOM151_COMPLIANCE)
+    @JsonProperty(value = JSON_PROPERTY_ENABLE_NOM151_COMPLIANCE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEnableNom151Compliance(
             @jakarta.annotation.Nullable Boolean enableNom151Compliance) {
@@ -528,10 +528,7 @@ public class AccountInfoResponsePreferences {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -570,6 +567,7 @@ public class AccountInfoResponsePreferences {
         if (getDateFormat() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdate_format%s=%s",
                             prefix,
                             suffix,
@@ -580,6 +578,7 @@ public class AccountInfoResponsePreferences {
         if (getDaysUntilLinksExpire() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdays_until_links_expire%s=%s",
                             prefix,
                             suffix,
@@ -591,6 +590,7 @@ public class AccountInfoResponsePreferences {
         if (getDisableApplyEverywhere() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdisable_apply_everywhere%s=%s",
                             prefix,
                             suffix,
@@ -602,6 +602,7 @@ public class AccountInfoResponsePreferences {
         if (getDisableApplyEverywhereEffective() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdisable_apply_everywhere_effective%s=%s",
                             prefix,
                             suffix,
@@ -614,6 +615,7 @@ public class AccountInfoResponsePreferences {
         if (getDisableDrawnSignatures() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdisable_drawn_signatures%s=%s",
                             prefix,
                             suffix,
@@ -625,6 +627,7 @@ public class AccountInfoResponsePreferences {
         if (getDisableTypedSignatures() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdisable_typed_signatures%s=%s",
                             prefix,
                             suffix,
@@ -636,6 +639,7 @@ public class AccountInfoResponsePreferences {
         if (getDisableUploadedSignatures() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdisable_uploaded_signatures%s=%s",
                             prefix,
                             suffix,
@@ -647,6 +651,7 @@ public class AccountInfoResponsePreferences {
         if (getEnableRedirect() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%senable_redirect%s=%s",
                             prefix,
                             suffix,
@@ -657,6 +662,7 @@ public class AccountInfoResponsePreferences {
         if (getHideDocumentIdInAudit() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%shide_document_id_in_audit%s=%s",
                             prefix,
                             suffix,
@@ -668,6 +674,7 @@ public class AccountInfoResponsePreferences {
         if (getMuteBranding() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smute_branding%s=%s",
                             prefix,
                             suffix,
@@ -678,6 +685,7 @@ public class AccountInfoResponsePreferences {
         if (getRedirectUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sredirect_url%s=%s",
                             prefix,
                             suffix,
@@ -688,6 +696,7 @@ public class AccountInfoResponsePreferences {
         if (getSeparateAuditPdf() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sseparate_audit_pdf%s=%s",
                             prefix,
                             suffix,
@@ -698,6 +707,7 @@ public class AccountInfoResponsePreferences {
         if (getSeparateCompletedFile() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sseparate_completed_file%s=%s",
                             prefix,
                             suffix,
@@ -709,6 +719,7 @@ public class AccountInfoResponsePreferences {
         if (getEnableNom151Compliance() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%senable_nom151_compliance%s=%s",
                             prefix,
                             suffix,

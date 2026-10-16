@@ -29,6 +29,48 @@ import org.junit.jupiter.api.Test;
 
 class SdkParityTest {
     @Test
+    void dateTimeDeserializersAcceptSpaceSeparatedApiTimestamps() throws Exception {
+        ObjectMapper mapper = ApiClient.createDefaultObjectMapper();
+        String json = "\"2026-10-09 12:34:56Z\"";
+        java.time.Instant expected = java.time.Instant.parse("2026-10-09T12:34:56Z");
+        assertEquals(expected, mapper.readValue(json, java.time.Instant.class));
+        assertEquals(expected, mapper.readValue(json, OffsetDateTime.class).toInstant());
+        assertEquals(expected, mapper.readValue(json, java.time.ZonedDateTime.class).toInstant());
+        assertEquals(
+                expected,
+                mapper.readValue(
+                                "{\"created_at\":\"2026-10-09 12:34:56Z\"}", DocumentResponse.class)
+                        .getCreatedAt()
+                        .toInstant());
+    }
+
+    @Test
+    void part11SigningModesDistinguishUnknownFromNull() throws Exception {
+        ObjectMapper mapper = ApiClient.createDefaultObjectMapper();
+        for (String value : new String[] {"streamlined", "per_signature", "future_mode", null}) {
+            String json = "{\"cfr_part11_signing_mode\":" + mapper.writeValueAsString(value) + "}";
+            String expected =
+                    value == null
+                            ? null
+                            : value.equals("future_mode") ? "unknown_default_open_api" : value;
+            assertEquals(
+                    expected,
+                    java.util.Objects.toString(
+                            mapper.readValue(json, DocumentResponse.class)
+                                    .getCfrPart11SigningMode(),
+                            null));
+            assertEquals(
+                    expected,
+                    java.util.Objects.toString(
+                            mapper.readValue(json, DocumentFromTemplateResponse.class)
+                                    .getCfrPart11SigningMode(),
+                            null));
+        }
+        assertNull(DocumentResponse.CfrPart11SigningModeEnum.fromValue(null));
+        assertNull(DocumentFromTemplateResponse.CfrPart11SigningModeEnum.fromValue(null));
+    }
+
+    @Test
     void clientRequiresSafeOptionsAndExposesEveryResource() {
         assertThrows(IllegalArgumentException.class, () -> new SignWellClient(" "));
         assertThrows(
@@ -149,6 +191,37 @@ class SdkParityTest {
                         .get(0)
                         .get(0)
                         .getValue()
+                        .getActualInstance());
+    }
+
+    @Test
+    void dropdownPasscodeAndScalarUnionValuesUseTheApiShapes() throws Exception {
+        ObjectMapper mapper = SignWellOptions.builder("key").build().createObjectMapper();
+        assertEquals("\"A\"", mapper.writeValueAsString(new DropdownOption("A")));
+        DropdownOption detailed = new DropdownOption(new DetailedOption().name("B").apiId("b"));
+        assertEquals(
+                "B", mapper.readTree(mapper.writeValueAsString(detailed)).get("name").asText());
+        assertEquals("A", mapper.readValue("\"A\"", DropdownOption.class).getActualInstance());
+        RecipientsInnerPasscodeDelivery delivery =
+                new RecipientsInnerPasscodeDelivery()
+                        .methods(List.of(RecipientsInnerPasscodeDelivery.MethodsEnum.EMAIL));
+        assertEquals(
+                "email",
+                mapper.readTree(mapper.writeValueAsString(delivery))
+                        .get("methods")
+                        .get(0)
+                        .asText());
+        assertEquals(
+                Boolean.FALSE,
+                mapper.readValue("false", DocumentResponseFieldsInnerInnerValue.class)
+                        .getActualInstance());
+        assertEquals(
+                "t",
+                mapper.readValue("\"t\"", DocumentResponseFieldsInnerInnerValue.class)
+                        .getActualInstance());
+        assertEquals(
+                "123",
+                mapper.readValue("\"123\"", DocumentResponseFieldsInnerInnerValue.class)
                         .getActualInstance());
     }
 

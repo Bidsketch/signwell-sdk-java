@@ -16,6 +16,7 @@ import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.signwell.sdk.models.CreateWebhookRequest;
 import com.signwell.sdk.models.WebhookResponse;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -24,21 +25,43 @@ import java.net.http.HttpRequest;
 import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.List;
+import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 import java.util.function.Consumer;
 
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class WebhooksApi {
+    /** Utility class for extending HttpRequest.Builder functionality. */
+    private static class HttpRequestBuilderExtensions {
+        /**
+         * Adds additional headers to the provided HttpRequest.Builder. Useful for adding
+         * method/endpoint specific headers.
+         *
+         * @param builder the HttpRequest.Builder to which headers will be added
+         * @param headers a map of header names and values to add; may be null
+         * @return the same HttpRequest.Builder instance with the additional headers set
+         */
+        static HttpRequest.Builder withAdditionalHeaders(
+                HttpRequest.Builder builder, Map<String, String> headers) {
+            if (headers != null) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    builder.header(entry.getKey(), entry.getValue());
+                }
+            }
+            return builder;
+        }
+    }
+
     private final HttpClient memberVarHttpClient;
     private final ObjectMapper memberVarObjectMapper;
     private final String memberVarBaseUri;
     private final Consumer<HttpRequest.Builder> memberVarInterceptor;
     private final Duration memberVarReadTimeout;
     private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-    private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+    private final Consumer<HttpResponse<InputStream>> memberVarAsyncResponseInterceptor;
 
     public WebhooksApi() {
         this(Configuration.getDefaultApiClient());
@@ -54,11 +77,22 @@ public class WebhooksApi {
         memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
     }
 
-    private ApiException getApiException(String operationId, HttpResponse<String> response) {
-        String message =
-                formatExceptionMessage(operationId, response.statusCode(), response.body());
-        return new ApiException(
-                response.statusCode(), message, response.headers(), response.body());
+    private ApiException getApiException(String operationId, HttpResponse<InputStream> response) {
+        try {
+            InputStream responseBody = ApiClient.getResponseBody(response);
+            String body = null;
+            if (responseBody != null) {
+                body =
+                        new String(
+                                responseBody.readAllBytes(),
+                                java.nio.charset.StandardCharsets.UTF_8);
+                responseBody.close();
+            }
+            String message = formatExceptionMessage(operationId, response.statusCode(), body);
+            return new ApiException(response.statusCode(), message, response.headers(), body);
+        } catch (IOException e) {
+            return new ApiException(e);
+        }
     }
 
     private String formatExceptionMessage(String operationId, int statusCode, String body) {
@@ -66,57 +100,177 @@ public class WebhooksApi {
     }
 
     /**
-     * Create Webhook Register a callback URL that we will post document events to.
+     * Download file from the given response.
+     *
+     * @param response Response
+     * @return File
+     * @throws ApiException If fail to read file content from response and write to disk
+     */
+    public File downloadFileFromResponse(
+            HttpResponse<InputStream> response, InputStream responseBody) throws ApiException {
+        if (responseBody == null) {
+            throw new ApiException(new IOException("Response body is empty"));
+        }
+        try {
+            File file = prepareDownloadFile(response);
+            java.nio.file.Files.copy(
+                    responseBody, file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            return file;
+        } catch (IOException e) {
+            throw new ApiException(e);
+        }
+    }
+
+    /**
+     * Prepare the file for download from the response.
+     *
+     * @param response a {@link java.net.http.HttpResponse} object.
+     * @return a {@link java.io.File} object.
+     * @throws java.io.IOException if any.
+     */
+    private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
+        String filename = null;
+        java.util.Optional<String> contentDisposition =
+                response.headers().firstValue("Content-Disposition");
+        if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
+            // Get filename from the Content-Disposition header.
+            java.util.regex.Pattern pattern =
+                    java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
+            java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
+            if (matcher.find()) filename = matcher.group(1);
+        }
+        File file = null;
+        if (filename != null) {
+            java.nio.file.Path tempDir =
+                    java.nio.file.Files.createTempDirectory("swagger-gen-native");
+            java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
+            file = filePath.toFile();
+            tempDir.toFile().deleteOnExit(); // best effort cleanup
+            file.deleteOnExit(); // best effort cleanup
+        } else {
+            file = java.nio.file.Files.createTempFile("download-", "").toFile();
+            file.deleteOnExit(); // best effort cleanup
+        }
+        return file;
+    }
+
+    /**
+     * Create Webhook Register a callback URL that we will post document events to. Note: a
+     * &#x60;document_signed&#x60; event is not emitted solely because a pre-signed template
+     * signature/initials was copied as document content, and &#x60;event.related_signer&#x60; only
+     * identifies a real recipient signing action. Two additional event types cover SMS delivery
+     * outcomes: &#x60;document_sms_failed&#x60; fires when an SMS reaches a terminal failure
+     * (undelivered or failed), and &#x60;document_sms_opted_out&#x60; fires when a phone number is
+     * newly added to the SMS suppression list. Both carry &#x60;event.related_recipient&#x60; (id,
+     * name, email when present, &#x60;phone_number_masked&#x60;, and &#x60;delivery_method&#x60;)
+     * instead of &#x60;event.related_signer&#x60;, and each recipient in
+     * &#x60;data.object.recipients[]&#x60; whose delivery method includes SMS carries a nested
+     * &#x60;sms&#x60; object (&#x60;phone_number_masked&#x60;, &#x60;send_sms&#x60;,
+     * &#x60;send_sms_delay&#x60;, &#x60;delivery_status&#x60;, &#x60;message_type&#x60;,
+     * &#x60;failed&#x60;, &#x60;failed_details&#x60;). Email-only recipients keep their existing
+     * payload shape unchanged. Only webhooks registered on API-type hooks receive these two events.
      *
      * @param createWebhookRequest (required)
      * @return CompletableFuture&lt;WebhookResponse&gt;
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<WebhookResponse> createWebhook(
-            CreateWebhookRequest createWebhookRequest) throws ApiException {
+            @jakarta.annotation.Nonnull CreateWebhookRequest createWebhookRequest)
+            throws ApiException {
+        return createWebhook(createWebhookRequest, null);
+    }
+
+    /**
+     * Create Webhook Register a callback URL that we will post document events to. Note: a
+     * &#x60;document_signed&#x60; event is not emitted solely because a pre-signed template
+     * signature/initials was copied as document content, and &#x60;event.related_signer&#x60; only
+     * identifies a real recipient signing action. Two additional event types cover SMS delivery
+     * outcomes: &#x60;document_sms_failed&#x60; fires when an SMS reaches a terminal failure
+     * (undelivered or failed), and &#x60;document_sms_opted_out&#x60; fires when a phone number is
+     * newly added to the SMS suppression list. Both carry &#x60;event.related_recipient&#x60; (id,
+     * name, email when present, &#x60;phone_number_masked&#x60;, and &#x60;delivery_method&#x60;)
+     * instead of &#x60;event.related_signer&#x60;, and each recipient in
+     * &#x60;data.object.recipients[]&#x60; whose delivery method includes SMS carries a nested
+     * &#x60;sms&#x60; object (&#x60;phone_number_masked&#x60;, &#x60;send_sms&#x60;,
+     * &#x60;send_sms_delay&#x60;, &#x60;delivery_status&#x60;, &#x60;message_type&#x60;,
+     * &#x60;failed&#x60;, &#x60;failed_details&#x60;). Email-only recipients keep their existing
+     * payload shape unchanged. Only webhooks registered on API-type hooks receive these two events.
+     *
+     * @param createWebhookRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;WebhookResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<WebhookResponse> createWebhook(
+            @jakarta.annotation.Nonnull CreateWebhookRequest createWebhookRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    createWebhookRequestBuilder(createWebhookRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("createWebhook", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    WebhookResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return createWebhookWithHttpInfo(createWebhookRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
     }
 
     /**
-     * Create Webhook Register a callback URL that we will post document events to.
+     * Create Webhook Register a callback URL that we will post document events to. Note: a
+     * &#x60;document_signed&#x60; event is not emitted solely because a pre-signed template
+     * signature/initials was copied as document content, and &#x60;event.related_signer&#x60; only
+     * identifies a real recipient signing action. Two additional event types cover SMS delivery
+     * outcomes: &#x60;document_sms_failed&#x60; fires when an SMS reaches a terminal failure
+     * (undelivered or failed), and &#x60;document_sms_opted_out&#x60; fires when a phone number is
+     * newly added to the SMS suppression list. Both carry &#x60;event.related_recipient&#x60; (id,
+     * name, email when present, &#x60;phone_number_masked&#x60;, and &#x60;delivery_method&#x60;)
+     * instead of &#x60;event.related_signer&#x60;, and each recipient in
+     * &#x60;data.object.recipients[]&#x60; whose delivery method includes SMS carries a nested
+     * &#x60;sms&#x60; object (&#x60;phone_number_masked&#x60;, &#x60;send_sms&#x60;,
+     * &#x60;send_sms_delay&#x60;, &#x60;delivery_status&#x60;, &#x60;message_type&#x60;,
+     * &#x60;failed&#x60;, &#x60;failed_details&#x60;). Email-only recipients keep their existing
+     * payload shape unchanged. Only webhooks registered on API-type hooks receive these two events.
      *
      * @param createWebhookRequest (required)
      * @return CompletableFuture&lt;ApiResponse&lt;WebhookResponse&gt;&gt;
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<WebhookResponse>> createWebhookWithHttpInfo(
-            CreateWebhookRequest createWebhookRequest) throws ApiException {
+            @jakarta.annotation.Nonnull CreateWebhookRequest createWebhookRequest)
+            throws ApiException {
+        return createWebhookWithHttpInfo(createWebhookRequest, null);
+    }
+
+    /**
+     * Create Webhook Register a callback URL that we will post document events to. Note: a
+     * &#x60;document_signed&#x60; event is not emitted solely because a pre-signed template
+     * signature/initials was copied as document content, and &#x60;event.related_signer&#x60; only
+     * identifies a real recipient signing action. Two additional event types cover SMS delivery
+     * outcomes: &#x60;document_sms_failed&#x60; fires when an SMS reaches a terminal failure
+     * (undelivered or failed), and &#x60;document_sms_opted_out&#x60; fires when a phone number is
+     * newly added to the SMS suppression list. Both carry &#x60;event.related_recipient&#x60; (id,
+     * name, email when present, &#x60;phone_number_masked&#x60;, and &#x60;delivery_method&#x60;)
+     * instead of &#x60;event.related_signer&#x60;, and each recipient in
+     * &#x60;data.object.recipients[]&#x60; whose delivery method includes SMS carries a nested
+     * &#x60;sms&#x60; object (&#x60;phone_number_masked&#x60;, &#x60;send_sms&#x60;,
+     * &#x60;send_sms_delay&#x60;, &#x60;delivery_status&#x60;, &#x60;message_type&#x60;,
+     * &#x60;failed&#x60;, &#x60;failed_details&#x60;). Email-only recipients keep their existing
+     * payload shape unchanged. Only webhooks registered on API-type hooks receive these two events.
+     *
+     * @param createWebhookRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;WebhookResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<WebhookResponse>> createWebhookWithHttpInfo(
+            @jakarta.annotation.Nonnull CreateWebhookRequest createWebhookRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    createWebhookRequestBuilder(createWebhookRequest);
+                    createWebhookRequestBuilder(createWebhookRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -127,17 +281,39 @@ public class WebhooksApi {
                                             getApiException("createWebhook", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<WebhookResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            WebhookResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<WebhookResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        WebhookResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        WebhookResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<WebhookResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -148,7 +324,9 @@ public class WebhooksApi {
     }
 
     private HttpRequest.Builder createWebhookRequestBuilder(
-            CreateWebhookRequest createWebhookRequest) throws ApiException {
+            @jakarta.annotation.Nonnull CreateWebhookRequest createWebhookRequest,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'createWebhookRequest' is set
         if (createWebhookRequest == null) {
             throw new ApiException(
@@ -176,6 +354,9 @@ public class WebhooksApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -189,19 +370,23 @@ public class WebhooksApi {
      * @return CompletableFuture&lt;Void&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<Void> deleteWebhook(UUID id) throws ApiException {
+    public CompletableFuture<Void> deleteWebhook(@jakarta.annotation.Nonnull UUID id)
+            throws ApiException {
+        return deleteWebhook(id, null);
+    }
+
+    /**
+     * Delete Webhook Deletes a registered callback URL that we are posting document events to.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;Void&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<Void> deleteWebhook(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = deleteWebhookRequestBuilder(id);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("deleteWebhook", localVarResponse));
-                                }
-                                return CompletableFuture.completedFuture(null);
-                            });
+            return deleteWebhookWithHttpInfo(id, headers).thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -214,12 +399,27 @@ public class WebhooksApi {
      * @return CompletableFuture&lt;ApiResponse&lt;Void&gt;&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<ApiResponse<Void>> deleteWebhookWithHttpInfo(UUID id)
-            throws ApiException {
+    public CompletableFuture<ApiResponse<Void>> deleteWebhookWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id) throws ApiException {
+        return deleteWebhookWithHttpInfo(id, null);
+    }
+
+    /**
+     * Delete Webhook Deletes a registered callback URL that we are posting document events to.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;Void&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<Void>> deleteWebhookWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = deleteWebhookRequestBuilder(id);
+            HttpRequest.Builder localVarRequestBuilder = deleteWebhookRequestBuilder(id, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -229,18 +429,34 @@ public class WebhooksApi {
                                     return CompletableFuture.failedFuture(
                                             getApiException("deleteWebhook", localVarResponse));
                                 }
-                                return CompletableFuture.completedFuture(
-                                        new ApiResponse<Void>(
-                                                localVarResponse.statusCode(),
-                                                localVarResponse.headers().map(),
-                                                null));
+                                try {
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.readAllBytes();
+                                        }
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<Void>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        null));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                    return CompletableFuture.failedFuture(new ApiException(e));
+                                }
                             });
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
     }
 
-    private HttpRequest.Builder deleteWebhookRequestBuilder(UUID id) throws ApiException {
+    private HttpRequest.Builder deleteWebhookRequestBuilder(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -260,6 +476,9 @@ public class WebhooksApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -273,29 +492,20 @@ public class WebhooksApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<List<WebhookResponse>> listWebhooks() throws ApiException {
+        return listWebhooks(null);
+    }
+
+    /**
+     * List Webhooks List all the webhooks in the account.
+     *
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;List&lt;WebhookResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<List<WebhookResponse>> listWebhooks(Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = listWebhooksRequestBuilder();
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("listWebhooks", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    List<WebhookResponse>>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return listWebhooksWithHttpInfo(headers).thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -309,10 +519,24 @@ public class WebhooksApi {
      */
     public CompletableFuture<ApiResponse<List<WebhookResponse>>> listWebhooksWithHttpInfo()
             throws ApiException {
+        return listWebhooksWithHttpInfo(null);
+    }
+
+    /**
+     * List Webhooks List all the webhooks in the account.
+     *
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;List&lt;WebhookResponse&gt;&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<List<WebhookResponse>>> listWebhooksWithHttpInfo(
+            Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = listWebhooksRequestBuilder();
+            HttpRequest.Builder localVarRequestBuilder = listWebhooksRequestBuilder(headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -323,18 +547,40 @@ public class WebhooksApi {
                                             getApiException("listWebhooks", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<List<WebhookResponse>>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            List<
-                                                                                    WebhookResponse>>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<List<WebhookResponse>>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        List<WebhookResponse> responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        List<
+                                                                                WebhookResponse>>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<List<WebhookResponse>>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -344,7 +590,8 @@ public class WebhooksApi {
         }
     }
 
-    private HttpRequest.Builder listWebhooksRequestBuilder() throws ApiException {
+    private HttpRequest.Builder listWebhooksRequestBuilder(Map<String, String> headers)
+            throws ApiException {
 
         HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
@@ -358,6 +605,9 @@ public class WebhooksApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }

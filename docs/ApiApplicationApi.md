@@ -87,7 +87,7 @@ CompletableFuture<void> (empty response body)
 
 ## deleteApiApplicationWithHttpInfo
 
-> CompletableFuture<ApiResponse<Void>> deleteApiApplication deleteApiApplicationWithHttpInfo(id)
+> CompletableFuture<ApiResponse<Void>> deleteApiApplicationWithHttpInfo(id)
 
 Delete API Application
 
@@ -247,7 +247,7 @@ CompletableFuture<[**ApiApplicationResponse**](ApiApplicationResponse.md)>
 
 ## getApiApplicationWithHttpInfo
 
-> CompletableFuture<ApiResponse<ApiApplicationResponse>> getApiApplication getApiApplicationWithHttpInfo(id)
+> CompletableFuture<ApiResponse<ApiApplicationResponse>> getApiApplicationWithHttpInfo(id)
 
 Get API Application
 

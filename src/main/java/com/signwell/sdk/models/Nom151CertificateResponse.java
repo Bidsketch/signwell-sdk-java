@@ -22,7 +22,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({Nom151CertificateResponse.JSON_PROPERTY_NOM151})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class Nom151CertificateResponse {
     public static final String JSON_PROPERTY_NOM151 = "nom151";
     @jakarta.annotation.Nonnull private Nom151CertificateResponseNom151 nom151;
@@ -41,13 +41,13 @@ public class Nom151CertificateResponse {
      * @return nom151
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NOM151)
+    @JsonProperty(value = JSON_PROPERTY_NOM151, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Nom151CertificateResponseNom151 getNom151() {
         return nom151;
     }
 
-    @JsonProperty(JSON_PROPERTY_NOM151)
+    @JsonProperty(value = JSON_PROPERTY_NOM151, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setNom151(@jakarta.annotation.Nonnull Nom151CertificateResponseNom151 nom151) {
         this.nom151 = nom151;
@@ -85,10 +85,7 @@ public class Nom151CertificateResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**

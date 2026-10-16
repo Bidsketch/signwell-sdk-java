@@ -24,7 +24,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({BulkSendCsvTemplateResponse.JSON_PROPERTY_DATA})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class BulkSendCsvTemplateResponse {
     public static final String JSON_PROPERTY_DATA = "data";
     @jakarta.annotation.Nonnull private byte[] data;
@@ -42,13 +42,13 @@ public class BulkSendCsvTemplateResponse {
      * @return data
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_DATA)
+    @JsonProperty(value = JSON_PROPERTY_DATA, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public byte[] getData() {
         return data;
     }
 
-    @JsonProperty(JSON_PROPERTY_DATA)
+    @JsonProperty(value = JSON_PROPERTY_DATA, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setData(@jakarta.annotation.Nonnull byte[] data) {
         this.data = data;
@@ -86,10 +86,7 @@ public class BulkSendCsvTemplateResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -128,6 +125,7 @@ public class BulkSendCsvTemplateResponse {
         if (getData() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdata%s=%s",
                             prefix,
                             suffix,

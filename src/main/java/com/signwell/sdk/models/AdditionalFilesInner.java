@@ -33,7 +33,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class AdditionalFilesInner {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nonnull private String name;
@@ -57,13 +57,13 @@ public class AdditionalFilesInner {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -79,13 +79,13 @@ public class AdditionalFilesInner {
      *
      * @return fileUrl
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_FILE_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_FILE_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getFileUrl() {
         return fileUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_FILE_URL)
+    @JsonProperty(value = JSON_PROPERTY_FILE_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setFileUrl(@jakarta.annotation.Nullable String fileUrl) {
         this.fileUrl = fileUrl;
@@ -101,13 +101,13 @@ public class AdditionalFilesInner {
      *
      * @return fileBase64
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_FILE_BASE64)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_FILE_BASE64, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public byte[] getFileBase64() {
         return fileBase64;
     }
 
-    @JsonProperty(JSON_PROPERTY_FILE_BASE64)
+    @JsonProperty(value = JSON_PROPERTY_FILE_BASE64, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setFileBase64(@jakarta.annotation.Nullable byte[] fileBase64) {
         this.fileBase64 = fileBase64;
@@ -149,10 +149,7 @@ public class AdditionalFilesInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -191,6 +188,7 @@ public class AdditionalFilesInner {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -201,6 +199,7 @@ public class AdditionalFilesInner {
         if (getFileUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sfile_url%s=%s",
                             prefix,
                             suffix,
@@ -211,6 +210,7 @@ public class AdditionalFilesInner {
         if (getFileBase64() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sfile_base64%s=%s",
                             prefix,
                             suffix,

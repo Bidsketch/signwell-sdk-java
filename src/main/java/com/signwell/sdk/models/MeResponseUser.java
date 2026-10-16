@@ -18,7 +18,6 @@ import com.fasterxml.jackson.annotation.JsonPropertyOrder;
 import com.signwell.sdk.raw.ApiClient;
 import java.util.Objects;
 import java.util.StringJoiner;
-import java.util.UUID;
 
 /** The authenticated user */
 @JsonPropertyOrder({
@@ -31,10 +30,10 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class MeResponseUser {
     public static final String JSON_PROPERTY_ID = "id";
-    @jakarta.annotation.Nonnull private UUID id;
+    @jakarta.annotation.Nonnull private String id;
 
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nonnull private String name;
@@ -53,7 +52,7 @@ public class MeResponseUser {
 
     public MeResponseUser() {}
 
-    public MeResponseUser id(@jakarta.annotation.Nonnull UUID id) {
+    public MeResponseUser id(@jakarta.annotation.Nonnull String id) {
         this.id = id;
         return this;
     }
@@ -64,15 +63,15 @@ public class MeResponseUser {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
-    public UUID getId() {
+    public String getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
-    public void setId(@jakarta.annotation.Nonnull UUID id) {
+    public void setId(@jakarta.annotation.Nonnull String id) {
         this.id = id;
     }
 
@@ -87,13 +86,13 @@ public class MeResponseUser {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -110,13 +109,13 @@ public class MeResponseUser {
      * @return email
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getEmail() {
         return email;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_EMAIL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setEmail(@jakarta.annotation.Nonnull String email) {
         this.email = email;
@@ -133,13 +132,13 @@ public class MeResponseUser {
      *
      * @return hasGoogleRegistration
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_HAS_GOOGLE_REGISTRATION)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_HAS_GOOGLE_REGISTRATION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getHasGoogleRegistration() {
         return hasGoogleRegistration;
     }
 
-    @JsonProperty(JSON_PROPERTY_HAS_GOOGLE_REGISTRATION)
+    @JsonProperty(value = JSON_PROPERTY_HAS_GOOGLE_REGISTRATION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setHasGoogleRegistration(
             @jakarta.annotation.Nullable Boolean hasGoogleRegistration) {
@@ -156,13 +155,13 @@ public class MeResponseUser {
      *
      * @return firstName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_FIRST_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_FIRST_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getFirstName() {
         return firstName;
     }
 
-    @JsonProperty(JSON_PROPERTY_FIRST_NAME)
+    @JsonProperty(value = JSON_PROPERTY_FIRST_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setFirstName(@jakarta.annotation.Nullable String firstName) {
         this.firstName = firstName;
@@ -179,13 +178,13 @@ public class MeResponseUser {
      *
      * @return preferences
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREFERENCES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREFERENCES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public MeResponseUserPreferences getPreferences() {
         return preferences;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREFERENCES)
+    @JsonProperty(value = JSON_PROPERTY_PREFERENCES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreferences(@jakarta.annotation.Nullable MeResponseUserPreferences preferences) {
         this.preferences = preferences;
@@ -235,10 +234,7 @@ public class MeResponseUser {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -277,14 +273,18 @@ public class MeResponseUser {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -295,6 +295,7 @@ public class MeResponseUser {
         if (getEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%semail%s=%s",
                             prefix,
                             suffix,
@@ -305,6 +306,7 @@ public class MeResponseUser {
         if (getHasGoogleRegistration() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%shas_google_registration%s=%s",
                             prefix,
                             suffix,
@@ -316,6 +318,7 @@ public class MeResponseUser {
         if (getFirstName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sfirst_name%s=%s",
                             prefix,
                             suffix,

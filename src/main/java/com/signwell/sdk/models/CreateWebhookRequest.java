@@ -27,7 +27,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class CreateWebhookRequest {
     public static final String JSON_PROPERTY_CALLBACK_URL = "callback_url";
     @jakarta.annotation.Nonnull private String callbackUrl;
@@ -48,13 +48,13 @@ public class CreateWebhookRequest {
      * @return callbackUrl
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_CALLBACK_URL)
+    @JsonProperty(value = JSON_PROPERTY_CALLBACK_URL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getCallbackUrl() {
         return callbackUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_CALLBACK_URL)
+    @JsonProperty(value = JSON_PROPERTY_CALLBACK_URL, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setCallbackUrl(@jakarta.annotation.Nonnull String callbackUrl) {
         this.callbackUrl = callbackUrl;
@@ -71,13 +71,13 @@ public class CreateWebhookRequest {
      *
      * @return apiApplicationId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getApiApplicationId() {
         return apiApplicationId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiApplicationId(@jakarta.annotation.Nullable UUID apiApplicationId) {
         this.apiApplicationId = apiApplicationId;
@@ -117,10 +117,7 @@ public class CreateWebhookRequest {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -159,6 +156,7 @@ public class CreateWebhookRequest {
         if (getCallbackUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scallback_url%s=%s",
                             prefix,
                             suffix,
@@ -169,6 +167,7 @@ public class CreateWebhookRequest {
         if (getApiApplicationId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_application_id%s=%s",
                             prefix,
                             suffix,

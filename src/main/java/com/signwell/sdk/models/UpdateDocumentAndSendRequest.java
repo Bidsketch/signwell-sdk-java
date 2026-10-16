@@ -27,6 +27,7 @@ import java.util.UUID;
 /** UpdateDocumentAndSendRequest */
 @JsonPropertyOrder({
     UpdateDocumentAndSendRequest.JSON_PROPERTY_TEST_MODE,
+    UpdateDocumentAndSendRequest.JSON_PROPERTY_SEND_SMS_TEST_PREVIEW_EMAIL,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_NAME,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_SUBJECT,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_MESSAGE,
@@ -36,22 +37,28 @@ import java.util.UUID;
     UpdateDocumentAndSendRequest.JSON_PROPERTY_API_APPLICATION_ID,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_EMBEDDED_SIGNING,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS,
+    UpdateDocumentAndSendRequest.JSON_PROPERTY_EMBEDDED,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_CUSTOM_REQUESTER_NAME,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_REDIRECT_URL,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_ALLOW_DECLINE,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_ALLOW_REASSIGN,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_DECLINE_REDIRECT_URL,
+    UpdateDocumentAndSendRequest.JSON_PROPERTY_CONDITIONAL_RULES,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_METADATA,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_LABELS,
     UpdateDocumentAndSendRequest.JSON_PROPERTY_CHECKBOX_GROUPS
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class UpdateDocumentAndSendRequest {
     public static final String JSON_PROPERTY_TEST_MODE = "test_mode";
     @jakarta.annotation.Nullable private Boolean testMode = false;
+
+    public static final String JSON_PROPERTY_SEND_SMS_TEST_PREVIEW_EMAIL =
+            "send_sms_test_preview_email";
+    @jakarta.annotation.Nullable private Boolean sendSmsTestPreviewEmail = false;
 
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nullable private String name;
@@ -81,6 +88,9 @@ public class UpdateDocumentAndSendRequest {
             "embedded_signing_notifications";
     @jakarta.annotation.Nullable private Boolean embeddedSigningNotifications = false;
 
+    public static final String JSON_PROPERTY_EMBEDDED = "embedded";
+    @jakarta.annotation.Nullable private EmbeddedRequest embedded;
+
     public static final String JSON_PROPERTY_CUSTOM_REQUESTER_NAME = "custom_requester_name";
     @jakarta.annotation.Nullable private String customRequesterName;
 
@@ -98,6 +108,10 @@ public class UpdateDocumentAndSendRequest {
 
     public static final String JSON_PROPERTY_DECLINE_REDIRECT_URL = "decline_redirect_url";
     @jakarta.annotation.Nullable private String declineRedirectUrl;
+
+    public static final String JSON_PROPERTY_CONDITIONAL_RULES = "conditional_rules";
+
+    @jakarta.annotation.Nullable private List<ConditionalRuleRequest> conditionalRules = new ArrayList<>();
 
     public static final String JSON_PROPERTY_METADATA = "metadata";
     @jakarta.annotation.Nullable private Map<String, String> metadata = new HashMap<>();
@@ -122,16 +136,43 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return testMode
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_TEST_MODE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_TEST_MODE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getTestMode() {
         return testMode;
     }
 
-    @JsonProperty(JSON_PROPERTY_TEST_MODE)
+    @JsonProperty(value = JSON_PROPERTY_TEST_MODE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setTestMode(@jakarta.annotation.Nullable Boolean testMode) {
         this.testMode = testMode;
+    }
+
+    public UpdateDocumentAndSendRequest sendSmsTestPreviewEmail(
+            @jakarta.annotation.Nullable Boolean sendSmsTestPreviewEmail) {
+        this.sendSmsTestPreviewEmail = sendSmsTestPreviewEmail;
+        return this;
+    }
+
+    /**
+     * Only applies when &#x60;test_mode&#x60; is &#x60;true&#x60;. When &#x60;true&#x60;, and the
+     * document has an SMS-only recipient, sends the document owner a test-mode preview email (with
+     * a masked phone number) instead of the regular SMS sender-copy email. No SMS is sent and no
+     * credits are used, in test mode or otherwise. Defaults to &#x60;false&#x60;.
+     *
+     * @return sendSmsTestPreviewEmail
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SEND_SMS_TEST_PREVIEW_EMAIL, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public Boolean getSendSmsTestPreviewEmail() {
+        return sendSmsTestPreviewEmail;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_SEND_SMS_TEST_PREVIEW_EMAIL, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setSendSmsTestPreviewEmail(
+            @jakarta.annotation.Nullable Boolean sendSmsTestPreviewEmail) {
+        this.sendSmsTestPreviewEmail = sendSmsTestPreviewEmail;
     }
 
     public UpdateDocumentAndSendRequest name(@jakarta.annotation.Nullable String name) {
@@ -144,13 +185,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -163,17 +204,18 @@ public class UpdateDocumentAndSendRequest {
 
     /**
      * Email subject for the signature request that recipients will see. Defaults to the default
-     * system subject or a template subject (if the document is created from a template).
+     * system subject or a template subject (if the document is created from a template). Applies to
+     * email notifications only; SMS notifications always use fixed system templates.
      *
      * @return subject
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getSubject() {
         return subject;
     }
 
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSubject(@jakarta.annotation.Nullable String subject) {
         this.subject = subject;
@@ -186,17 +228,18 @@ public class UpdateDocumentAndSendRequest {
 
     /**
      * Email message for the signature request that recipients will see. Defaults to the default
-     * system message or a template message (if the document is created from a template).
+     * system message or a template message (if the document is created from a template). Applies to
+     * email notifications only; SMS notifications always use fixed system templates.
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -213,13 +256,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return expiresIn
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EXPIRES_IN)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EXPIRES_IN, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getExpiresIn() {
         return expiresIn;
     }
 
-    @JsonProperty(JSON_PROPERTY_EXPIRES_IN)
+    @JsonProperty(value = JSON_PROPERTY_EXPIRES_IN, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setExpiresIn(@jakarta.annotation.Nullable Integer expiresIn) {
         this.expiresIn = expiresIn;
@@ -236,13 +279,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return reminders
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_REMINDERS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_REMINDERS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getReminders() {
         return reminders;
     }
 
-    @JsonProperty(JSON_PROPERTY_REMINDERS)
+    @JsonProperty(value = JSON_PROPERTY_REMINDERS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setReminders(@jakarta.annotation.Nullable Boolean reminders) {
         this.reminders = reminders;
@@ -260,13 +303,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return applySigningOrder
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_APPLY_SIGNING_ORDER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_APPLY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getApplySigningOrder() {
         return applySigningOrder;
     }
 
-    @JsonProperty(JSON_PROPERTY_APPLY_SIGNING_ORDER)
+    @JsonProperty(value = JSON_PROPERTY_APPLY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApplySigningOrder(@jakarta.annotation.Nullable Boolean applySigningOrder) {
         this.applySigningOrder = applySigningOrder;
@@ -284,13 +327,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return apiApplicationId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getApiApplicationId() {
         return apiApplicationId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiApplicationId(@jakarta.annotation.Nullable UUID apiApplicationId) {
         this.apiApplicationId = apiApplicationId;
@@ -309,13 +352,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return embeddedSigning
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EMBEDDED_SIGNING)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMBEDDED_SIGNING, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getEmbeddedSigning() {
         return embeddedSigning;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMBEDDED_SIGNING)
+    @JsonProperty(value = JSON_PROPERTY_EMBEDDED_SIGNING, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEmbeddedSigning(@jakarta.annotation.Nullable Boolean embeddedSigning) {
         this.embeddedSigning = embeddedSigning;
@@ -334,17 +377,40 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return embeddedSigningNotifications
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getEmbeddedSigningNotifications() {
         return embeddedSigningNotifications;
     }
 
-    @JsonProperty(JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS)
+    @JsonProperty(value = JSON_PROPERTY_EMBEDDED_SIGNING_NOTIFICATIONS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setEmbeddedSigningNotifications(
             @jakarta.annotation.Nullable Boolean embeddedSigningNotifications) {
         this.embeddedSigningNotifications = embeddedSigningNotifications;
+    }
+
+    public UpdateDocumentAndSendRequest embedded(
+            @jakarta.annotation.Nullable EmbeddedRequest embedded) {
+        this.embedded = embedded;
+        return this;
+    }
+
+    /**
+     * Get embedded
+     *
+     * @return embedded
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EMBEDDED, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public EmbeddedRequest getEmbedded() {
+        return embedded;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_EMBEDDED, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setEmbedded(@jakarta.annotation.Nullable EmbeddedRequest embedded) {
+        this.embedded = embedded;
     }
 
     public UpdateDocumentAndSendRequest customRequesterName(
@@ -359,13 +425,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return customRequesterName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getCustomRequesterName() {
         return customRequesterName;
     }
 
-    @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_NAME)
+    @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCustomRequesterName(@jakarta.annotation.Nullable String customRequesterName) {
         this.customRequesterName = customRequesterName;
@@ -383,13 +449,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return customRequesterEmail
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getCustomRequesterEmail() {
         return customRequesterEmail;
     }
 
-    @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCustomRequesterEmail(@jakarta.annotation.Nullable String customRequesterEmail) {
         this.customRequesterEmail = customRequesterEmail;
@@ -406,13 +472,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return redirectUrl
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_REDIRECT_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getRedirectUrl() {
         return redirectUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_REDIRECT_URL)
+    @JsonProperty(value = JSON_PROPERTY_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setRedirectUrl(@jakarta.annotation.Nullable String redirectUrl) {
         this.redirectUrl = redirectUrl;
@@ -431,13 +497,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return allowDecline
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ALLOW_DECLINE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ALLOW_DECLINE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getAllowDecline() {
         return allowDecline;
     }
 
-    @JsonProperty(JSON_PROPERTY_ALLOW_DECLINE)
+    @JsonProperty(value = JSON_PROPERTY_ALLOW_DECLINE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setAllowDecline(@jakarta.annotation.Nullable Boolean allowDecline) {
         this.allowDecline = allowDecline;
@@ -452,17 +518,18 @@ public class UpdateDocumentAndSendRequest {
     /**
      * In some cases a signer is not the right person to sign and may need to reassign their signing
      * responsibilities to another person. This feature allows them to reassign the document to
-     * someone else.
+     * someone else. Unavailable on 21 CFR Part 11 documents: omit it and reassignment stays off,
+     * while sending &#x60;true&#x60; returns a 422.
      *
      * @return allowReassign
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ALLOW_REASSIGN)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ALLOW_REASSIGN, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getAllowReassign() {
         return allowReassign;
     }
 
-    @JsonProperty(JSON_PROPERTY_ALLOW_REASSIGN)
+    @JsonProperty(value = JSON_PROPERTY_ALLOW_REASSIGN, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setAllowReassign(@jakarta.annotation.Nullable Boolean allowReassign) {
         this.allowReassign = allowReassign;
@@ -479,16 +546,50 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return declineRedirectUrl
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_DECLINE_REDIRECT_URL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_DECLINE_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getDeclineRedirectUrl() {
         return declineRedirectUrl;
     }
 
-    @JsonProperty(JSON_PROPERTY_DECLINE_REDIRECT_URL)
+    @JsonProperty(value = JSON_PROPERTY_DECLINE_REDIRECT_URL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setDeclineRedirectUrl(@jakarta.annotation.Nullable String declineRedirectUrl) {
         this.declineRedirectUrl = declineRedirectUrl;
+    }
+
+    public UpdateDocumentAndSendRequest conditionalRules(
+            @jakarta.annotation.Nullable List<ConditionalRuleRequest> conditionalRules) {
+        this.conditionalRules = conditionalRules;
+        return this;
+    }
+
+    public UpdateDocumentAndSendRequest addConditionalRulesItem(
+            ConditionalRuleRequest conditionalRulesItem) {
+        if (this.conditionalRules == null) {
+            this.conditionalRules = new ArrayList<>();
+        }
+        this.conditionalRules.add(conditionalRulesItem);
+        return this;
+    }
+
+    /**
+     * Conditional logic rules that show, hide, or require fields based on what a signer does to
+     * other fields. Every identifier is a field api_id. At most 10 rules per document or template.
+     *
+     * @return conditionalRules
+     */
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CONDITIONAL_RULES, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public List<ConditionalRuleRequest> getConditionalRules() {
+        return conditionalRules;
+    }
+
+    @JsonProperty(value = JSON_PROPERTY_CONDITIONAL_RULES, required = false)
+    @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
+    public void setConditionalRules(
+            @jakarta.annotation.Nullable List<ConditionalRuleRequest> conditionalRules) {
+        this.conditionalRules = conditionalRules;
     }
 
     public UpdateDocumentAndSendRequest metadata(
@@ -511,13 +612,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return metadata
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_METADATA)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_METADATA, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Map<String, String> getMetadata() {
         return metadata;
     }
 
-    @JsonProperty(JSON_PROPERTY_METADATA)
+    @JsonProperty(value = JSON_PROPERTY_METADATA, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMetadata(@jakarta.annotation.Nullable Map<String, String> metadata) {
         this.metadata = metadata;
@@ -544,13 +645,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return labels
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_LABELS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_LABELS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<LabelRequest> getLabels() {
         return labels;
     }
 
-    @JsonProperty(JSON_PROPERTY_LABELS)
+    @JsonProperty(value = JSON_PROPERTY_LABELS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setLabels(@jakarta.annotation.Nullable List<LabelRequest> labels) {
         this.labels = labels;
@@ -577,13 +678,13 @@ public class UpdateDocumentAndSendRequest {
      *
      * @return checkboxGroups
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CHECKBOX_GROUPS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CHECKBOX_GROUPS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<CheckboxGroupsInner> getCheckboxGroups() {
         return checkboxGroups;
     }
 
-    @JsonProperty(JSON_PROPERTY_CHECKBOX_GROUPS)
+    @JsonProperty(value = JSON_PROPERTY_CHECKBOX_GROUPS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCheckboxGroups(
             @jakarta.annotation.Nullable List<CheckboxGroupsInner> checkboxGroups) {
@@ -602,6 +703,9 @@ public class UpdateDocumentAndSendRequest {
         UpdateDocumentAndSendRequest updateDocumentAndSendRequest =
                 (UpdateDocumentAndSendRequest) o;
         return Objects.equals(this.testMode, updateDocumentAndSendRequest.testMode)
+                && Objects.equals(
+                        this.sendSmsTestPreviewEmail,
+                        updateDocumentAndSendRequest.sendSmsTestPreviewEmail)
                 && Objects.equals(this.name, updateDocumentAndSendRequest.name)
                 && Objects.equals(this.subject, updateDocumentAndSendRequest.subject)
                 && Objects.equals(this.message, updateDocumentAndSendRequest.message)
@@ -616,6 +720,7 @@ public class UpdateDocumentAndSendRequest {
                 && Objects.equals(
                         this.embeddedSigningNotifications,
                         updateDocumentAndSendRequest.embeddedSigningNotifications)
+                && Objects.equals(this.embedded, updateDocumentAndSendRequest.embedded)
                 && Objects.equals(
                         this.customRequesterName, updateDocumentAndSendRequest.customRequesterName)
                 && Objects.equals(
@@ -626,6 +731,8 @@ public class UpdateDocumentAndSendRequest {
                 && Objects.equals(this.allowReassign, updateDocumentAndSendRequest.allowReassign)
                 && Objects.equals(
                         this.declineRedirectUrl, updateDocumentAndSendRequest.declineRedirectUrl)
+                && Objects.equals(
+                        this.conditionalRules, updateDocumentAndSendRequest.conditionalRules)
                 && Objects.equals(this.metadata, updateDocumentAndSendRequest.metadata)
                 && Objects.equals(this.labels, updateDocumentAndSendRequest.labels)
                 && Objects.equals(this.checkboxGroups, updateDocumentAndSendRequest.checkboxGroups);
@@ -635,6 +742,7 @@ public class UpdateDocumentAndSendRequest {
     public int hashCode() {
         return Objects.hash(
                 testMode,
+                sendSmsTestPreviewEmail,
                 name,
                 subject,
                 message,
@@ -644,12 +752,14 @@ public class UpdateDocumentAndSendRequest {
                 apiApplicationId,
                 embeddedSigning,
                 embeddedSigningNotifications,
+                embedded,
                 customRequesterName,
                 customRequesterEmail,
                 redirectUrl,
                 allowDecline,
                 allowReassign,
                 declineRedirectUrl,
+                conditionalRules,
                 metadata,
                 labels,
                 checkboxGroups);
@@ -660,6 +770,9 @@ public class UpdateDocumentAndSendRequest {
         StringBuilder sb = new StringBuilder();
         sb.append("class UpdateDocumentAndSendRequest {\n");
         sb.append("    testMode: ").append(toIndentedString(testMode)).append("\n");
+        sb.append("    sendSmsTestPreviewEmail: ")
+                .append(toIndentedString(sendSmsTestPreviewEmail))
+                .append("\n");
         sb.append("    name: ").append(toIndentedString(name)).append("\n");
         sb.append("    subject: ").append(toIndentedString(subject)).append("\n");
         sb.append("    message: ").append(toIndentedString(message)).append("\n");
@@ -673,6 +786,7 @@ public class UpdateDocumentAndSendRequest {
         sb.append("    embeddedSigningNotifications: ")
                 .append(toIndentedString(embeddedSigningNotifications))
                 .append("\n");
+        sb.append("    embedded: ").append(toIndentedString(embedded)).append("\n");
         sb.append("    customRequesterName: ")
                 .append(toIndentedString(customRequesterName))
                 .append("\n");
@@ -685,6 +799,7 @@ public class UpdateDocumentAndSendRequest {
         sb.append("    declineRedirectUrl: ")
                 .append(toIndentedString(declineRedirectUrl))
                 .append("\n");
+        sb.append("    conditionalRules: ").append(toIndentedString(conditionalRules)).append("\n");
         sb.append("    metadata: ").append(toIndentedString(metadata)).append("\n");
         sb.append("    labels: ").append(toIndentedString(labels)).append("\n");
         sb.append("    checkboxGroups: ").append(toIndentedString(checkboxGroups)).append("\n");
@@ -697,10 +812,7 @@ public class UpdateDocumentAndSendRequest {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -739,16 +851,30 @@ public class UpdateDocumentAndSendRequest {
         if (getTestMode() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stest_mode%s=%s",
                             prefix,
                             suffix,
                             ApiClient.urlEncode(ApiClient.valueToString(getTestMode()))));
         }
 
+        // add `send_sms_test_preview_email` to the URL query string
+        if (getSendSmsTestPreviewEmail() != null) {
+            joiner.add(
+                    String.format(
+                            java.util.Locale.ROOT,
+                            "%ssend_sms_test_preview_email%s=%s",
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(
+                                    ApiClient.valueToString(getSendSmsTestPreviewEmail()))));
+        }
+
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -759,6 +885,7 @@ public class UpdateDocumentAndSendRequest {
         if (getSubject() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssubject%s=%s",
                             prefix,
                             suffix,
@@ -769,6 +896,7 @@ public class UpdateDocumentAndSendRequest {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -779,6 +907,7 @@ public class UpdateDocumentAndSendRequest {
         if (getExpiresIn() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sexpires_in%s=%s",
                             prefix,
                             suffix,
@@ -789,6 +918,7 @@ public class UpdateDocumentAndSendRequest {
         if (getReminders() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sreminders%s=%s",
                             prefix,
                             suffix,
@@ -799,6 +929,7 @@ public class UpdateDocumentAndSendRequest {
         if (getApplySigningOrder() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapply_signing_order%s=%s",
                             prefix,
                             suffix,
@@ -809,6 +940,7 @@ public class UpdateDocumentAndSendRequest {
         if (getApiApplicationId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_application_id%s=%s",
                             prefix,
                             suffix,
@@ -819,6 +951,7 @@ public class UpdateDocumentAndSendRequest {
         if (getEmbeddedSigning() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sembedded_signing%s=%s",
                             prefix,
                             suffix,
@@ -829,6 +962,7 @@ public class UpdateDocumentAndSendRequest {
         if (getEmbeddedSigningNotifications() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sembedded_signing_notifications%s=%s",
                             prefix,
                             suffix,
@@ -836,10 +970,16 @@ public class UpdateDocumentAndSendRequest {
                                     ApiClient.valueToString(getEmbeddedSigningNotifications()))));
         }
 
+        // add `embedded` to the URL query string
+        if (getEmbedded() != null) {
+            joiner.add(getEmbedded().toUrlQueryString(prefix + "embedded" + suffix));
+        }
+
         // add `custom_requester_name` to the URL query string
         if (getCustomRequesterName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scustom_requester_name%s=%s",
                             prefix,
                             suffix,
@@ -851,6 +991,7 @@ public class UpdateDocumentAndSendRequest {
         if (getCustomRequesterEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scustom_requester_email%s=%s",
                             prefix,
                             suffix,
@@ -862,6 +1003,7 @@ public class UpdateDocumentAndSendRequest {
         if (getRedirectUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sredirect_url%s=%s",
                             prefix,
                             suffix,
@@ -872,6 +1014,7 @@ public class UpdateDocumentAndSendRequest {
         if (getAllowDecline() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sallow_decline%s=%s",
                             prefix,
                             suffix,
@@ -882,6 +1025,7 @@ public class UpdateDocumentAndSendRequest {
         if (getAllowReassign() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sallow_reassign%s=%s",
                             prefix,
                             suffix,
@@ -892,10 +1036,36 @@ public class UpdateDocumentAndSendRequest {
         if (getDeclineRedirectUrl() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sdecline_redirect_url%s=%s",
                             prefix,
                             suffix,
                             ApiClient.urlEncode(ApiClient.valueToString(getDeclineRedirectUrl()))));
+        }
+
+        // add `conditional_rules` to the URL query string
+        if (getConditionalRules() != null) {
+            for (int i = 0; i < getConditionalRules().size(); i++) {
+                if (getConditionalRules().get(i) != null) {
+                    joiner.add(
+                            getConditionalRules()
+                                    .get(i)
+                                    .toUrlQueryString(
+                                            String.format(
+                                                    java.util.Locale.ROOT,
+                                                    "%sconditional_rules%s%s",
+                                                    prefix,
+                                                    suffix,
+                                                    "".equals(suffix)
+                                                            ? ""
+                                                            : String.format(
+                                                                    java.util.Locale.ROOT,
+                                                                    "%s%d%s",
+                                                                    containerPrefix,
+                                                                    i,
+                                                                    containerSuffix))));
+                }
+            }
         }
 
         // add `metadata` to the URL query string
@@ -903,13 +1073,18 @@ public class UpdateDocumentAndSendRequest {
             for (String _key : getMetadata().keySet()) {
                 joiner.add(
                         String.format(
+                                java.util.Locale.ROOT,
                                 "%smetadata%s%s=%s",
                                 prefix,
                                 suffix,
                                 "".equals(suffix)
                                         ? ""
                                         : String.format(
-                                                "%s%d%s", containerPrefix, _key, containerSuffix),
+                                                java.util.Locale.ROOT,
+                                                "%s%d%s",
+                                                containerPrefix,
+                                                _key,
+                                                containerSuffix),
                                 getMetadata().get(_key),
                                 ApiClient.urlEncode(
                                         ApiClient.valueToString(getMetadata().get(_key)))));
@@ -925,12 +1100,14 @@ public class UpdateDocumentAndSendRequest {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%slabels%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,
@@ -948,12 +1125,14 @@ public class UpdateDocumentAndSendRequest {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%scheckbox_groups%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,

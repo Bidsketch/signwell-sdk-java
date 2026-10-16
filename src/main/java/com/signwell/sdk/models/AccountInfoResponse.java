@@ -36,7 +36,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class AccountInfoResponse {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private UUID id;
@@ -81,13 +81,13 @@ public class AccountInfoResponse {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull UUID id) {
         this.id = id;
@@ -104,13 +104,13 @@ public class AccountInfoResponse {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -127,13 +127,13 @@ public class AccountInfoResponse {
      * @return planTier
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_PLAN_TIER)
+    @JsonProperty(value = JSON_PROPERTY_PLAN_TIER, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getPlanTier() {
         return planTier;
     }
 
-    @JsonProperty(JSON_PROPERTY_PLAN_TIER)
+    @JsonProperty(value = JSON_PROPERTY_PLAN_TIER, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setPlanTier(@jakarta.annotation.Nonnull String planTier) {
         this.planTier = planTier;
@@ -150,13 +150,13 @@ public class AccountInfoResponse {
      *
      * @return activeTemplates
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ACTIVE_TEMPLATES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ACTIVE_TEMPLATES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getActiveTemplates() {
         return activeTemplates;
     }
 
-    @JsonProperty(JSON_PROPERTY_ACTIVE_TEMPLATES)
+    @JsonProperty(value = JSON_PROPERTY_ACTIVE_TEMPLATES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setActiveTemplates(@jakarta.annotation.Nullable Integer activeTemplates) {
         this.activeTemplates = activeTemplates;
@@ -173,13 +173,13 @@ public class AccountInfoResponse {
      *
      * @return canCreateTemplate
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CAN_CREATE_TEMPLATE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CAN_CREATE_TEMPLATE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getCanCreateTemplate() {
         return canCreateTemplate;
     }
 
-    @JsonProperty(JSON_PROPERTY_CAN_CREATE_TEMPLATE)
+    @JsonProperty(value = JSON_PROPERTY_CAN_CREATE_TEMPLATE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCanCreateTemplate(@jakarta.annotation.Nullable Boolean canCreateTemplate) {
         this.canCreateTemplate = canCreateTemplate;
@@ -196,13 +196,13 @@ public class AccountInfoResponse {
      *
      * @return canCreateTrackingDocument
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CAN_CREATE_TRACKING_DOCUMENT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CAN_CREATE_TRACKING_DOCUMENT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getCanCreateTrackingDocument() {
         return canCreateTrackingDocument;
     }
 
-    @JsonProperty(JSON_PROPERTY_CAN_CREATE_TRACKING_DOCUMENT)
+    @JsonProperty(value = JSON_PROPERTY_CAN_CREATE_TRACKING_DOCUMENT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCanCreateTrackingDocument(
             @jakarta.annotation.Nullable Boolean canCreateTrackingDocument) {
@@ -220,13 +220,13 @@ public class AccountInfoResponse {
      *
      * @return canCreateCompletionDocument
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CAN_CREATE_COMPLETION_DOCUMENT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CAN_CREATE_COMPLETION_DOCUMENT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getCanCreateCompletionDocument() {
         return canCreateCompletionDocument;
     }
 
-    @JsonProperty(JSON_PROPERTY_CAN_CREATE_COMPLETION_DOCUMENT)
+    @JsonProperty(value = JSON_PROPERTY_CAN_CREATE_COMPLETION_DOCUMENT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCanCreateCompletionDocument(
             @jakarta.annotation.Nullable Boolean canCreateCompletionDocument) {
@@ -253,13 +253,13 @@ public class AccountInfoResponse {
      *
      * @return activeUsers
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ACTIVE_USERS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ACTIVE_USERS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<AccountInfoResponseActiveUsersInner> getActiveUsers() {
         return activeUsers;
     }
 
-    @JsonProperty(JSON_PROPERTY_ACTIVE_USERS)
+    @JsonProperty(value = JSON_PROPERTY_ACTIVE_USERS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setActiveUsers(
             @jakarta.annotation.Nullable List<AccountInfoResponseActiveUsersInner> activeUsers) {
@@ -277,13 +277,13 @@ public class AccountInfoResponse {
      *
      * @return preferences
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREFERENCES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREFERENCES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public AccountInfoResponsePreferences getPreferences() {
         return preferences;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREFERENCES)
+    @JsonProperty(value = JSON_PROPERTY_PREFERENCES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreferences(
             @jakarta.annotation.Nullable AccountInfoResponsePreferences preferences) {
@@ -357,10 +357,7 @@ public class AccountInfoResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -399,14 +396,18 @@ public class AccountInfoResponse {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `name` to the URL query string
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -417,6 +418,7 @@ public class AccountInfoResponse {
         if (getPlanTier() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%splan_tier%s=%s",
                             prefix,
                             suffix,
@@ -427,6 +429,7 @@ public class AccountInfoResponse {
         if (getActiveTemplates() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sactive_templates%s=%s",
                             prefix,
                             suffix,
@@ -437,6 +440,7 @@ public class AccountInfoResponse {
         if (getCanCreateTemplate() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scan_create_template%s=%s",
                             prefix,
                             suffix,
@@ -447,6 +451,7 @@ public class AccountInfoResponse {
         if (getCanCreateTrackingDocument() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scan_create_tracking_document%s=%s",
                             prefix,
                             suffix,
@@ -458,6 +463,7 @@ public class AccountInfoResponse {
         if (getCanCreateCompletionDocument() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scan_create_completion_document%s=%s",
                             prefix,
                             suffix,
@@ -474,12 +480,14 @@ public class AccountInfoResponse {
                                     .get(i)
                                     .toUrlQueryString(
                                             String.format(
+                                                    java.util.Locale.ROOT,
                                                     "%sactive_users%s%s",
                                                     prefix,
                                                     suffix,
                                                     "".equals(suffix)
                                                             ? ""
                                                             : String.format(
+                                                                    java.util.Locale.ROOT,
                                                                     "%s%d%s",
                                                                     containerPrefix,
                                                                     i,

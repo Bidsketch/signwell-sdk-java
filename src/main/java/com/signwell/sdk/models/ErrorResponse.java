@@ -23,7 +23,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({ErrorResponse.JSON_PROPERTY_MESSAGE, ErrorResponse.JSON_PROPERTY_META})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class ErrorResponse {
     public static final String JSON_PROPERTY_MESSAGE = "message";
     @jakarta.annotation.Nullable private String message;
@@ -43,13 +43,13 @@ public class ErrorResponse {
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -65,13 +65,13 @@ public class ErrorResponse {
      *
      * @return meta
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_META)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_META, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public ErrorResponseMeta getMeta() {
         return meta;
     }
 
-    @JsonProperty(JSON_PROPERTY_META)
+    @JsonProperty(value = JSON_PROPERTY_META, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMeta(@jakarta.annotation.Nullable ErrorResponseMeta meta) {
         this.meta = meta;
@@ -111,10 +111,7 @@ public class ErrorResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -153,6 +150,7 @@ public class ErrorResponse {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,

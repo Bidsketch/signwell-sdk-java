@@ -29,7 +29,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class ErrorResponseMeta {
     public static final String JSON_PROPERTY_ERROR = "error";
     @jakarta.annotation.Nonnull private String error;
@@ -53,13 +53,13 @@ public class ErrorResponseMeta {
      * @return error
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ERROR)
+    @JsonProperty(value = JSON_PROPERTY_ERROR, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getError() {
         return error;
     }
 
-    @JsonProperty(JSON_PROPERTY_ERROR)
+    @JsonProperty(value = JSON_PROPERTY_ERROR, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setError(@jakarta.annotation.Nonnull String error) {
         this.error = error;
@@ -76,13 +76,13 @@ public class ErrorResponseMeta {
      * @return message
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setMessage(@jakarta.annotation.Nonnull String message) {
         this.message = message;
@@ -106,13 +106,13 @@ public class ErrorResponseMeta {
      *
      * @return messages
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGES)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public List<String> getMessages() {
         return messages;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGES)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGES, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessages(@jakarta.annotation.Nullable List<String> messages) {
         this.messages = messages;
@@ -154,10 +154,7 @@ public class ErrorResponseMeta {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -196,6 +193,7 @@ public class ErrorResponseMeta {
         if (getError() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%serror%s=%s",
                             prefix,
                             suffix,
@@ -206,6 +204,7 @@ public class ErrorResponseMeta {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -217,13 +216,18 @@ public class ErrorResponseMeta {
             for (int i = 0; i < getMessages().size(); i++) {
                 joiner.add(
                         String.format(
+                                java.util.Locale.ROOT,
                                 "%smessages%s%s=%s",
                                 prefix,
                                 suffix,
                                 "".equals(suffix)
                                         ? ""
                                         : String.format(
-                                                "%s%d%s", containerPrefix, i, containerSuffix),
+                                                java.util.Locale.ROOT,
+                                                "%s%d%s",
+                                                containerPrefix,
+                                                i,
+                                                containerSuffix),
                                 ApiClient.urlEncode(
                                         ApiClient.valueToString(getMessages().get(i)))));
             }

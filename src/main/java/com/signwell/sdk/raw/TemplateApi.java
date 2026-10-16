@@ -18,6 +18,7 @@ import com.signwell.sdk.models.DocumentTemplateListResponse;
 import com.signwell.sdk.models.DocumentTemplateRequest;
 import com.signwell.sdk.models.DocumentTemplateResponse;
 import com.signwell.sdk.models.DocumentTemplateUpdateRequest;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -27,6 +28,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -34,15 +36,36 @@ import java.util.function.Consumer;
 
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class TemplateApi {
+    /** Utility class for extending HttpRequest.Builder functionality. */
+    private static class HttpRequestBuilderExtensions {
+        /**
+         * Adds additional headers to the provided HttpRequest.Builder. Useful for adding
+         * method/endpoint specific headers.
+         *
+         * @param builder the HttpRequest.Builder to which headers will be added
+         * @param headers a map of header names and values to add; may be null
+         * @return the same HttpRequest.Builder instance with the additional headers set
+         */
+        static HttpRequest.Builder withAdditionalHeaders(
+                HttpRequest.Builder builder, Map<String, String> headers) {
+            if (headers != null) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    builder.header(entry.getKey(), entry.getValue());
+                }
+            }
+            return builder;
+        }
+    }
+
     private final HttpClient memberVarHttpClient;
     private final ObjectMapper memberVarObjectMapper;
     private final String memberVarBaseUri;
     private final Consumer<HttpRequest.Builder> memberVarInterceptor;
     private final Duration memberVarReadTimeout;
     private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-    private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+    private final Consumer<HttpResponse<InputStream>> memberVarAsyncResponseInterceptor;
 
     public TemplateApi() {
         this(Configuration.getDefaultApiClient());
@@ -58,15 +81,81 @@ public class TemplateApi {
         memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
     }
 
-    private ApiException getApiException(String operationId, HttpResponse<String> response) {
-        String message =
-                formatExceptionMessage(operationId, response.statusCode(), response.body());
-        return new ApiException(
-                response.statusCode(), message, response.headers(), response.body());
+    private ApiException getApiException(String operationId, HttpResponse<InputStream> response) {
+        try {
+            InputStream responseBody = ApiClient.getResponseBody(response);
+            String body = null;
+            if (responseBody != null) {
+                body =
+                        new String(
+                                responseBody.readAllBytes(),
+                                java.nio.charset.StandardCharsets.UTF_8);
+                responseBody.close();
+            }
+            String message = formatExceptionMessage(operationId, response.statusCode(), body);
+            return new ApiException(response.statusCode(), message, response.headers(), body);
+        } catch (IOException e) {
+            return new ApiException(e);
+        }
     }
 
     private String formatExceptionMessage(String operationId, int statusCode, String body) {
         return "SignWell API request failed with HTTP status " + statusCode + ".";
+    }
+
+    /**
+     * Download file from the given response.
+     *
+     * @param response Response
+     * @return File
+     * @throws ApiException If fail to read file content from response and write to disk
+     */
+    public File downloadFileFromResponse(
+            HttpResponse<InputStream> response, InputStream responseBody) throws ApiException {
+        if (responseBody == null) {
+            throw new ApiException(new IOException("Response body is empty"));
+        }
+        try {
+            File file = prepareDownloadFile(response);
+            java.nio.file.Files.copy(
+                    responseBody, file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            return file;
+        } catch (IOException e) {
+            throw new ApiException(e);
+        }
+    }
+
+    /**
+     * Prepare the file for download from the response.
+     *
+     * @param response a {@link java.net.http.HttpResponse} object.
+     * @return a {@link java.io.File} object.
+     * @throws java.io.IOException if any.
+     */
+    private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
+        String filename = null;
+        java.util.Optional<String> contentDisposition =
+                response.headers().firstValue("Content-Disposition");
+        if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
+            // Get filename from the Content-Disposition header.
+            java.util.regex.Pattern pattern =
+                    java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
+            java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
+            if (matcher.find()) filename = matcher.group(1);
+        }
+        File file = null;
+        if (filename != null) {
+            java.nio.file.Path tempDir =
+                    java.nio.file.Files.createTempDirectory("swagger-gen-native");
+            java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
+            file = filePath.toFile();
+            tempDir.toFile().deleteOnExit(); // best effort cleanup
+            file.deleteOnExit(); // best effort cleanup
+        } else {
+            file = java.nio.file.Files.createTempFile("download-", "").toFile();
+            file.deleteOnExit(); // best effort cleanup
+        }
+        return file;
     }
 
     /**
@@ -77,31 +166,26 @@ public class TemplateApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<DocumentTemplateResponse> createTemplate(
-            DocumentTemplateRequest documentTemplateRequest) throws ApiException {
+            @jakarta.annotation.Nonnull DocumentTemplateRequest documentTemplateRequest)
+            throws ApiException {
+        return createTemplate(documentTemplateRequest, null);
+    }
+
+    /**
+     * Create Template Creates a new template.
+     *
+     * @param documentTemplateRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentTemplateResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentTemplateResponse> createTemplate(
+            @jakarta.annotation.Nonnull DocumentTemplateRequest documentTemplateRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    createTemplateRequestBuilder(documentTemplateRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("createTemplate", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentTemplateResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return createTemplateWithHttpInfo(documentTemplateRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -115,12 +199,30 @@ public class TemplateApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<DocumentTemplateResponse>> createTemplateWithHttpInfo(
-            DocumentTemplateRequest documentTemplateRequest) throws ApiException {
+            @jakarta.annotation.Nonnull DocumentTemplateRequest documentTemplateRequest)
+            throws ApiException {
+        return createTemplateWithHttpInfo(documentTemplateRequest, null);
+    }
+
+    /**
+     * Create Template Creates a new template.
+     *
+     * @param documentTemplateRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentTemplateResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentTemplateResponse>> createTemplateWithHttpInfo(
+            @jakarta.annotation.Nonnull DocumentTemplateRequest documentTemplateRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    createTemplateRequestBuilder(documentTemplateRequest);
+                    createTemplateRequestBuilder(documentTemplateRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -131,17 +233,39 @@ public class TemplateApi {
                                             getApiException("createTemplate", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentTemplateResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentTemplateResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentTemplateResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentTemplateResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentTemplateResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentTemplateResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -152,7 +276,9 @@ public class TemplateApi {
     }
 
     private HttpRequest.Builder createTemplateRequestBuilder(
-            DocumentTemplateRequest documentTemplateRequest) throws ApiException {
+            @jakarta.annotation.Nonnull DocumentTemplateRequest documentTemplateRequest,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'documentTemplateRequest' is set
         if (documentTemplateRequest == null) {
             throw new ApiException(
@@ -181,6 +307,9 @@ public class TemplateApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -195,19 +324,24 @@ public class TemplateApi {
      * @return CompletableFuture&lt;Void&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<Void> deleteTemplate(UUID id) throws ApiException {
+    public CompletableFuture<Void> deleteTemplate(@jakarta.annotation.Nonnull UUID id)
+            throws ApiException {
+        return deleteTemplate(id, null);
+    }
+
+    /**
+     * Delete Template Deletes a template. Supply the unique template ID from either a Create
+     * Template request or template page URL.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;Void&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<Void> deleteTemplate(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = deleteTemplateRequestBuilder(id);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("deleteTemplate", localVarResponse));
-                                }
-                                return CompletableFuture.completedFuture(null);
-                            });
+            return deleteTemplateWithHttpInfo(id, headers).thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -221,12 +355,28 @@ public class TemplateApi {
      * @return CompletableFuture&lt;ApiResponse&lt;Void&gt;&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<ApiResponse<Void>> deleteTemplateWithHttpInfo(UUID id)
-            throws ApiException {
+    public CompletableFuture<ApiResponse<Void>> deleteTemplateWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id) throws ApiException {
+        return deleteTemplateWithHttpInfo(id, null);
+    }
+
+    /**
+     * Delete Template Deletes a template. Supply the unique template ID from either a Create
+     * Template request or template page URL.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;Void&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<Void>> deleteTemplateWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = deleteTemplateRequestBuilder(id);
+            HttpRequest.Builder localVarRequestBuilder = deleteTemplateRequestBuilder(id, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -236,18 +386,34 @@ public class TemplateApi {
                                     return CompletableFuture.failedFuture(
                                             getApiException("deleteTemplate", localVarResponse));
                                 }
-                                return CompletableFuture.completedFuture(
-                                        new ApiResponse<Void>(
-                                                localVarResponse.statusCode(),
-                                                localVarResponse.headers().map(),
-                                                null));
+                                try {
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.readAllBytes();
+                                        }
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<Void>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        null));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                    return CompletableFuture.failedFuture(new ApiException(e));
+                                }
                             });
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
     }
 
-    private HttpRequest.Builder deleteTemplateRequestBuilder(UUID id) throws ApiException {
+    private HttpRequest.Builder deleteTemplateRequestBuilder(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -268,6 +434,9 @@ public class TemplateApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -282,30 +451,24 @@ public class TemplateApi {
      * @return CompletableFuture&lt;DocumentTemplateResponse&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<DocumentTemplateResponse> getTemplate(UUID id) throws ApiException {
+    public CompletableFuture<DocumentTemplateResponse> getTemplate(
+            @jakarta.annotation.Nonnull UUID id) throws ApiException {
+        return getTemplate(id, null);
+    }
+
+    /**
+     * Get Template Returns a template and all associated template data. Supply the unique template
+     * ID from either a Create Template request or template page URL.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentTemplateResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentTemplateResponse> getTemplate(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = getTemplateRequestBuilder(id);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("getTemplate", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentTemplateResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return getTemplateWithHttpInfo(id, headers).thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -319,12 +482,28 @@ public class TemplateApi {
      * @return CompletableFuture&lt;ApiResponse&lt;DocumentTemplateResponse&gt;&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<ApiResponse<DocumentTemplateResponse>> getTemplateWithHttpInfo(UUID id)
-            throws ApiException {
+    public CompletableFuture<ApiResponse<DocumentTemplateResponse>> getTemplateWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id) throws ApiException {
+        return getTemplateWithHttpInfo(id, null);
+    }
+
+    /**
+     * Get Template Returns a template and all associated template data. Supply the unique template
+     * ID from either a Create Template request or template page URL.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentTemplateResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentTemplateResponse>> getTemplateWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = getTemplateRequestBuilder(id);
+            HttpRequest.Builder localVarRequestBuilder = getTemplateRequestBuilder(id, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -335,17 +514,39 @@ public class TemplateApi {
                                             getApiException("getTemplate", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentTemplateResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentTemplateResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentTemplateResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentTemplateResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentTemplateResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentTemplateResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -355,7 +556,8 @@ public class TemplateApi {
         }
     }
 
-    private HttpRequest.Builder getTemplateRequestBuilder(UUID id) throws ApiException {
+    private HttpRequest.Builder getTemplateRequestBuilder(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -376,6 +578,9 @@ public class TemplateApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -392,31 +597,32 @@ public class TemplateApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<DocumentTemplateListResponse> listTemplates(
-            Integer page, Integer limit, String query) throws ApiException {
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query)
+            throws ApiException {
+        return listTemplates(page, limit, query, null);
+    }
+
+    /**
+     * List Templates Returns a paginated list of templates for the authenticated account.
+     *
+     * @param page (optional, default to 1)
+     * @param limit (optional, default to 10)
+     * @param query Search templates using SignWell key:value syntax. (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentTemplateListResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentTemplateListResponse> listTemplates(
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    listTemplatesRequestBuilder(page, limit, query);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("listTemplates", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentTemplateListResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return listTemplatesWithHttpInfo(page, limit, query, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -432,12 +638,36 @@ public class TemplateApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<DocumentTemplateListResponse>> listTemplatesWithHttpInfo(
-            Integer page, Integer limit, String query) throws ApiException {
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query)
+            throws ApiException {
+        return listTemplatesWithHttpInfo(page, limit, query, null);
+    }
+
+    /**
+     * List Templates Returns a paginated list of templates for the authenticated account.
+     *
+     * @param page (optional, default to 1)
+     * @param limit (optional, default to 10)
+     * @param query Search templates using SignWell key:value syntax. (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentTemplateListResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentTemplateListResponse>> listTemplatesWithHttpInfo(
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    listTemplatesRequestBuilder(page, limit, query);
+                    listTemplatesRequestBuilder(page, limit, query, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -448,17 +678,39 @@ public class TemplateApi {
                                             getApiException("listTemplates", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentTemplateListResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentTemplateListResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentTemplateListResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentTemplateListResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentTemplateListResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentTemplateListResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -469,7 +721,11 @@ public class TemplateApi {
     }
 
     private HttpRequest.Builder listTemplatesRequestBuilder(
-            Integer page, Integer limit, String query) throws ApiException {
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query,
+            Map<String, String> headers)
+            throws ApiException {
 
         HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
@@ -503,6 +759,9 @@ public class TemplateApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -518,32 +777,29 @@ public class TemplateApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<DocumentTemplateResponse> updateTemplate(
-            UUID id, DocumentTemplateUpdateRequest documentTemplateUpdateRequest)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull DocumentTemplateUpdateRequest documentTemplateUpdateRequest)
+            throws ApiException {
+        return updateTemplate(id, documentTemplateUpdateRequest, null);
+    }
+
+    /**
+     * Update Template Updates an existing template.
+     *
+     * @param id (required)
+     * @param documentTemplateUpdateRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentTemplateResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentTemplateResponse> updateTemplate(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull DocumentTemplateUpdateRequest documentTemplateUpdateRequest,
+            Map<String, String> headers)
             throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    updateTemplateRequestBuilder(id, documentTemplateUpdateRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("updateTemplate", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentTemplateResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return updateTemplateWithHttpInfo(id, documentTemplateUpdateRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -558,13 +814,33 @@ public class TemplateApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<DocumentTemplateResponse>> updateTemplateWithHttpInfo(
-            UUID id, DocumentTemplateUpdateRequest documentTemplateUpdateRequest)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull DocumentTemplateUpdateRequest documentTemplateUpdateRequest)
+            throws ApiException {
+        return updateTemplateWithHttpInfo(id, documentTemplateUpdateRequest, null);
+    }
+
+    /**
+     * Update Template Updates an existing template.
+     *
+     * @param id (required)
+     * @param documentTemplateUpdateRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentTemplateResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentTemplateResponse>> updateTemplateWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull DocumentTemplateUpdateRequest documentTemplateUpdateRequest,
+            Map<String, String> headers)
             throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    updateTemplateRequestBuilder(id, documentTemplateUpdateRequest);
+                    updateTemplateRequestBuilder(id, documentTemplateUpdateRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -575,17 +851,39 @@ public class TemplateApi {
                                             getApiException("updateTemplate", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentTemplateResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentTemplateResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentTemplateResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentTemplateResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentTemplateResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentTemplateResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -596,7 +894,9 @@ public class TemplateApi {
     }
 
     private HttpRequest.Builder updateTemplateRequestBuilder(
-            UUID id, DocumentTemplateUpdateRequest documentTemplateUpdateRequest)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull DocumentTemplateUpdateRequest documentTemplateUpdateRequest,
+            Map<String, String> headers)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -633,6 +933,9 @@ public class TemplateApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }

@@ -37,6 +37,7 @@
 |**allowReassign** | **Boolean** |  |  [optional] |
 |**labels** | [**List&lt;LabelInfo&gt;**](LabelInfo.md) |  |  [optional] |
 |**checkboxGroups** | [**List&lt;CheckboxGroupInfo&gt;**](CheckboxGroupInfo.md) |  |  [optional] |
+|**conditionalRules** | [**List&lt;ConditionalRuleInfo&gt;**](ConditionalRuleInfo.md) |  |  [optional] |
 
 
 

@@ -21,6 +21,8 @@
 |**required** | **Boolean** |  |  [optional] |
 |**type** | **FieldType** |  |  [optional] |
 |**validation** | **TextValidation** |  |  [optional] |
+|**validationRegex** | **String** | Text fields with custom validation only: the regex pattern used to validate field values. Required when validation is set to custom. |  [optional] |
+|**validationRegexErrorMessage** | **String** | Text fields with custom validation only: the error message shown to the recipient when their input doesn&#39;t match the regex pattern. Required when validation is set to custom. |  [optional] |
 |**value** | [**DocumentResponseFieldsInnerInnerValue**](DocumentResponseFieldsInnerInnerValue.md) |  |  [optional] |
 |**height** | **String** |  |  [optional] |
 |**width** | **String** |  |  [optional] |

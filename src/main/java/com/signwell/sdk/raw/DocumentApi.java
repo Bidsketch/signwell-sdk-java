@@ -25,6 +25,7 @@ import com.signwell.sdk.models.SendReminderRequest;
 import com.signwell.sdk.models.UpdateAuthenticationRequest;
 import com.signwell.sdk.models.UpdateDocumentAndSendRequest;
 import com.signwell.sdk.models.UpdateRecipientsRequest;
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URI;
@@ -34,6 +35,7 @@ import java.net.http.HttpResponse;
 import java.time.Duration;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.StringJoiner;
 import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
@@ -41,15 +43,36 @@ import java.util.function.Consumer;
 
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class DocumentApi {
+    /** Utility class for extending HttpRequest.Builder functionality. */
+    private static class HttpRequestBuilderExtensions {
+        /**
+         * Adds additional headers to the provided HttpRequest.Builder. Useful for adding
+         * method/endpoint specific headers.
+         *
+         * @param builder the HttpRequest.Builder to which headers will be added
+         * @param headers a map of header names and values to add; may be null
+         * @return the same HttpRequest.Builder instance with the additional headers set
+         */
+        static HttpRequest.Builder withAdditionalHeaders(
+                HttpRequest.Builder builder, Map<String, String> headers) {
+            if (headers != null) {
+                for (Map.Entry<String, String> entry : headers.entrySet()) {
+                    builder.header(entry.getKey(), entry.getValue());
+                }
+            }
+            return builder;
+        }
+    }
+
     private final HttpClient memberVarHttpClient;
     private final ObjectMapper memberVarObjectMapper;
     private final String memberVarBaseUri;
     private final Consumer<HttpRequest.Builder> memberVarInterceptor;
     private final Duration memberVarReadTimeout;
     private final Consumer<HttpResponse<InputStream>> memberVarResponseInterceptor;
-    private final Consumer<HttpResponse<String>> memberVarAsyncResponseInterceptor;
+    private final Consumer<HttpResponse<InputStream>> memberVarAsyncResponseInterceptor;
 
     public DocumentApi() {
         this(Configuration.getDefaultApiClient());
@@ -65,11 +88,22 @@ public class DocumentApi {
         memberVarAsyncResponseInterceptor = apiClient.getAsyncResponseInterceptor();
     }
 
-    private ApiException getApiException(String operationId, HttpResponse<String> response) {
-        String message =
-                formatExceptionMessage(operationId, response.statusCode(), response.body());
-        return new ApiException(
-                response.statusCode(), message, response.headers(), response.body());
+    private ApiException getApiException(String operationId, HttpResponse<InputStream> response) {
+        try {
+            InputStream responseBody = ApiClient.getResponseBody(response);
+            String body = null;
+            if (responseBody != null) {
+                body =
+                        new String(
+                                responseBody.readAllBytes(),
+                                java.nio.charset.StandardCharsets.UTF_8);
+                responseBody.close();
+            }
+            String message = formatExceptionMessage(operationId, response.statusCode(), body);
+            return new ApiException(response.statusCode(), message, response.headers(), body);
+        } catch (IOException e) {
+            return new ApiException(e);
+        }
     }
 
     private String formatExceptionMessage(String operationId, int statusCode, String body) {
@@ -77,39 +111,95 @@ public class DocumentApi {
     }
 
     /**
+     * Download file from the given response.
+     *
+     * @param response Response
+     * @return File
+     * @throws ApiException If fail to read file content from response and write to disk
+     */
+    public File downloadFileFromResponse(
+            HttpResponse<InputStream> response, InputStream responseBody) throws ApiException {
+        if (responseBody == null) {
+            throw new ApiException(new IOException("Response body is empty"));
+        }
+        try {
+            File file = prepareDownloadFile(response);
+            java.nio.file.Files.copy(
+                    responseBody, file.toPath(), java.nio.file.StandardCopyOption.REPLACE_EXISTING);
+            return file;
+        } catch (IOException e) {
+            throw new ApiException(e);
+        }
+    }
+
+    /**
+     * Prepare the file for download from the response.
+     *
+     * @param response a {@link java.net.http.HttpResponse} object.
+     * @return a {@link java.io.File} object.
+     * @throws java.io.IOException if any.
+     */
+    private File prepareDownloadFile(HttpResponse<InputStream> response) throws IOException {
+        String filename = null;
+        java.util.Optional<String> contentDisposition =
+                response.headers().firstValue("Content-Disposition");
+        if (contentDisposition.isPresent() && !"".equals(contentDisposition.get())) {
+            // Get filename from the Content-Disposition header.
+            java.util.regex.Pattern pattern =
+                    java.util.regex.Pattern.compile("filename=['\"]?([^'\"\\s]+)['\"]?");
+            java.util.regex.Matcher matcher = pattern.matcher(contentDisposition.get());
+            if (matcher.find()) filename = matcher.group(1);
+        }
+        File file = null;
+        if (filename != null) {
+            java.nio.file.Path tempDir =
+                    java.nio.file.Files.createTempDirectory("swagger-gen-native");
+            java.nio.file.Path filePath = java.nio.file.Files.createFile(tempDir.resolve(filename));
+            file = filePath.toFile();
+            tempDir.toFile().deleteOnExit(); // best effort cleanup
+            file.deleteOnExit(); // best effort cleanup
+        } else {
+            file = java.nio.file.Files.createTempFile("download-", "").toFile();
+            file.deleteOnExit(); // best effort cleanup
+        }
+        return file;
+    }
+
+    /**
      * Create Document Creates and optionally sends a new document for signing. If &#x60;draft&#x60;
-     * is set to true the document will not be sent.
+     * is set to true the document will not be sent. Recipients are notified by email, SMS, or both
+     * based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available only to
+     * workspaces that are eligible for SMS and have it enabled, and requires a
+     * &#x60;phone_number&#x60; in E.164 format.
      *
      * @param documentRequest (required)
      * @return CompletableFuture&lt;DocumentResponse&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<DocumentResponse> createDocument(DocumentRequest documentRequest)
+    public CompletableFuture<DocumentResponse> createDocument(
+            @jakarta.annotation.Nonnull DocumentRequest documentRequest) throws ApiException {
+        return createDocument(documentRequest, null);
+    }
+
+    /**
+     * Create Document Creates and optionally sends a new document for signing. If &#x60;draft&#x60;
+     * is set to true the document will not be sent. Recipients are notified by email, SMS, or both
+     * based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available only to
+     * workspaces that are eligible for SMS and have it enabled, and requires a
+     * &#x60;phone_number&#x60; in E.164 format.
+     *
+     * @param documentRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentResponse> createDocument(
+            @jakarta.annotation.Nonnull DocumentRequest documentRequest,
+            Map<String, String> headers)
             throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    createDocumentRequestBuilder(documentRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("createDocument", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return createDocumentWithHttpInfo(documentRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -117,19 +207,43 @@ public class DocumentApi {
 
     /**
      * Create Document Creates and optionally sends a new document for signing. If &#x60;draft&#x60;
-     * is set to true the document will not be sent.
+     * is set to true the document will not be sent. Recipients are notified by email, SMS, or both
+     * based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available only to
+     * workspaces that are eligible for SMS and have it enabled, and requires a
+     * &#x60;phone_number&#x60; in E.164 format.
      *
      * @param documentRequest (required)
      * @return CompletableFuture&lt;ApiResponse&lt;DocumentResponse&gt;&gt;
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<DocumentResponse>> createDocumentWithHttpInfo(
-            DocumentRequest documentRequest) throws ApiException {
+            @jakarta.annotation.Nonnull DocumentRequest documentRequest) throws ApiException {
+        return createDocumentWithHttpInfo(documentRequest, null);
+    }
+
+    /**
+     * Create Document Creates and optionally sends a new document for signing. If &#x60;draft&#x60;
+     * is set to true the document will not be sent. Recipients are notified by email, SMS, or both
+     * based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available only to
+     * workspaces that are eligible for SMS and have it enabled, and requires a
+     * &#x60;phone_number&#x60; in E.164 format.
+     *
+     * @param documentRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentResponse>> createDocumentWithHttpInfo(
+            @jakarta.annotation.Nonnull DocumentRequest documentRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    createDocumentRequestBuilder(documentRequest);
+                    createDocumentRequestBuilder(documentRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -140,17 +254,39 @@ public class DocumentApi {
                                             getApiException("createDocument", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -160,7 +296,9 @@ public class DocumentApi {
         }
     }
 
-    private HttpRequest.Builder createDocumentRequestBuilder(DocumentRequest documentRequest)
+    private HttpRequest.Builder createDocumentRequestBuilder(
+            @jakarta.annotation.Nonnull DocumentRequest documentRequest,
+            Map<String, String> headers)
             throws ApiException {
         // verify the required parameter 'documentRequest' is set
         if (documentRequest == null) {
@@ -188,6 +326,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -196,40 +337,52 @@ public class DocumentApi {
 
     /**
      * Create Document from Template Creates and optionally sends a new document for signing. If
-     * &#x60;draft&#x60; is set to true the document will not be sent.
+     * &#x60;draft&#x60; is set to true the document will not be sent. Pre-signed template
+     * signatures and initials are copied to the new document as document content — they remain
+     * visible on the document but do not generate a signing event, do not emit a
+     * &#x60;document_signed&#x60; webhook, and the recipient&#39;s status will not reflect them as
+     * a real signing action. If the template was pre-signed for a signer and the request adds new
+     * unsigned signature/initials fields for that same signer, the pre-applied ratifications are
+     * cleared silently so the signer is asked to sign once. Recipients are notified by email, SMS,
+     * or both based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available
+     * only to workspaces that are eligible for SMS and have it enabled, and requires a
+     * &#x60;phone_number&#x60; in E.164 format.
      *
      * @param documentFromTemplateRequest (required)
      * @return CompletableFuture&lt;DocumentFromTemplateResponse&gt;
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<DocumentFromTemplateResponse> createDocumentFromTemplate(
-            DocumentFromTemplateRequest documentFromTemplateRequest) throws ApiException {
+            @jakarta.annotation.Nonnull DocumentFromTemplateRequest documentFromTemplateRequest)
+            throws ApiException {
+        return createDocumentFromTemplate(documentFromTemplateRequest, null);
+    }
+
+    /**
+     * Create Document from Template Creates and optionally sends a new document for signing. If
+     * &#x60;draft&#x60; is set to true the document will not be sent. Pre-signed template
+     * signatures and initials are copied to the new document as document content — they remain
+     * visible on the document but do not generate a signing event, do not emit a
+     * &#x60;document_signed&#x60; webhook, and the recipient&#39;s status will not reflect them as
+     * a real signing action. If the template was pre-signed for a signer and the request adds new
+     * unsigned signature/initials fields for that same signer, the pre-applied ratifications are
+     * cleared silently so the signer is asked to sign once. Recipients are notified by email, SMS,
+     * or both based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available
+     * only to workspaces that are eligible for SMS and have it enabled, and requires a
+     * &#x60;phone_number&#x60; in E.164 format.
+     *
+     * @param documentFromTemplateRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentFromTemplateResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentFromTemplateResponse> createDocumentFromTemplate(
+            @jakarta.annotation.Nonnull DocumentFromTemplateRequest documentFromTemplateRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    createDocumentFromTemplateRequestBuilder(documentFromTemplateRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException(
-                                                    "createDocumentFromTemplate",
-                                                    localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentFromTemplateResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return createDocumentFromTemplateWithHttpInfo(documentFromTemplateRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -237,7 +390,16 @@ public class DocumentApi {
 
     /**
      * Create Document from Template Creates and optionally sends a new document for signing. If
-     * &#x60;draft&#x60; is set to true the document will not be sent.
+     * &#x60;draft&#x60; is set to true the document will not be sent. Pre-signed template
+     * signatures and initials are copied to the new document as document content — they remain
+     * visible on the document but do not generate a signing event, do not emit a
+     * &#x60;document_signed&#x60; webhook, and the recipient&#39;s status will not reflect them as
+     * a real signing action. If the template was pre-signed for a signer and the request adds new
+     * unsigned signature/initials fields for that same signer, the pre-applied ratifications are
+     * cleared silently so the signer is asked to sign once. Recipients are notified by email, SMS,
+     * or both based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available
+     * only to workspaces that are eligible for SMS and have it enabled, and requires a
+     * &#x60;phone_number&#x60; in E.164 format.
      *
      * @param documentFromTemplateRequest (required)
      * @return CompletableFuture&lt;ApiResponse&lt;DocumentFromTemplateResponse&gt;&gt;
@@ -245,12 +407,43 @@ public class DocumentApi {
      */
     public CompletableFuture<ApiResponse<DocumentFromTemplateResponse>>
             createDocumentFromTemplateWithHttpInfo(
-                    DocumentFromTemplateRequest documentFromTemplateRequest) throws ApiException {
+                    @jakarta.annotation.Nonnull
+                            DocumentFromTemplateRequest documentFromTemplateRequest)
+                    throws ApiException {
+        return createDocumentFromTemplateWithHttpInfo(documentFromTemplateRequest, null);
+    }
+
+    /**
+     * Create Document from Template Creates and optionally sends a new document for signing. If
+     * &#x60;draft&#x60; is set to true the document will not be sent. Pre-signed template
+     * signatures and initials are copied to the new document as document content — they remain
+     * visible on the document but do not generate a signing event, do not emit a
+     * &#x60;document_signed&#x60; webhook, and the recipient&#39;s status will not reflect them as
+     * a real signing action. If the template was pre-signed for a signer and the request adds new
+     * unsigned signature/initials fields for that same signer, the pre-applied ratifications are
+     * cleared silently so the signer is asked to sign once. Recipients are notified by email, SMS,
+     * or both based on each recipient&#39;s &#x60;delivery_method&#x60;. SMS delivery is available
+     * only to workspaces that are eligible for SMS and have it enabled, and requires a
+     * &#x60;phone_number&#x60; in E.164 format.
+     *
+     * @param documentFromTemplateRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentFromTemplateResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentFromTemplateResponse>>
+            createDocumentFromTemplateWithHttpInfo(
+                    @jakarta.annotation.Nonnull
+                            DocumentFromTemplateRequest documentFromTemplateRequest,
+                    Map<String, String> headers)
+                    throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    createDocumentFromTemplateRequestBuilder(documentFromTemplateRequest);
+                    createDocumentFromTemplateRequestBuilder(documentFromTemplateRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -263,17 +456,39 @@ public class DocumentApi {
                                                     localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentFromTemplateResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentFromTemplateResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentFromTemplateResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentFromTemplateResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentFromTemplateResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentFromTemplateResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -284,7 +499,9 @@ public class DocumentApi {
     }
 
     private HttpRequest.Builder createDocumentFromTemplateRequestBuilder(
-            DocumentFromTemplateRequest documentFromTemplateRequest) throws ApiException {
+            @jakarta.annotation.Nonnull DocumentFromTemplateRequest documentFromTemplateRequest,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'documentFromTemplateRequest' is set
         if (documentFromTemplateRequest == null) {
             throw new ApiException(
@@ -313,6 +530,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -328,19 +548,25 @@ public class DocumentApi {
      * @return CompletableFuture&lt;Void&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<Void> deleteDocument(UUID id) throws ApiException {
+    public CompletableFuture<Void> deleteDocument(@jakarta.annotation.Nonnull UUID id)
+            throws ApiException {
+        return deleteDocument(id, null);
+    }
+
+    /**
+     * Delete Document Deletes a document. Deleting a document will also cancel document signing (if
+     * in progress). Supply the unique document ID from either a Create Document request or document
+     * page URL.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;Void&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<Void> deleteDocument(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = deleteDocumentRequestBuilder(id);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("deleteDocument", localVarResponse));
-                                }
-                                return CompletableFuture.completedFuture(null);
-                            });
+            return deleteDocumentWithHttpInfo(id, headers).thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -355,12 +581,29 @@ public class DocumentApi {
      * @return CompletableFuture&lt;ApiResponse&lt;Void&gt;&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<ApiResponse<Void>> deleteDocumentWithHttpInfo(UUID id)
-            throws ApiException {
+    public CompletableFuture<ApiResponse<Void>> deleteDocumentWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id) throws ApiException {
+        return deleteDocumentWithHttpInfo(id, null);
+    }
+
+    /**
+     * Delete Document Deletes a document. Deleting a document will also cancel document signing (if
+     * in progress). Supply the unique document ID from either a Create Document request or document
+     * page URL.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;Void&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<Void>> deleteDocumentWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = deleteDocumentRequestBuilder(id);
+            HttpRequest.Builder localVarRequestBuilder = deleteDocumentRequestBuilder(id, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -370,18 +613,34 @@ public class DocumentApi {
                                     return CompletableFuture.failedFuture(
                                             getApiException("deleteDocument", localVarResponse));
                                 }
-                                return CompletableFuture.completedFuture(
-                                        new ApiResponse<Void>(
-                                                localVarResponse.statusCode(),
-                                                localVarResponse.headers().map(),
-                                                null));
+                                try {
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.readAllBytes();
+                                        }
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<Void>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        null));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                    return CompletableFuture.failedFuture(new ApiException(e));
+                                }
                             });
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
     }
 
-    private HttpRequest.Builder deleteDocumentRequestBuilder(UUID id) throws ApiException {
+    private HttpRequest.Builder deleteDocumentRequestBuilder(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -401,6 +660,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -419,32 +681,36 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<CompletedPdfResponse> getCompletedPdf(
-            UUID id, Boolean urlOnly, Boolean auditPage, FileFormat fileFormat)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nullable Boolean urlOnly,
+            @jakarta.annotation.Nullable Boolean auditPage,
+            @jakarta.annotation.Nullable FileFormat fileFormat)
+            throws ApiException {
+        return getCompletedPdf(id, urlOnly, auditPage, fileFormat, null);
+    }
+
+    /**
+     * Completed PDF Gets a completed document PDF or ZIP file. Supply the unique document ID from
+     * either a document creation request or document page URL.
+     *
+     * @param id (required)
+     * @param urlOnly (optional, default to false)
+     * @param auditPage (optional, default to true)
+     * @param fileFormat (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;CompletedPdfResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<CompletedPdfResponse> getCompletedPdf(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nullable Boolean urlOnly,
+            @jakarta.annotation.Nullable Boolean auditPage,
+            @jakarta.annotation.Nullable FileFormat fileFormat,
+            Map<String, String> headers)
             throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    getCompletedPdfRequestBuilder(id, urlOnly, auditPage, fileFormat);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("getCompletedPdf", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    CompletedPdfResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return getCompletedPdfWithHttpInfo(id, urlOnly, auditPage, fileFormat, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -462,13 +728,40 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<CompletedPdfResponse>> getCompletedPdfWithHttpInfo(
-            UUID id, Boolean urlOnly, Boolean auditPage, FileFormat fileFormat)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nullable Boolean urlOnly,
+            @jakarta.annotation.Nullable Boolean auditPage,
+            @jakarta.annotation.Nullable FileFormat fileFormat)
+            throws ApiException {
+        return getCompletedPdfWithHttpInfo(id, urlOnly, auditPage, fileFormat, null);
+    }
+
+    /**
+     * Completed PDF Gets a completed document PDF or ZIP file. Supply the unique document ID from
+     * either a document creation request or document page URL.
+     *
+     * @param id (required)
+     * @param urlOnly (optional, default to false)
+     * @param auditPage (optional, default to true)
+     * @param fileFormat (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;CompletedPdfResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<CompletedPdfResponse>> getCompletedPdfWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nullable Boolean urlOnly,
+            @jakarta.annotation.Nullable Boolean auditPage,
+            @jakarta.annotation.Nullable FileFormat fileFormat,
+            Map<String, String> headers)
             throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    getCompletedPdfRequestBuilder(id, urlOnly, auditPage, fileFormat);
+                    getCompletedPdfRequestBuilder(id, urlOnly, auditPage, fileFormat, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -479,17 +772,39 @@ public class DocumentApi {
                                             getApiException("getCompletedPdf", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<CompletedPdfResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            CompletedPdfResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<CompletedPdfResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        CompletedPdfResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        CompletedPdfResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<CompletedPdfResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -500,7 +815,11 @@ public class DocumentApi {
     }
 
     private HttpRequest.Builder getCompletedPdfRequestBuilder(
-            UUID id, Boolean urlOnly, Boolean auditPage, FileFormat fileFormat)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nullable Boolean urlOnly,
+            @jakarta.annotation.Nullable Boolean auditPage,
+            @jakarta.annotation.Nullable FileFormat fileFormat,
+            Map<String, String> headers)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -542,6 +861,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -550,36 +872,34 @@ public class DocumentApi {
 
     /**
      * Get Document Returns a document and all associated document data. Supply the unique document
-     * ID from either a document creation request or Document page URL.
+     * ID from either a document creation request or Document page URL. Each recipient includes its
+     * &#x60;delivery_method&#x60;, and recipients whose delivery includes SMS also include an
+     * &#x60;sms&#x60; object with the masked phone number and SMS delivery status.
      *
      * @param id (required)
      * @return CompletableFuture&lt;DocumentResponse&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<DocumentResponse> getDocument(UUID id) throws ApiException {
+    public CompletableFuture<DocumentResponse> getDocument(@jakarta.annotation.Nonnull UUID id)
+            throws ApiException {
+        return getDocument(id, null);
+    }
+
+    /**
+     * Get Document Returns a document and all associated document data. Supply the unique document
+     * ID from either a document creation request or Document page URL. Each recipient includes its
+     * &#x60;delivery_method&#x60;, and recipients whose delivery includes SMS also include an
+     * &#x60;sms&#x60; object with the masked phone number and SMS delivery status.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentResponse> getDocument(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = getDocumentRequestBuilder(id);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("getDocument", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return getDocumentWithHttpInfo(id, headers).thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -587,18 +907,38 @@ public class DocumentApi {
 
     /**
      * Get Document Returns a document and all associated document data. Supply the unique document
-     * ID from either a document creation request or Document page URL.
+     * ID from either a document creation request or Document page URL. Each recipient includes its
+     * &#x60;delivery_method&#x60;, and recipients whose delivery includes SMS also include an
+     * &#x60;sms&#x60; object with the masked phone number and SMS delivery status.
      *
      * @param id (required)
      * @return CompletableFuture&lt;ApiResponse&lt;DocumentResponse&gt;&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<ApiResponse<DocumentResponse>> getDocumentWithHttpInfo(UUID id)
-            throws ApiException {
+    public CompletableFuture<ApiResponse<DocumentResponse>> getDocumentWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id) throws ApiException {
+        return getDocumentWithHttpInfo(id, null);
+    }
+
+    /**
+     * Get Document Returns a document and all associated document data. Supply the unique document
+     * ID from either a document creation request or Document page URL. Each recipient includes its
+     * &#x60;delivery_method&#x60;, and recipients whose delivery includes SMS also include an
+     * &#x60;sms&#x60; object with the masked phone number and SMS delivery status.
+     *
+     * @param id (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentResponse>> getDocumentWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder = getDocumentRequestBuilder(id);
+            HttpRequest.Builder localVarRequestBuilder = getDocumentRequestBuilder(id, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -609,17 +949,39 @@ public class DocumentApi {
                                             getApiException("getDocument", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -629,7 +991,8 @@ public class DocumentApi {
         }
     }
 
-    private HttpRequest.Builder getDocumentRequestBuilder(UUID id) throws ApiException {
+    private HttpRequest.Builder getDocumentRequestBuilder(
+            @jakarta.annotation.Nonnull UUID id, Map<String, String> headers) throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -649,6 +1012,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -665,31 +1031,32 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<DocumentListResponse> listDocuments(
-            Integer page, Integer limit, String query) throws ApiException {
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query)
+            throws ApiException {
+        return listDocuments(page, limit, query, null);
+    }
+
+    /**
+     * List Documents Returns a paginated list of documents for the authenticated account.
+     *
+     * @param page (optional, default to 1)
+     * @param limit (optional, default to 10)
+     * @param query Search documents using SignWell key:value syntax. (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentListResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentListResponse> listDocuments(
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    listDocumentsRequestBuilder(page, limit, query);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("listDocuments", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentListResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return listDocumentsWithHttpInfo(page, limit, query, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -705,12 +1072,36 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<DocumentListResponse>> listDocumentsWithHttpInfo(
-            Integer page, Integer limit, String query) throws ApiException {
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query)
+            throws ApiException {
+        return listDocumentsWithHttpInfo(page, limit, query, null);
+    }
+
+    /**
+     * List Documents Returns a paginated list of documents for the authenticated account.
+     *
+     * @param page (optional, default to 1)
+     * @param limit (optional, default to 10)
+     * @param query Search documents using SignWell key:value syntax. (optional)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentListResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentListResponse>> listDocumentsWithHttpInfo(
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    listDocumentsRequestBuilder(page, limit, query);
+                    listDocumentsRequestBuilder(page, limit, query, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -721,17 +1112,39 @@ public class DocumentApi {
                                             getApiException("listDocuments", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentListResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentListResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentListResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentListResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentListResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentListResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -742,7 +1155,11 @@ public class DocumentApi {
     }
 
     private HttpRequest.Builder listDocumentsRequestBuilder(
-            Integer page, Integer limit, String query) throws ApiException {
+            @jakarta.annotation.Nullable Integer page,
+            @jakarta.annotation.Nullable Integer limit,
+            @jakarta.annotation.Nullable String query,
+            Map<String, String> headers)
+            throws ApiException {
 
         HttpRequest.Builder localVarRequestBuilder = HttpRequest.newBuilder();
 
@@ -776,6 +1193,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -784,6 +1204,8 @@ public class DocumentApi {
 
     /**
      * Update and Send Document Updates a draft document and sends it to be signed by recipients.
+     * &#x60;subject&#x60; and &#x60;message&#x60; apply to email notifications only; SMS
+     * notifications always use fixed system templates.
      *
      * @param id (required)
      * @param updateDocumentAndSendRequest (required)
@@ -791,32 +1213,31 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<DocumentResponse> sendDocument(
-            UUID id, UpdateDocumentAndSendRequest updateDocumentAndSendRequest)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateDocumentAndSendRequest updateDocumentAndSendRequest)
+            throws ApiException {
+        return sendDocument(id, updateDocumentAndSendRequest, null);
+    }
+
+    /**
+     * Update and Send Document Updates a draft document and sends it to be signed by recipients.
+     * &#x60;subject&#x60; and &#x60;message&#x60; apply to email notifications only; SMS
+     * notifications always use fixed system templates.
+     *
+     * @param id (required)
+     * @param updateDocumentAndSendRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentResponse> sendDocument(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateDocumentAndSendRequest updateDocumentAndSendRequest,
+            Map<String, String> headers)
             throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    sendDocumentRequestBuilder(id, updateDocumentAndSendRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("sendDocument", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return sendDocumentWithHttpInfo(id, updateDocumentAndSendRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -824,6 +1245,8 @@ public class DocumentApi {
 
     /**
      * Update and Send Document Updates a draft document and sends it to be signed by recipients.
+     * &#x60;subject&#x60; and &#x60;message&#x60; apply to email notifications only; SMS
+     * notifications always use fixed system templates.
      *
      * @param id (required)
      * @param updateDocumentAndSendRequest (required)
@@ -831,13 +1254,35 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<DocumentResponse>> sendDocumentWithHttpInfo(
-            UUID id, UpdateDocumentAndSendRequest updateDocumentAndSendRequest)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateDocumentAndSendRequest updateDocumentAndSendRequest)
+            throws ApiException {
+        return sendDocumentWithHttpInfo(id, updateDocumentAndSendRequest, null);
+    }
+
+    /**
+     * Update and Send Document Updates a draft document and sends it to be signed by recipients.
+     * &#x60;subject&#x60; and &#x60;message&#x60; apply to email notifications only; SMS
+     * notifications always use fixed system templates.
+     *
+     * @param id (required)
+     * @param updateDocumentAndSendRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentResponse>> sendDocumentWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateDocumentAndSendRequest updateDocumentAndSendRequest,
+            Map<String, String> headers)
             throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    sendDocumentRequestBuilder(id, updateDocumentAndSendRequest);
+                    sendDocumentRequestBuilder(id, updateDocumentAndSendRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -848,17 +1293,39 @@ public class DocumentApi {
                                             getApiException("sendDocument", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -869,7 +1336,9 @@ public class DocumentApi {
     }
 
     private HttpRequest.Builder sendDocumentRequestBuilder(
-            UUID id, UpdateDocumentAndSendRequest updateDocumentAndSendRequest)
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateDocumentAndSendRequest updateDocumentAndSendRequest,
+            Map<String, String> headers)
             throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
@@ -905,6 +1374,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -912,35 +1384,53 @@ public class DocumentApi {
     }
 
     /**
-     * Send Reminder Sends a reminder email to recipients that have not signed yet.
+     * Send Reminder Sends a reminder to recipients who have not signed yet. Each recipient is
+     * reminded through their delivery method (email, SMS, or both). SMS reminders are only sent to
+     * recipients whose delivery method includes SMS, and only when the workspace is eligible for
+     * SMS and has it enabled.
      *
      * @param id (required)
      * @param sendReminderRequest (required)
      * @return CompletableFuture&lt;Void&gt;
      * @throws ApiException if fails to make API call
      */
-    public CompletableFuture<Void> sendReminder(UUID id, SendReminderRequest sendReminderRequest)
+    public CompletableFuture<Void> sendReminder(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull SendReminderRequest sendReminderRequest)
+            throws ApiException {
+        return sendReminder(id, sendReminderRequest, null);
+    }
+
+    /**
+     * Send Reminder Sends a reminder to recipients who have not signed yet. Each recipient is
+     * reminded through their delivery method (email, SMS, or both). SMS reminders are only sent to
+     * recipients whose delivery method includes SMS, and only when the workspace is eligible for
+     * SMS and has it enabled.
+     *
+     * @param id (required)
+     * @param sendReminderRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;Void&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<Void> sendReminder(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull SendReminderRequest sendReminderRequest,
+            Map<String, String> headers)
             throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    sendReminderRequestBuilder(id, sendReminderRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("sendReminder", localVarResponse));
-                                }
-                                return CompletableFuture.completedFuture(null);
-                            });
+            return sendReminderWithHttpInfo(id, sendReminderRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
     }
 
     /**
-     * Send Reminder Sends a reminder email to recipients that have not signed yet.
+     * Send Reminder Sends a reminder to recipients who have not signed yet. Each recipient is
+     * reminded through their delivery method (email, SMS, or both). SMS reminders are only sent to
+     * recipients whose delivery method includes SMS, and only when the workspace is eligible for
+     * SMS and has it enabled.
      *
      * @param id (required)
      * @param sendReminderRequest (required)
@@ -948,12 +1438,36 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<Void>> sendReminderWithHttpInfo(
-            UUID id, SendReminderRequest sendReminderRequest) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull SendReminderRequest sendReminderRequest)
+            throws ApiException {
+        return sendReminderWithHttpInfo(id, sendReminderRequest, null);
+    }
+
+    /**
+     * Send Reminder Sends a reminder to recipients who have not signed yet. Each recipient is
+     * reminded through their delivery method (email, SMS, or both). SMS reminders are only sent to
+     * recipients whose delivery method includes SMS, and only when the workspace is eligible for
+     * SMS and has it enabled.
+     *
+     * @param id (required)
+     * @param sendReminderRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;Void&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<Void>> sendReminderWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull SendReminderRequest sendReminderRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    sendReminderRequestBuilder(id, sendReminderRequest);
+                    sendReminderRequestBuilder(id, sendReminderRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -963,11 +1477,26 @@ public class DocumentApi {
                                     return CompletableFuture.failedFuture(
                                             getApiException("sendReminder", localVarResponse));
                                 }
-                                return CompletableFuture.completedFuture(
-                                        new ApiResponse<Void>(
-                                                localVarResponse.statusCode(),
-                                                localVarResponse.headers().map(),
-                                                null));
+                                try {
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.readAllBytes();
+                                        }
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<Void>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        null));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
+                                } catch (IOException e) {
+                                    return CompletableFuture.failedFuture(new ApiException(e));
+                                }
                             });
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
@@ -975,7 +1504,10 @@ public class DocumentApi {
     }
 
     private HttpRequest.Builder sendReminderRequestBuilder(
-            UUID id, SendReminderRequest sendReminderRequest) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull SendReminderRequest sendReminderRequest,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -1010,6 +1542,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -1026,32 +1561,30 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<DocumentResponse> updateAuthentication(
-            UUID id, UpdateAuthenticationRequest updateAuthenticationRequest) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateAuthenticationRequest updateAuthenticationRequest)
+            throws ApiException {
+        return updateAuthentication(id, updateAuthenticationRequest, null);
+    }
+
+    /**
+     * Update Authentication Update passcode delivery settings for recipients on a sent document.
+     * Only recipients who have not started signing can be updated.
+     *
+     * @param id (required)
+     * @param updateAuthenticationRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentResponse> updateAuthentication(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateAuthenticationRequest updateAuthenticationRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    updateAuthenticationRequestBuilder(id, updateAuthenticationRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException(
-                                                    "updateAuthentication", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return updateAuthenticationWithHttpInfo(id, updateAuthenticationRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -1067,12 +1600,34 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<DocumentResponse>> updateAuthenticationWithHttpInfo(
-            UUID id, UpdateAuthenticationRequest updateAuthenticationRequest) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateAuthenticationRequest updateAuthenticationRequest)
+            throws ApiException {
+        return updateAuthenticationWithHttpInfo(id, updateAuthenticationRequest, null);
+    }
+
+    /**
+     * Update Authentication Update passcode delivery settings for recipients on a sent document.
+     * Only recipients who have not started signing can be updated.
+     *
+     * @param id (required)
+     * @param updateAuthenticationRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentResponse>> updateAuthenticationWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateAuthenticationRequest updateAuthenticationRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    updateAuthenticationRequestBuilder(id, updateAuthenticationRequest);
+                    updateAuthenticationRequestBuilder(id, updateAuthenticationRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -1084,17 +1639,39 @@ public class DocumentApi {
                                                     "updateAuthentication", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -1105,7 +1682,10 @@ public class DocumentApi {
     }
 
     private HttpRequest.Builder updateAuthenticationRequestBuilder(
-            UUID id, UpdateAuthenticationRequest updateAuthenticationRequest) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateAuthenticationRequest updateAuthenticationRequest,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -1141,6 +1721,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }
@@ -1153,6 +1736,8 @@ public class DocumentApi {
      * from the Get Document response. Allowed document statuses: sent, viewed, pending, bounced.
      * For non-embedded documents, updated recipients will receive a new notification email. For
      * embedded signing documents, email behavior follows each recipient&#39;s send_email setting.
+     * This endpoint does not support changing a recipient&#39;s &#x60;delivery_method&#x60; or
+     * &#x60;phone_number&#x60;; SMS delivery settings are set when the document is created.
      *
      * @param id (required)
      * @param updateRecipientsRequest (required)
@@ -1160,31 +1745,35 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<DocumentResponse> updateRecipients(
-            UUID id, UpdateRecipientsRequest updateRecipientsRequest) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateRecipientsRequest updateRecipientsRequest)
+            throws ApiException {
+        return updateRecipients(id, updateRecipientsRequest, null);
+    }
+
+    /**
+     * Update Recipients Updates one or more recipients on a document that has already been sent.
+     * Only recipients who have not started signing may be updated. Recipient IDs must be retrieved
+     * from the Get Document response. Allowed document statuses: sent, viewed, pending, bounced.
+     * For non-embedded documents, updated recipients will receive a new notification email. For
+     * embedded signing documents, email behavior follows each recipient&#39;s send_email setting.
+     * This endpoint does not support changing a recipient&#39;s &#x60;delivery_method&#x60; or
+     * &#x60;phone_number&#x60;; SMS delivery settings are set when the document is created.
+     *
+     * @param id (required)
+     * @param updateRecipientsRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;DocumentResponse&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<DocumentResponse> updateRecipients(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateRecipientsRequest updateRecipientsRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
-            HttpRequest.Builder localVarRequestBuilder =
-                    updateRecipientsRequestBuilder(id, updateRecipientsRequest);
-            return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
-                    .thenComposeAsync(
-                            localVarResponse -> {
-                                if (localVarResponse.statusCode() / 100 != 2) {
-                                    return CompletableFuture.failedFuture(
-                                            getApiException("updateRecipients", localVarResponse));
-                                }
-                                try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            responseBody == null || responseBody.isBlank()
-                                                    ? null
-                                                    : memberVarObjectMapper.readValue(
-                                                            responseBody,
-                                                            new TypeReference<
-                                                                    DocumentResponse>() {}));
-                                } catch (IOException e) {
-                                    return CompletableFuture.failedFuture(new ApiException(e));
-                                }
-                            });
+            return updateRecipientsWithHttpInfo(id, updateRecipientsRequest, headers)
+                    .thenApply(ApiResponse::getData);
         } catch (ApiException e) {
             return CompletableFuture.failedFuture(e);
         }
@@ -1196,6 +1785,8 @@ public class DocumentApi {
      * from the Get Document response. Allowed document statuses: sent, viewed, pending, bounced.
      * For non-embedded documents, updated recipients will receive a new notification email. For
      * embedded signing documents, email behavior follows each recipient&#39;s send_email setting.
+     * This endpoint does not support changing a recipient&#39;s &#x60;delivery_method&#x60; or
+     * &#x60;phone_number&#x60;; SMS delivery settings are set when the document is created.
      *
      * @param id (required)
      * @param updateRecipientsRequest (required)
@@ -1203,12 +1794,39 @@ public class DocumentApi {
      * @throws ApiException if fails to make API call
      */
     public CompletableFuture<ApiResponse<DocumentResponse>> updateRecipientsWithHttpInfo(
-            UUID id, UpdateRecipientsRequest updateRecipientsRequest) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateRecipientsRequest updateRecipientsRequest)
+            throws ApiException {
+        return updateRecipientsWithHttpInfo(id, updateRecipientsRequest, null);
+    }
+
+    /**
+     * Update Recipients Updates one or more recipients on a document that has already been sent.
+     * Only recipients who have not started signing may be updated. Recipient IDs must be retrieved
+     * from the Get Document response. Allowed document statuses: sent, viewed, pending, bounced.
+     * For non-embedded documents, updated recipients will receive a new notification email. For
+     * embedded signing documents, email behavior follows each recipient&#39;s send_email setting.
+     * This endpoint does not support changing a recipient&#39;s &#x60;delivery_method&#x60; or
+     * &#x60;phone_number&#x60;; SMS delivery settings are set when the document is created.
+     *
+     * @param id (required)
+     * @param updateRecipientsRequest (required)
+     * @param headers Optional headers to include in the request
+     * @return CompletableFuture&lt;ApiResponse&lt;DocumentResponse&gt;&gt;
+     * @throws ApiException if fails to make API call
+     */
+    public CompletableFuture<ApiResponse<DocumentResponse>> updateRecipientsWithHttpInfo(
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateRecipientsRequest updateRecipientsRequest,
+            Map<String, String> headers)
+            throws ApiException {
         try {
             HttpRequest.Builder localVarRequestBuilder =
-                    updateRecipientsRequestBuilder(id, updateRecipientsRequest);
+                    updateRecipientsRequestBuilder(id, updateRecipientsRequest, headers);
             return memberVarHttpClient
-                    .sendAsync(localVarRequestBuilder.build(), HttpResponse.BodyHandlers.ofString())
+                    .sendAsync(
+                            localVarRequestBuilder.build(),
+                            HttpResponse.BodyHandlers.ofInputStream())
                     .thenComposeAsync(
                             localVarResponse -> {
                                 if (memberVarAsyncResponseInterceptor != null) {
@@ -1219,17 +1837,39 @@ public class DocumentApi {
                                             getApiException("updateRecipients", localVarResponse));
                                 }
                                 try {
-                                    String responseBody = localVarResponse.body();
-                                    return CompletableFuture.completedFuture(
-                                            new ApiResponse<DocumentResponse>(
-                                                    localVarResponse.statusCode(),
-                                                    localVarResponse.headers().map(),
-                                                    responseBody == null || responseBody.isBlank()
-                                                            ? null
-                                                            : memberVarObjectMapper.readValue(
-                                                                    responseBody,
-                                                                    new TypeReference<
-                                                                            DocumentResponse>() {})));
+                                    InputStream localVarResponseBody =
+                                            ApiClient.getResponseBody(localVarResponse);
+                                    try {
+                                        if (localVarResponseBody == null) {
+                                            return CompletableFuture.completedFuture(
+                                                    new ApiResponse<DocumentResponse>(
+                                                            localVarResponse.statusCode(),
+                                                            localVarResponse.headers().map(),
+                                                            null));
+                                        }
+
+                                        String responseBody =
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
+                                        DocumentResponse responseValue =
+                                                responseBody.isBlank()
+                                                        ? null
+                                                        : memberVarObjectMapper.readValue(
+                                                                responseBody,
+                                                                new TypeReference<
+                                                                        DocumentResponse>() {});
+
+                                        return CompletableFuture.completedFuture(
+                                                new ApiResponse<DocumentResponse>(
+                                                        localVarResponse.statusCode(),
+                                                        localVarResponse.headers().map(),
+                                                        responseValue));
+                                    } finally {
+                                        if (localVarResponseBody != null) {
+                                            localVarResponseBody.close();
+                                        }
+                                    }
                                 } catch (IOException e) {
                                     return CompletableFuture.failedFuture(new ApiException(e));
                                 }
@@ -1240,7 +1880,10 @@ public class DocumentApi {
     }
 
     private HttpRequest.Builder updateRecipientsRequestBuilder(
-            UUID id, UpdateRecipientsRequest updateRecipientsRequest) throws ApiException {
+            @jakarta.annotation.Nonnull UUID id,
+            @jakarta.annotation.Nonnull UpdateRecipientsRequest updateRecipientsRequest,
+            Map<String, String> headers)
+            throws ApiException {
         // verify the required parameter 'id' is set
         if (id == null) {
             throw new ApiException(
@@ -1276,6 +1919,9 @@ public class DocumentApi {
         if (memberVarReadTimeout != null) {
             localVarRequestBuilder.timeout(memberVarReadTimeout);
         }
+        // Add custom headers if provided
+        localVarRequestBuilder =
+                HttpRequestBuilderExtensions.withAdditionalHeaders(localVarRequestBuilder, headers);
         if (memberVarInterceptor != null) {
             memberVarInterceptor.accept(localVarRequestBuilder);
         }

@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class DetailedOption {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nonnull private String name;
@@ -51,13 +51,13 @@ public class DetailedOption {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -73,13 +73,13 @@ public class DetailedOption {
      *
      * @return apiId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getApiId() {
         return apiId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiId(@jakarta.annotation.Nullable String apiId) {
         this.apiId = apiId;
@@ -95,13 +95,13 @@ public class DetailedOption {
      *
      * @return isOther
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_IS_OTHER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_IS_OTHER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getIsOther() {
         return isOther;
     }
 
-    @JsonProperty(JSON_PROPERTY_IS_OTHER)
+    @JsonProperty(value = JSON_PROPERTY_IS_OTHER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setIsOther(@jakarta.annotation.Nullable Boolean isOther) {
         this.isOther = isOther;
@@ -143,10 +143,7 @@ public class DetailedOption {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -185,6 +182,7 @@ public class DetailedOption {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -195,6 +193,7 @@ public class DetailedOption {
         if (getApiId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_id%s=%s",
                             prefix,
                             suffix,
@@ -205,6 +204,7 @@ public class DetailedOption {
         if (getIsOther() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sis_other%s=%s",
                             prefix,
                             suffix,

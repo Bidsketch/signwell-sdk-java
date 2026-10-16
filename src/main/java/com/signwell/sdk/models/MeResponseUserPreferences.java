@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class MeResponseUserPreferences {
     public static final String JSON_PROPERTY_SALES_DOCUMENT = "sales_document";
     @jakarta.annotation.Nullable private Boolean salesDocument;
@@ -51,13 +51,13 @@ public class MeResponseUserPreferences {
      *
      * @return salesDocument
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SALES_DOCUMENT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SALES_DOCUMENT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getSalesDocument() {
         return salesDocument;
     }
 
-    @JsonProperty(JSON_PROPERTY_SALES_DOCUMENT)
+    @JsonProperty(value = JSON_PROPERTY_SALES_DOCUMENT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSalesDocument(@jakarta.annotation.Nullable Boolean salesDocument) {
         this.salesDocument = salesDocument;
@@ -73,13 +73,13 @@ public class MeResponseUserPreferences {
      *
      * @return timeZone
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_TIME_ZONE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_TIME_ZONE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getTimeZone() {
         return timeZone;
     }
 
-    @JsonProperty(JSON_PROPERTY_TIME_ZONE)
+    @JsonProperty(value = JSON_PROPERTY_TIME_ZONE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setTimeZone(@jakarta.annotation.Nullable String timeZone) {
         this.timeZone = timeZone;
@@ -95,13 +95,13 @@ public class MeResponseUserPreferences {
      *
      * @return smartFields
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SMART_FIELDS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SMART_FIELDS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getSmartFields() {
         return smartFields;
     }
 
-    @JsonProperty(JSON_PROPERTY_SMART_FIELDS)
+    @JsonProperty(value = JSON_PROPERTY_SMART_FIELDS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSmartFields(@jakarta.annotation.Nullable Boolean smartFields) {
         this.smartFields = smartFields;
@@ -143,10 +143,7 @@ public class MeResponseUserPreferences {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -185,6 +182,7 @@ public class MeResponseUserPreferences {
         if (getSalesDocument() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssales_document%s=%s",
                             prefix,
                             suffix,
@@ -195,6 +193,7 @@ public class MeResponseUserPreferences {
         if (getTimeZone() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stime_zone%s=%s",
                             prefix,
                             suffix,
@@ -205,6 +204,7 @@ public class MeResponseUserPreferences {
         if (getSmartFields() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssmart_fields%s=%s",
                             prefix,
                             suffix,

@@ -37,7 +37,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class CreateBulkSendRequest {
     public static final String JSON_PROPERTY_TEMPLATE_IDS = "template_ids";
     @jakarta.annotation.Nonnull private List<UUID> templateIds = new ArrayList<>();
@@ -85,18 +85,20 @@ public class CreateBulkSendRequest {
     }
 
     /**
-     * Unique identifiers for a list of templates.
+     * Unique identifiers for a list of templates. A template that carries a pre-applied signature
+     * or initials field cannot be used while 21 CFR Part 11 is enabled, which requires every
+     * signature to be signed by the recipient: it returns a 422.
      *
      * @return templateIds
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public List<UUID> getTemplateIds() {
         return templateIds;
     }
 
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTemplateIds(@jakarta.annotation.Nonnull List<UUID> templateIds) {
         this.templateIds = templateIds;
@@ -108,18 +110,23 @@ public class CreateBulkSendRequest {
     }
 
     /**
-     * A RFC 4648 base64 string of the template CSV file to be validated.
+     * A RFC 4648 base64 string of the template CSV file to be validated. While 21 CFR Part 11 is
+     * enabled, every recipient needs a name: the CSV must carry a name column next to each
+     * placeholder email column (for example &#x60;signer_name&#x60; alongside
+     * &#x60;signer_email&#x60;), and each row must fill that name in wherever it carries the
+     * matching email, otherwise it returns a 422. A row that leaves both the email and the name
+     * blank sends nothing to that placeholder, so no name is needed there.
      *
      * @return bulkSendCsv
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_BULK_SEND_CSV)
+    @JsonProperty(value = JSON_PROPERTY_BULK_SEND_CSV, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getBulkSendCsv() {
         return bulkSendCsv;
     }
 
-    @JsonProperty(JSON_PROPERTY_BULK_SEND_CSV)
+    @JsonProperty(value = JSON_PROPERTY_BULK_SEND_CSV, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setBulkSendCsv(@jakarta.annotation.Nonnull String bulkSendCsv) {
         this.bulkSendCsv = bulkSendCsv;
@@ -135,13 +142,13 @@ public class CreateBulkSendRequest {
      *
      * @return skipRowErrors
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SKIP_ROW_ERRORS)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SKIP_ROW_ERRORS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getSkipRowErrors() {
         return skipRowErrors;
     }
 
-    @JsonProperty(JSON_PROPERTY_SKIP_ROW_ERRORS)
+    @JsonProperty(value = JSON_PROPERTY_SKIP_ROW_ERRORS, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSkipRowErrors(@jakarta.annotation.Nullable Boolean skipRowErrors) {
         this.skipRowErrors = skipRowErrors;
@@ -159,13 +166,13 @@ public class CreateBulkSendRequest {
      *
      * @return apiApplicationId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public UUID getApiApplicationId() {
         return apiApplicationId;
     }
 
-    @JsonProperty(JSON_PROPERTY_API_APPLICATION_ID)
+    @JsonProperty(value = JSON_PROPERTY_API_APPLICATION_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApiApplicationId(@jakarta.annotation.Nullable UUID apiApplicationId) {
         this.apiApplicationId = apiApplicationId;
@@ -181,13 +188,13 @@ public class CreateBulkSendRequest {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -204,13 +211,13 @@ public class CreateBulkSendRequest {
      *
      * @return subject
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getSubject() {
         return subject;
     }
 
-    @JsonProperty(JSON_PROPERTY_SUBJECT)
+    @JsonProperty(value = JSON_PROPERTY_SUBJECT, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setSubject(@jakarta.annotation.Nullable String subject) {
         this.subject = subject;
@@ -227,13 +234,13 @@ public class CreateBulkSendRequest {
      *
      * @return message
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getMessage() {
         return message;
     }
 
-    @JsonProperty(JSON_PROPERTY_MESSAGE)
+    @JsonProperty(value = JSON_PROPERTY_MESSAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMessage(@jakarta.annotation.Nullable String message) {
         this.message = message;
@@ -251,13 +258,13 @@ public class CreateBulkSendRequest {
      *
      * @return applySigningOrder
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_APPLY_SIGNING_ORDER)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_APPLY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getApplySigningOrder() {
         return applySigningOrder;
     }
 
-    @JsonProperty(JSON_PROPERTY_APPLY_SIGNING_ORDER)
+    @JsonProperty(value = JSON_PROPERTY_APPLY_SIGNING_ORDER, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setApplySigningOrder(@jakarta.annotation.Nullable Boolean applySigningOrder) {
         this.applySigningOrder = applySigningOrder;
@@ -275,13 +282,13 @@ public class CreateBulkSendRequest {
      *
      * @return customRequesterName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getCustomRequesterName() {
         return customRequesterName;
     }
 
-    @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_NAME)
+    @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCustomRequesterName(@jakarta.annotation.Nullable String customRequesterName) {
         this.customRequesterName = customRequesterName;
@@ -299,13 +306,13 @@ public class CreateBulkSendRequest {
      *
      * @return customRequesterEmail
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getCustomRequesterEmail() {
         return customRequesterEmail;
     }
 
-    @JsonProperty(JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_CUSTOM_REQUESTER_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setCustomRequesterEmail(@jakarta.annotation.Nullable String customRequesterEmail) {
         this.customRequesterEmail = customRequesterEmail;
@@ -379,10 +386,7 @@ public class CreateBulkSendRequest {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -423,13 +427,18 @@ public class CreateBulkSendRequest {
                 if (getTemplateIds().get(i) != null) {
                     joiner.add(
                             String.format(
+                                    java.util.Locale.ROOT,
                                     "%stemplate_ids%s%s=%s",
                                     prefix,
                                     suffix,
                                     "".equals(suffix)
                                             ? ""
                                             : String.format(
-                                                    "%s%d%s", containerPrefix, i, containerSuffix),
+                                                    java.util.Locale.ROOT,
+                                                    "%s%d%s",
+                                                    containerPrefix,
+                                                    i,
+                                                    containerSuffix),
                                     ApiClient.urlEncode(
                                             ApiClient.valueToString(getTemplateIds().get(i)))));
                 }
@@ -440,6 +449,7 @@ public class CreateBulkSendRequest {
         if (getBulkSendCsv() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sbulk_send_csv%s=%s",
                             prefix,
                             suffix,
@@ -450,6 +460,7 @@ public class CreateBulkSendRequest {
         if (getSkipRowErrors() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sskip_row_errors%s=%s",
                             prefix,
                             suffix,
@@ -460,6 +471,7 @@ public class CreateBulkSendRequest {
         if (getApiApplicationId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapi_application_id%s=%s",
                             prefix,
                             suffix,
@@ -470,6 +482,7 @@ public class CreateBulkSendRequest {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -480,6 +493,7 @@ public class CreateBulkSendRequest {
         if (getSubject() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%ssubject%s=%s",
                             prefix,
                             suffix,
@@ -490,6 +504,7 @@ public class CreateBulkSendRequest {
         if (getMessage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smessage%s=%s",
                             prefix,
                             suffix,
@@ -500,6 +515,7 @@ public class CreateBulkSendRequest {
         if (getApplySigningOrder() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sapply_signing_order%s=%s",
                             prefix,
                             suffix,
@@ -510,6 +526,7 @@ public class CreateBulkSendRequest {
         if (getCustomRequesterName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scustom_requester_name%s=%s",
                             prefix,
                             suffix,
@@ -521,6 +538,7 @@ public class CreateBulkSendRequest {
         if (getCustomRequesterEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scustom_requester_email%s=%s",
                             prefix,
                             suffix,

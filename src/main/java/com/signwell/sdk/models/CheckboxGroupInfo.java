@@ -36,7 +36,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class CheckboxGroupInfo {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private UUID id;
@@ -78,13 +78,13 @@ public class CheckboxGroupInfo {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull UUID id) {
         this.id = id;
@@ -100,13 +100,13 @@ public class CheckboxGroupInfo {
      *
      * @return groupName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_GROUP_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_GROUP_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getGroupName() {
         return groupName;
     }
 
-    @JsonProperty(JSON_PROPERTY_GROUP_NAME)
+    @JsonProperty(value = JSON_PROPERTY_GROUP_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setGroupName(@jakarta.annotation.Nullable String groupName) {
         this.groupName = groupName;
@@ -122,13 +122,13 @@ public class CheckboxGroupInfo {
      *
      * @return recipientId
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_RECIPIENT_ID)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_RECIPIENT_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getRecipientId() {
         return recipientId;
     }
 
-    @JsonProperty(JSON_PROPERTY_RECIPIENT_ID)
+    @JsonProperty(value = JSON_PROPERTY_RECIPIENT_ID, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setRecipientId(@jakarta.annotation.Nullable String recipientId) {
         this.recipientId = recipientId;
@@ -153,13 +153,13 @@ public class CheckboxGroupInfo {
      * @return checkboxIds
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_CHECKBOX_IDS)
+    @JsonProperty(value = JSON_PROPERTY_CHECKBOX_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public List<String> getCheckboxIds() {
         return checkboxIds;
     }
 
-    @JsonProperty(JSON_PROPERTY_CHECKBOX_IDS)
+    @JsonProperty(value = JSON_PROPERTY_CHECKBOX_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setCheckboxIds(@jakarta.annotation.Nonnull List<String> checkboxIds) {
         this.checkboxIds = checkboxIds;
@@ -176,13 +176,13 @@ public class CheckboxGroupInfo {
      *
      * @return validation
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_VALIDATION)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_VALIDATION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public CheckboxValidation getValidation() {
         return validation;
     }
 
-    @JsonProperty(JSON_PROPERTY_VALIDATION)
+    @JsonProperty(value = JSON_PROPERTY_VALIDATION, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setValidation(@jakarta.annotation.Nullable CheckboxValidation validation) {
         this.validation = validation;
@@ -199,13 +199,13 @@ public class CheckboxGroupInfo {
      * @return required
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_REQUIRED)
+    @JsonProperty(value = JSON_PROPERTY_REQUIRED, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Boolean getRequired() {
         return required;
     }
 
-    @JsonProperty(JSON_PROPERTY_REQUIRED)
+    @JsonProperty(value = JSON_PROPERTY_REQUIRED, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setRequired(@jakarta.annotation.Nonnull Boolean required) {
         this.required = required;
@@ -221,13 +221,13 @@ public class CheckboxGroupInfo {
      *
      * @return minValue
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MIN_VALUE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MIN_VALUE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getMinValue() {
         return minValue;
     }
 
-    @JsonProperty(JSON_PROPERTY_MIN_VALUE)
+    @JsonProperty(value = JSON_PROPERTY_MIN_VALUE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMinValue(@jakarta.annotation.Nullable Integer minValue) {
         this.minValue = minValue;
@@ -243,13 +243,13 @@ public class CheckboxGroupInfo {
      *
      * @return maxValue
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_MAX_VALUE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_MAX_VALUE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getMaxValue() {
         return maxValue;
     }
 
-    @JsonProperty(JSON_PROPERTY_MAX_VALUE)
+    @JsonProperty(value = JSON_PROPERTY_MAX_VALUE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setMaxValue(@jakarta.annotation.Nullable Integer maxValue) {
         this.maxValue = maxValue;
@@ -265,13 +265,13 @@ public class CheckboxGroupInfo {
      *
      * @return exactValue
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_EXACT_VALUE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_EXACT_VALUE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getExactValue() {
         return exactValue;
     }
 
-    @JsonProperty(JSON_PROPERTY_EXACT_VALUE)
+    @JsonProperty(value = JSON_PROPERTY_EXACT_VALUE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setExactValue(@jakarta.annotation.Nullable Integer exactValue) {
         this.exactValue = exactValue;
@@ -334,10 +334,7 @@ public class CheckboxGroupInfo {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -376,14 +373,18 @@ public class CheckboxGroupInfo {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `group_name` to the URL query string
         if (getGroupName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sgroup_name%s=%s",
                             prefix,
                             suffix,
@@ -394,6 +395,7 @@ public class CheckboxGroupInfo {
         if (getRecipientId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%srecipient_id%s=%s",
                             prefix,
                             suffix,
@@ -405,13 +407,18 @@ public class CheckboxGroupInfo {
             for (int i = 0; i < getCheckboxIds().size(); i++) {
                 joiner.add(
                         String.format(
+                                java.util.Locale.ROOT,
                                 "%scheckbox_ids%s%s=%s",
                                 prefix,
                                 suffix,
                                 "".equals(suffix)
                                         ? ""
                                         : String.format(
-                                                "%s%d%s", containerPrefix, i, containerSuffix),
+                                                java.util.Locale.ROOT,
+                                                "%s%d%s",
+                                                containerPrefix,
+                                                i,
+                                                containerSuffix),
                                 ApiClient.urlEncode(
                                         ApiClient.valueToString(getCheckboxIds().get(i)))));
             }
@@ -421,6 +428,7 @@ public class CheckboxGroupInfo {
         if (getValidation() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%svalidation%s=%s",
                             prefix,
                             suffix,
@@ -431,6 +439,7 @@ public class CheckboxGroupInfo {
         if (getRequired() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%srequired%s=%s",
                             prefix,
                             suffix,
@@ -441,6 +450,7 @@ public class CheckboxGroupInfo {
         if (getMinValue() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smin_value%s=%s",
                             prefix,
                             suffix,
@@ -451,6 +461,7 @@ public class CheckboxGroupInfo {
         if (getMaxValue() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%smax_value%s=%s",
                             prefix,
                             suffix,
@@ -461,6 +472,7 @@ public class CheckboxGroupInfo {
         if (getExactValue() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sexact_value%s=%s",
                             prefix,
                             suffix,

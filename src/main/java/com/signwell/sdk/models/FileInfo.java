@@ -23,7 +23,7 @@ import java.util.StringJoiner;
 @JsonPropertyOrder({FileInfo.JSON_PROPERTY_NAME, FileInfo.JSON_PROPERTY_PAGES_NUMBER})
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class FileInfo {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nullable private String name;
@@ -43,13 +43,13 @@ public class FileInfo {
      *
      * @return name
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setName(@jakarta.annotation.Nullable String name) {
         this.name = name;
@@ -66,13 +66,13 @@ public class FileInfo {
      * @return pagesNumber
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_PAGES_NUMBER)
+    @JsonProperty(value = JSON_PROPERTY_PAGES_NUMBER, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getPagesNumber() {
         return pagesNumber;
     }
 
-    @JsonProperty(JSON_PROPERTY_PAGES_NUMBER)
+    @JsonProperty(value = JSON_PROPERTY_PAGES_NUMBER, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setPagesNumber(@jakarta.annotation.Nonnull Integer pagesNumber) {
         this.pagesNumber = pagesNumber;
@@ -112,10 +112,7 @@ public class FileInfo {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -154,6 +151,7 @@ public class FileInfo {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -164,6 +162,7 @@ public class FileInfo {
         if (getPagesNumber() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spages_number%s=%s",
                             prefix,
                             suffix,

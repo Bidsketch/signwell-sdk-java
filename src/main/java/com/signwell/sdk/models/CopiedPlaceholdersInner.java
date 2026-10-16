@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class CopiedPlaceholdersInner {
     public static final String JSON_PROPERTY_NAME = "name";
     @jakarta.annotation.Nonnull private String name;
@@ -53,13 +53,13 @@ public class CopiedPlaceholdersInner {
      * @return name
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getName() {
         return name;
     }
 
-    @JsonProperty(JSON_PROPERTY_NAME)
+    @JsonProperty(value = JSON_PROPERTY_NAME, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setName(@jakarta.annotation.Nonnull String name) {
         this.name = name;
@@ -74,17 +74,18 @@ public class CopiedPlaceholdersInner {
     /**
      * In some cases, it may be necessary to pre-fill the name and email for a placeholder because
      * it will always be the same person for all documents created from this template. This sets the
-     * name.
+     * name. Every recipient on a 21 CFR Part 11 document needs a name, so leaving it unset means
+     * the name has to be supplied when the document is created.
      *
      * @return preassignedRecipientName
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPreassignedRecipientName() {
         return preassignedRecipientName;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME)
+    @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_NAME, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreassignedRecipientName(
             @jakarta.annotation.Nullable String preassignedRecipientName) {
@@ -104,13 +105,13 @@ public class CopiedPlaceholdersInner {
      *
      * @return preassignedRecipientEmail
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPreassignedRecipientEmail() {
         return preassignedRecipientEmail;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL)
+    @JsonProperty(value = JSON_PROPERTY_PREASSIGNED_RECIPIENT_EMAIL, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreassignedRecipientEmail(
             @jakarta.annotation.Nullable String preassignedRecipientEmail) {
@@ -161,10 +162,7 @@ public class CopiedPlaceholdersInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -203,6 +201,7 @@ public class CopiedPlaceholdersInner {
         if (getName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sname%s=%s",
                             prefix,
                             suffix,
@@ -213,6 +212,7 @@ public class CopiedPlaceholdersInner {
         if (getPreassignedRecipientName() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spreassigned_recipient_name%s=%s",
                             prefix,
                             suffix,
@@ -224,6 +224,7 @@ public class CopiedPlaceholdersInner {
         if (getPreassignedRecipientEmail() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spreassigned_recipient_email%s=%s",
                             prefix,
                             suffix,

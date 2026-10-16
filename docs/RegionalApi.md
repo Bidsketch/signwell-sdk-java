@@ -91,7 +91,7 @@ CompletableFuture<[**Nom151UrlResponse**](Nom151UrlResponse.md)>
 
 ## getNom151CertificateWithHttpInfo
 
-> CompletableFuture<ApiResponse<Nom151UrlResponse>> getNom151Certificate getNom151CertificateWithHttpInfo(id, urlOnly, objectOnly)
+> CompletableFuture<ApiResponse<Nom151UrlResponse>> getNom151CertificateWithHttpInfo(id, urlOnly, objectOnly)
 
 MX – NOM-151 Certificate
 

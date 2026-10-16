@@ -29,7 +29,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class PaginationMeta {
     public static final String JSON_PROPERTY_CURRENT_PAGE = "current_page";
     @jakarta.annotation.Nonnull private Integer currentPage;
@@ -59,13 +59,13 @@ public class PaginationMeta {
      * @return currentPage
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_CURRENT_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_CURRENT_PAGE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getCurrentPage() {
         return currentPage;
     }
 
-    @JsonProperty(JSON_PROPERTY_CURRENT_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_CURRENT_PAGE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setCurrentPage(@jakarta.annotation.Nonnull Integer currentPage) {
         this.currentPage = currentPage;
@@ -81,13 +81,13 @@ public class PaginationMeta {
      *
      * @return nextPage
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_NEXT_PAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getNextPage() {
         return nextPage;
     }
 
-    @JsonProperty(JSON_PROPERTY_NEXT_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_NEXT_PAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setNextPage(@jakarta.annotation.Nullable Integer nextPage) {
         this.nextPage = nextPage;
@@ -103,13 +103,13 @@ public class PaginationMeta {
      *
      * @return previousPage
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PREVIOUS_PAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Integer getPreviousPage() {
         return previousPage;
     }
 
-    @JsonProperty(JSON_PROPERTY_PREVIOUS_PAGE)
+    @JsonProperty(value = JSON_PROPERTY_PREVIOUS_PAGE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPreviousPage(@jakarta.annotation.Nullable Integer previousPage) {
         this.previousPage = previousPage;
@@ -126,13 +126,13 @@ public class PaginationMeta {
      * @return totalCount
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TOTAL_COUNT)
+    @JsonProperty(value = JSON_PROPERTY_TOTAL_COUNT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getTotalCount() {
         return totalCount;
     }
 
-    @JsonProperty(JSON_PROPERTY_TOTAL_COUNT)
+    @JsonProperty(value = JSON_PROPERTY_TOTAL_COUNT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTotalCount(@jakarta.annotation.Nonnull Integer totalCount) {
         this.totalCount = totalCount;
@@ -149,13 +149,13 @@ public class PaginationMeta {
      * @return totalPages
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TOTAL_PAGES)
+    @JsonProperty(value = JSON_PROPERTY_TOTAL_PAGES, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public Integer getTotalPages() {
         return totalPages;
     }
 
-    @JsonProperty(JSON_PROPERTY_TOTAL_PAGES)
+    @JsonProperty(value = JSON_PROPERTY_TOTAL_PAGES, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTotalPages(@jakarta.annotation.Nonnull Integer totalPages) {
         this.totalPages = totalPages;
@@ -201,10 +201,7 @@ public class PaginationMeta {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -243,6 +240,7 @@ public class PaginationMeta {
         if (getCurrentPage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%scurrent_page%s=%s",
                             prefix,
                             suffix,
@@ -253,6 +251,7 @@ public class PaginationMeta {
         if (getNextPage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%snext_page%s=%s",
                             prefix,
                             suffix,
@@ -263,6 +262,7 @@ public class PaginationMeta {
         if (getPreviousPage() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sprevious_page%s=%s",
                             prefix,
                             suffix,
@@ -273,6 +273,7 @@ public class PaginationMeta {
         if (getTotalCount() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stotal_count%s=%s",
                             prefix,
                             suffix,
@@ -283,6 +284,7 @@ public class PaginationMeta {
         if (getTotalPages() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%stotal_pages%s=%s",
                             prefix,
                             suffix,

@@ -32,7 +32,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class MeResponse {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private UUID id;
@@ -68,13 +68,13 @@ public class MeResponse {
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public UUID getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull UUID id) {
         this.id = id;
@@ -91,13 +91,13 @@ public class MeResponse {
      * @return role
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ROLE)
+    @JsonProperty(value = JSON_PROPERTY_ROLE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getRole() {
         return role;
     }
 
-    @JsonProperty(JSON_PROPERTY_ROLE)
+    @JsonProperty(value = JSON_PROPERTY_ROLE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setRole(@jakarta.annotation.Nonnull String role) {
         this.role = role;
@@ -113,13 +113,13 @@ public class MeResponse {
      *
      * @return archived
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_ARCHIVED)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_ARCHIVED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public Boolean getArchived() {
         return archived;
     }
 
-    @JsonProperty(JSON_PROPERTY_ARCHIVED)
+    @JsonProperty(value = JSON_PROPERTY_ARCHIVED, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setArchived(@jakarta.annotation.Nullable Boolean archived) {
         this.archived = archived;
@@ -136,13 +136,13 @@ public class MeResponse {
      * @return user
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_USER)
+    @JsonProperty(value = JSON_PROPERTY_USER, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public MeResponseUser getUser() {
         return user;
     }
 
-    @JsonProperty(JSON_PROPERTY_USER)
+    @JsonProperty(value = JSON_PROPERTY_USER, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setUser(@jakarta.annotation.Nonnull MeResponseUser user) {
         this.user = user;
@@ -159,13 +159,13 @@ public class MeResponse {
      * @return account
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ACCOUNT)
+    @JsonProperty(value = JSON_PROPERTY_ACCOUNT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public AccountInfoResponse getAccount() {
         return account;
     }
 
-    @JsonProperty(JSON_PROPERTY_ACCOUNT)
+    @JsonProperty(value = JSON_PROPERTY_ACCOUNT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setAccount(@jakarta.annotation.Nonnull AccountInfoResponse account) {
         this.account = account;
@@ -182,13 +182,13 @@ public class MeResponse {
      * @return workspace
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_WORKSPACE)
+    @JsonProperty(value = JSON_PROPERTY_WORKSPACE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public AccountInfoResponse getWorkspace() {
         return workspace;
     }
 
-    @JsonProperty(JSON_PROPERTY_WORKSPACE)
+    @JsonProperty(value = JSON_PROPERTY_WORKSPACE, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setWorkspace(@jakarta.annotation.Nonnull AccountInfoResponse workspace) {
         this.workspace = workspace;
@@ -205,13 +205,13 @@ public class MeResponse {
      * @return contact
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_CONTACT)
+    @JsonProperty(value = JSON_PROPERTY_CONTACT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public MeResponseContact getContact() {
         return contact;
     }
 
-    @JsonProperty(JSON_PROPERTY_CONTACT)
+    @JsonProperty(value = JSON_PROPERTY_CONTACT, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setContact(@jakarta.annotation.Nonnull MeResponseContact contact) {
         this.contact = contact;
@@ -261,10 +261,7 @@ public class MeResponse {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -303,14 +300,18 @@ public class MeResponse {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `role` to the URL query string
         if (getRole() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%srole%s=%s",
                             prefix,
                             suffix,
@@ -321,6 +322,7 @@ public class MeResponse {
         if (getArchived() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sarchived%s=%s",
                             prefix,
                             suffix,

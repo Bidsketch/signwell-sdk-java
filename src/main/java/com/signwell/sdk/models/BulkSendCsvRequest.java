@@ -29,7 +29,7 @@ import java.util.UUID;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class BulkSendCsvRequest {
     public static final String JSON_PROPERTY_TEMPLATE_IDS = "template_ids";
     @jakarta.annotation.Nonnull private List<UUID> templateIds = new ArrayList<>();
@@ -61,13 +61,13 @@ public class BulkSendCsvRequest {
      * @return templateIds
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public List<UUID> getTemplateIds() {
         return templateIds;
     }
 
-    @JsonProperty(JSON_PROPERTY_TEMPLATE_IDS)
+    @JsonProperty(value = JSON_PROPERTY_TEMPLATE_IDS, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setTemplateIds(@jakarta.annotation.Nonnull List<UUID> templateIds) {
         this.templateIds = templateIds;
@@ -79,18 +79,23 @@ public class BulkSendCsvRequest {
     }
 
     /**
-     * A RFC 4648 base64 string of the template CSV file to be validated.
+     * A RFC 4648 base64 string of the template CSV file to be validated. While 21 CFR Part 11 is
+     * enabled, every recipient needs a name: the CSV must carry a name column next to each
+     * placeholder email column (for example &#x60;signer_name&#x60; alongside
+     * &#x60;signer_email&#x60;), and each row must fill that name in wherever it carries the
+     * matching email, otherwise it returns a 422. A row that leaves both the email and the name
+     * blank sends nothing to that placeholder, so no name is needed there.
      *
      * @return bulkSendCsv
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_BULK_SEND_CSV)
+    @JsonProperty(value = JSON_PROPERTY_BULK_SEND_CSV, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getBulkSendCsv() {
         return bulkSendCsv;
     }
 
-    @JsonProperty(JSON_PROPERTY_BULK_SEND_CSV)
+    @JsonProperty(value = JSON_PROPERTY_BULK_SEND_CSV, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setBulkSendCsv(@jakarta.annotation.Nonnull String bulkSendCsv) {
         this.bulkSendCsv = bulkSendCsv;
@@ -130,10 +135,7 @@ public class BulkSendCsvRequest {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -174,13 +176,18 @@ public class BulkSendCsvRequest {
                 if (getTemplateIds().get(i) != null) {
                     joiner.add(
                             String.format(
+                                    java.util.Locale.ROOT,
                                     "%stemplate_ids%s%s=%s",
                                     prefix,
                                     suffix,
                                     "".equals(suffix)
                                             ? ""
                                             : String.format(
-                                                    "%s%d%s", containerPrefix, i, containerSuffix),
+                                                    java.util.Locale.ROOT,
+                                                    "%s%d%s",
+                                                    containerPrefix,
+                                                    i,
+                                                    containerSuffix),
                                     ApiClient.urlEncode(
                                             ApiClient.valueToString(getTemplateIds().get(i)))));
                 }
@@ -191,6 +198,7 @@ public class BulkSendCsvRequest {
         if (getBulkSendCsv() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sbulk_send_csv%s=%s",
                             prefix,
                             suffix,

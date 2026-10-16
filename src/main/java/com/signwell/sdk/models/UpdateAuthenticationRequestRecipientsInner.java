@@ -27,7 +27,7 @@ import java.util.StringJoiner;
 })
 @jakarta.annotation.Generated(
         value = "org.openapitools.codegen.languages.JavaClientCodegen",
-        comments = "Generator version: 7.12.0")
+        comments = "Generator version: 7.26.0")
 public class UpdateAuthenticationRequestRecipientsInner {
     public static final String JSON_PROPERTY_ID = "id";
     @jakarta.annotation.Nonnull private String id;
@@ -46,18 +46,19 @@ public class UpdateAuthenticationRequestRecipientsInner {
     }
 
     /**
-     * Recipient id from the Get Document response.
+     * A unique identifier that you will give to each recipient. We recommend numbering sequentially
+     * from 1 to X. IDs are required for associating recipients to fields and more.
      *
      * @return id
      */
     @jakarta.annotation.Nonnull
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public String getId() {
         return id;
     }
 
-    @JsonProperty(JSON_PROPERTY_ID)
+    @JsonProperty(value = JSON_PROPERTY_ID, required = true)
     @JsonInclude(value = JsonInclude.Include.ALWAYS)
     public void setId(@jakarta.annotation.Nonnull String id) {
         this.id = id;
@@ -70,17 +71,19 @@ public class UpdateAuthenticationRequestRecipientsInner {
     }
 
     /**
-     * Updated passcode for the recipient.
+     * Updated passcode for the recipient. If set, the signer will be required to enter the passcode
+     * before viewing and completing the document. On a 21 CFR Part 11 document SignWell generates
+     * the passcode, so a sender-defined passcode returns a 422.
      *
      * @return passcode
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PASSCODE)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PASSCODE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public String getPasscode() {
         return passcode;
     }
 
-    @JsonProperty(JSON_PROPERTY_PASSCODE)
+    @JsonProperty(value = JSON_PROPERTY_PASSCODE, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPasscode(@jakarta.annotation.Nullable String passcode) {
         this.passcode = passcode;
@@ -97,13 +100,13 @@ public class UpdateAuthenticationRequestRecipientsInner {
      *
      * @return passcodeDelivery
      */
-    @jakarta.annotation.Nullable @JsonProperty(JSON_PROPERTY_PASSCODE_DELIVERY)
+    @jakarta.annotation.Nullable @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public PasscodeDelivery getPasscodeDelivery() {
         return passcodeDelivery;
     }
 
-    @JsonProperty(JSON_PROPERTY_PASSCODE_DELIVERY)
+    @JsonProperty(value = JSON_PROPERTY_PASSCODE_DELIVERY, required = false)
     @JsonInclude(value = JsonInclude.Include.USE_DEFAULTS)
     public void setPasscodeDelivery(
             @jakarta.annotation.Nullable PasscodeDelivery passcodeDelivery) {
@@ -150,10 +153,7 @@ public class UpdateAuthenticationRequestRecipientsInner {
      * line).
      */
     private String toIndentedString(Object o) {
-        if (o == null) {
-            return "null";
-        }
-        return o.toString().replace("\n", "\n    ");
+        return o == null ? "null" : o.toString().replace("\n", "\n    ");
     }
 
     /**
@@ -192,14 +192,18 @@ public class UpdateAuthenticationRequestRecipientsInner {
         if (getId() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%sid%s=%s",
-                            prefix, suffix, ApiClient.urlEncode(ApiClient.valueToString(getId()))));
+                            prefix,
+                            suffix,
+                            ApiClient.urlEncode(ApiClient.valueToString(getId()))));
         }
 
         // add `passcode` to the URL query string
         if (getPasscode() != null) {
             joiner.add(
                     String.format(
+                            java.util.Locale.ROOT,
                             "%spasscode%s=%s",
                             prefix,
                             suffix,
