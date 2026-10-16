@@ -79,7 +79,10 @@ public class MeApi {
             InputStream responseBody = ApiClient.getResponseBody(response);
             String body = null;
             if (responseBody != null) {
-                body = new String(responseBody.readAllBytes());
+                body =
+                        new String(
+                                responseBody.readAllBytes(),
+                                java.nio.charset.StandardCharsets.UTF_8);
                 responseBody.close();
             }
             String message = formatExceptionMessage(operationId, response.statusCode(), body);
@@ -220,7 +223,9 @@ public class MeApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         MeResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null

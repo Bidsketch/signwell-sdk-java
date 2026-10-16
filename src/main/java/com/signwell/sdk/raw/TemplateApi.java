@@ -86,7 +86,10 @@ public class TemplateApi {
             InputStream responseBody = ApiClient.getResponseBody(response);
             String body = null;
             if (responseBody != null) {
-                body = new String(responseBody.readAllBytes());
+                body =
+                        new String(
+                                responseBody.readAllBytes(),
+                                java.nio.charset.StandardCharsets.UTF_8);
                 responseBody.close();
             }
             String message = formatExceptionMessage(operationId, response.statusCode(), body);
@@ -242,7 +245,9 @@ public class TemplateApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         DocumentTemplateResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null
@@ -521,7 +526,9 @@ public class TemplateApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         DocumentTemplateResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null
@@ -683,7 +690,9 @@ public class TemplateApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         DocumentTemplateListResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null
@@ -854,7 +863,9 @@ public class TemplateApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         DocumentTemplateResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null

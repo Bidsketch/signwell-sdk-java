@@ -114,7 +114,7 @@ public class DocumentResponse {
                     return b;
                 }
             }
-            return null;
+            return value == null ? null : UNKNOWN_DEFAULT_OPEN_API;
         }
     }
 

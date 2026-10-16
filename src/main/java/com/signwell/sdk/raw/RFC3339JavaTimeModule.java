@@ -30,10 +30,10 @@ public class RFC3339JavaTimeModule extends SimpleModule {
 
     @Override
     public void setupModule(SetupContext context) {
-        super.setupModule(context);
 
         addDeserializer(Instant.class, RFC3339InstantDeserializer.INSTANT);
         addDeserializer(OffsetDateTime.class, RFC3339InstantDeserializer.OFFSET_DATE_TIME);
         addDeserializer(ZonedDateTime.class, RFC3339InstantDeserializer.ZONED_DATE_TIME);
+        super.setupModule(context);
     }
 }

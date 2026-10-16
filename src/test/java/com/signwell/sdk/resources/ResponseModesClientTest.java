@@ -47,6 +47,32 @@ import org.junit.jupiter.api.Test;
 
 class ResponseModesClientTest {
     @Test
+    void rawClientDecodesSuccessAndErrorBodiesAsUtf8() throws ApiException {
+        QueueHttpClient http = new QueueHttpClient();
+        DocumentApi raw = new DocumentApi(rawApiClient(http));
+        String name = "Contrat caf\u00e9 \u2014 \u6771\u4eac";
+        http.enqueue(
+                201,
+                Map.of("Content-Type", List.of("application/json")),
+                "{\"name\":\"" + name + "\"}");
+        assertEquals(
+                name,
+                raw.createDocument(new com.signwell.sdk.models.DocumentRequest()).join().getName());
+
+        String errorBody = "{\"message\":\"" + name + "\"}";
+        http.enqueue(400, Map.of("Content-Type", List.of("application/json")), errorBody);
+        CompletionException failure =
+                assertThrows(
+                        CompletionException.class,
+                        () ->
+                                raw.createDocument(new com.signwell.sdk.models.DocumentRequest())
+                                        .join());
+        assertEquals(
+                errorBody,
+                assertInstanceOf(ApiException.class, failure.getCause()).getResponseBody());
+    }
+
+    @Test
     void rawClientRetriesRateLimitsAndReplaysTheSamePostBody() throws ApiException {
         QueueHttpClient http = new QueueHttpClient();
         TrackingStream rejected = new TrackingStream(new byte[] {1});

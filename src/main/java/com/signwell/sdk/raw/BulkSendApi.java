@@ -89,7 +89,10 @@ public class BulkSendApi {
             InputStream responseBody = ApiClient.getResponseBody(response);
             String body = null;
             if (responseBody != null) {
-                body = new String(responseBody.readAllBytes());
+                body =
+                        new String(
+                                responseBody.readAllBytes(),
+                                java.nio.charset.StandardCharsets.UTF_8);
                 responseBody.close();
             }
             String message = formatExceptionMessage(operationId, response.statusCode(), body);
@@ -249,7 +252,9 @@ public class BulkSendApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         BulkSendCreateResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null
@@ -397,7 +402,9 @@ public class BulkSendApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         BulkSendResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null
@@ -754,7 +761,9 @@ public class BulkSendApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         BulkSendDocumentsResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null
@@ -946,7 +955,9 @@ public class BulkSendApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         BulkSendListResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null
@@ -1119,7 +1130,9 @@ public class BulkSendApi {
                                         }
 
                                         String responseBody =
-                                                new String(localVarResponseBody.readAllBytes());
+                                                new String(
+                                                        localVarResponseBody.readAllBytes(),
+                                                        java.nio.charset.StandardCharsets.UTF_8);
                                         BulkSendValidateCsvResponse responseValue =
                                                 responseBody.isBlank()
                                                         ? null

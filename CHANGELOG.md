@@ -21,6 +21,9 @@
 
 ### Fixed
 
+- Decode raw JSON responses and error bodies as UTF-8 on every platform.
+- Register the RFC 3339 deserializers before module setup so space-separated API timestamps parse correctly.
+- Preserve unknown Part 11 signing modes with the unknown enum sentinel while retaining null for absent modes.
 - Retry explicit HTTP 429 responses up to two times across raw APIs, resource helpers, and downloads. Honor `Retry-After` seconds or dates, fall back to exponential backoff, and stop waits on cancellation. Network failures and other status codes are not retried. Use `maxRateLimitRetries(0)` to disable.
 
 ### Migration
